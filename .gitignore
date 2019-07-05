@@ -1,0 +1,7 @@
+target/
+release.properties
+**/*credentials.properties
+.project
+.classpath
+.settings
+svn-commit*
