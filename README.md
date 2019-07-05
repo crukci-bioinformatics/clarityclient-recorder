@@ -37,13 +37,20 @@ Maven do the work. Add a <repositories> section containing:
 
 ## Usage
 
-Add the JAR file to your POM (I'm assuming you're using Maven now):
+Add the JAR file file of the main Clarity client and the JAR of this project
+to your POM (I'm assuming you're using Maven now):
 
 ```XML
     <dependency>
         <groupId>org.cruk.genologics</groupId>
+        <artifactId>clarity-client</artifactId>
+        <version>...</version>
+    </dependency>
+    <dependency>
+        <groupId>org.cruk.genologics</groupId>
         <artifactId>clarity-client-recorder</artifactId>
         <version>...</version>
+        <scope>test</scope>
     </dependency>
 ```
 

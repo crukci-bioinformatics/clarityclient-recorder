@@ -7,3 +7,5 @@ configuration to use it.
     * {{{./spring.html}Spring configuration}}
 
     * {{{./usage.html}Setting up the Record and Playback Wrappers}}
+
+    * {{{http://crukci-bioinformatics.github.io/clarityclient/}Clarity Java Client documentation}}
