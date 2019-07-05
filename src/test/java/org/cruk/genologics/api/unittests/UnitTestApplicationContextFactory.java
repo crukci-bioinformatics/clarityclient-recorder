@@ -45,7 +45,7 @@ public final class UnitTestApplicationContextFactory
         {
             recordingContext = new ClassPathXmlApplicationContext(
                     "/org/cruk/genologics/api/genologics-client-context.xml",
-                    "/org/cruk/genologics/api/genologics-client-record-context.xml",
+                    "/org/cruk/genologics/api/genologics-record-context.xml",
                     "unittest-context.xml");
 
             GenologicsAPI api = recordingContext.getBean("genologicsAPI", GenologicsAPI.class);
@@ -60,7 +60,7 @@ public final class UnitTestApplicationContextFactory
         {
             playbackContext = new ClassPathXmlApplicationContext(
                     "/org/cruk/genologics/api/genologics-client-context.xml",
-                    "/org/cruk/genologics/api/genologics-client-playback-context.xml",
+                    "/org/cruk/genologics/api/genologics-playback-context.xml",
                     "unittest-context.xml");
 
             GenologicsAPI api = playbackContext.getBean("genologicsAPI", GenologicsAPI.class);

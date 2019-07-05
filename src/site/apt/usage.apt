@@ -1,0 +1,36 @@
+Setting the Message Directory
+
+  The record and playback wrappers around the Clarity client need no additional
+configuration beyond what is supplied in the Spring files. The one property that
+the user might want to change is the directory the server's messages are written
+to, or the pretend server reads from.
+
+  By default, both the recording and playback aspects write and read into a
+directory <<<serverexchanges>>> in the current working directory. This can be
+configured by setting the <messagesDirectory> property in Spring configuration,
+or fetching the aspect in code and setting the property:
+
++---
+ApplicationContext appContext =
+    new ClassPathXmlApplicationContext(
+        "/org/cruk/genologics/api/genologics-client-context.xml",
+        "/org/cruk/genologics/api/genologics-record-context.xml");
+
+GenologicsAPIRecordingAspect aspect = ctx.getBean(GenologicsAPIRecordingAspect.class);
+aspect.setMessageDirectory(new File("target/messages"));
++---
+
+  Similarly, for playback:
+
++---
+ApplicationContext appContext =
+    new ClassPathXmlApplicationContext(
+        "/org/cruk/genologics/api/genologics-client-context.xml",
+        "/org/cruk/genologics/api/genologics-playback-context.xml");
+
+GenologicsAPIPlaybackAspect playbackAspect = ctx.getBean(GenologicsAPIPlaybackAspect.class);
+playbackAspect.setMessageDirectory(new File("src/test/messages"));
++---
+
+  This directory is not automatically created, so when recording make sure that it
+exists before communicating with the server.

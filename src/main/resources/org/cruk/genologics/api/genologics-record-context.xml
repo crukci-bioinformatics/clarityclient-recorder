@@ -33,8 +33,6 @@
 
     <context:annotation-config />
 
-    <bean id="java6Https" class="org.cruk.genologics.api.java6.Java6Https"/>
-
     <bean name="recordingApiAspect" class="org.cruk.genologics.api.record.GenologicsAPIRecordingAspect">
         <property name="jaxbMarshaller" ref="genologicsJaxbMarshaller"/>
     </bean>

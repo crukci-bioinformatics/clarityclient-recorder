@@ -1,0 +1,31 @@
+<body>
+<p>
+This project is record and playback wrappers for the Cambridge Research UK
+Cambridge Institute (CRUK-CI) Java client for Genologics' REST API.
+</p>
+
+<p>
+It provides a means of recording Clarity API server messages to files,
+which can then be used to provide a replay of those messages from the files.
+This allows unit tests to be written that have real data but don't
+change over time and can be run without access to the original server.
+</p>
+
+<p>
+To use the record and playback wrappers, create a Spring application context
+including the main client's file
+<code>org/cruk/genologics/api/genologics-client-context.xml</code> plus either
+<code>org/cruk/genologics/api/genologics-record-context.xml</code> for recording or
+<code>org/cruk/genologics/api/genologics-playback-context.xml</code> for playback.
+</p>
+
+@author Richard Bowers (richard.bowers@cruk.cam.ac.uk)
+
+@see <a href="http://crukci-bioinformatics.github.io/clarityclient/" target="_top">CRUK-CI Clarity Client</a>
+@see <a href="http://genologics.com/developer" target="_top">Genologics Developer Documentation</a>
+@see <a href="http://spring.io/" target="_top">The Spring Framework</a>
+@see <a href="http://www.oracle.com/technetwork/articles/javase/index-140168.html" target="_top">Java Architecture for XML Binding (JAXB)</a>
+@see <a href="http://hc.apache.org/" target="_top">Apache HTTP Components</a>
+@see <a href="http://ehcache.org/" target="_top">Ehcache</a>
+
+</body>

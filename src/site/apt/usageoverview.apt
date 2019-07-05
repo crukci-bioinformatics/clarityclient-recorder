@@ -1,0 +1,9 @@
+Usage
+
+  The Java client uses many features of Spring and some other third party
+libraries (AspectJ, Apache HTTP Client). You'll need to use some Spring
+configuration to use it.
+
+    * {{{./spring.html}Spring configuration}}
+
+    * {{{./usage.html}Setting up the Record and Playback Wrappers}}

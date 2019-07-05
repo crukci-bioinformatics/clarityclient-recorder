@@ -34,33 +34,75 @@ import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 
 import com.genologics.ri.reagenttype.ReagentTypes;
 
+/**
+ * Aspect for replaying server exchanges from a directory containing XML representations
+ * of entities as would be returned from a real Clarity server.
+ */
 @Aspect
 public class GenologicsAPIPlaybackAspect
 {
+    /**
+     * The directory containing the prerecorded messages.
+     */
     private File messageDirectory = new File("serverexchanges");
 
+    /**
+     * The JAXB marshaller used to directly unmarshal the XML files into objects.
+     */
     private Jaxb2Marshaller jaxbMarshaller;
 
+
+    /**
+     * Constructor.
+     */
     public GenologicsAPIPlaybackAspect()
     {
     }
 
+    /**
+     * Get the directory the messages are being read from.
+     *
+     * @return The message directory.
+     */
     public File getMessageDirectory()
     {
         return messageDirectory;
     }
 
+    /**
+     * Set the directory the messages are being read from.
+     *
+     * @param messageDirectory The message directory.
+     */
     public void setMessageDirectory(File messageDirectory)
     {
         this.messageDirectory = messageDirectory;
     }
 
+    /**
+     * Inject the JAXB marshaller. This is required.
+     *
+     * @param jaxbMarshaller The marshaller.
+     */
     @Required
     public void setJaxbMarshaller(Jaxb2Marshaller jaxbMarshaller)
     {
         this.jaxbMarshaller = jaxbMarshaller;
     }
 
+    /**
+     * Join point around the Spring REST client's {@code getForObject()} methods.
+     * Looks for a file named with the required class's short name (no package) plus
+     * either its LIMS id (if there is one) or the identifier given at the end of
+     * the path of the URI.
+     *
+     * @param pjp The join point.
+     * @return The unmarshalled entity from the file found.
+     *
+     * @throws FileNotFoundException if there is no file recorded for the object.
+     *
+     * @throws Throwable if there is anything else that fails.
+     */
     public Object doGet(ProceedingJoinPoint pjp) throws Throwable
     {
         Object uriObj = pjp.getArgs()[0];
@@ -102,6 +144,19 @@ public class GenologicsAPIPlaybackAspect
         return thing;
     }
 
+    /**
+     * Join point around the Spring REST client's {@code getForEntity()} methods.
+     * Works as {@link #doGet(ProceedingJoinPoint)}, except rather than throwing an
+     * error when the file does not exist, {@code null} is returned.
+     *
+     * @param pjp The join point.
+     *
+     * @return A ResponseEntity object containing the unmarshalled entity and an "OK"
+     * code if the file exists, or one with no body and a "not found" status if it
+     * does not.
+     *
+     * @throws Throwable if there is anything fails.
+     */
     public ResponseEntity<?> doGetEntity(ProceedingJoinPoint pjp) throws Throwable
     {
         ResponseEntity<?> response;
