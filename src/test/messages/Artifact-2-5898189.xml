@@ -1,0 +1,444 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<art:artifact xmlns:res="http://genologics.com/ri/researcher" xmlns:udf="http://genologics.com/ri/userdefined" xmlns:ptm="http://genologics.com/ri/processtemplate" xmlns:que="http://genologics.com/ri/queue" xmlns:file="http://genologics.com/ri/file" xmlns:art="http://genologics.com/ri/artifact" xmlns:role="http://genologics.com/ri/role" xmlns:cnf="http://genologics.com/ri/configuration" xmlns:protstepcnf="http://genologics.com/ri/stepconfiguration" xmlns:protcnf="http://genologics.com/ri/protocolconfiguration" xmlns:inst="http://genologics.com/ri/instrument" xmlns:ri="http://genologics.com/ri" xmlns:lab="http://genologics.com/ri/lab" xmlns:lot="http://genologics.com/ri/reagentlot" xmlns:prc="http://genologics.com/ri/process" xmlns:ctrltp="http://genologics.com/ri/controltype" xmlns:ptp="http://genologics.com/ri/processtype" xmlns:itp="http://genologics.com/ri/instrumenttype" xmlns:stp="http://genologics.com/ri/step" xmlns:perm="http://genologics.com/ri/permission" xmlns:wkfcnf="http://genologics.com/ri/workflowconfiguration" xmlns:prj="http://genologics.com/ri/project" xmlns:rtp="http://genologics.com/ri/reagenttype" xmlns:exc="http://genologics.com/ri/exception" xmlns:ctp="http://genologics.com/ri/containertype" xmlns:ver="http://genologics.com/ri/version" xmlns:kit="http://genologics.com/ri/reagentkit" xmlns:artgr="http://genologics.com/ri/artifactgroup" xmlns:con="http://genologics.com/ri/container" xmlns:prx="http://genologics.com/ri/processexecution" xmlns:rt="http://genologics.com/ri/routing" xmlns:smp="http://genologics.com/ri/sample" xmlns:stg="http://genologics.com/ri/stage" xmlns:prop="http://genologics.com/ri/property" xmlns:ns36="SAMPLE_NAMESPACE" limsid="2-5898189" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/2-5898189?state=5212311">
+    <name>SLX-12321_NORM-1</name>
+    <type>Analyte</type>
+    <output-type>Analyte</output-type>
+    <parent-process uri="https://limsdev.cruk.cam.ac.uk/api/v2/processes/24-723511" limsid="24-723511"/>
+    <qc-flag>PASSED</qc-flag>
+    <location>
+        <container uri="https://limsdev.cruk.cam.ac.uk/api/v2/containers/27-340091" limsid="27-340091"/>
+        <value>5:1</value>
+    </location>
+    <working-flag>true</working-flag>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A146" limsid="GAO9862A146"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A147" limsid="GAO9862A147"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A144" limsid="GAO9862A144"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A145" limsid="GAO9862A145"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A150" limsid="GAO9862A150"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A151" limsid="GAO9862A151"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A148" limsid="GAO9862A148"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A149" limsid="GAO9862A149"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A138" limsid="GAO9862A138"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A139" limsid="GAO9862A139"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A136" limsid="GAO9862A136"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A137" limsid="GAO9862A137"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A142" limsid="GAO9862A142"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A143" limsid="GAO9862A143"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A140" limsid="GAO9862A140"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A141" limsid="GAO9862A141"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A163" limsid="GAO9862A163"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A162" limsid="GAO9862A162"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A161" limsid="GAO9862A161"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A160" limsid="GAO9862A160"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A167" limsid="GAO9862A167"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A166" limsid="GAO9862A166"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A165" limsid="GAO9862A165"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A164" limsid="GAO9862A164"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A155" limsid="GAO9862A155"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A154" limsid="GAO9862A154"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A153" limsid="GAO9862A153"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A152" limsid="GAO9862A152"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A159" limsid="GAO9862A159"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A158" limsid="GAO9862A158"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A157" limsid="GAO9862A157"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A156" limsid="GAO9862A156"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A176" limsid="GAO9862A176"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A177" limsid="GAO9862A177"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A178" limsid="GAO9862A178"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A179" limsid="GAO9862A179"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A180" limsid="GAO9862A180"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A181" limsid="GAO9862A181"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A182" limsid="GAO9862A182"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A183" limsid="GAO9862A183"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A168" limsid="GAO9862A168"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A169" limsid="GAO9862A169"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A170" limsid="GAO9862A170"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A171" limsid="GAO9862A171"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A172" limsid="GAO9862A172"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A173" limsid="GAO9862A173"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A174" limsid="GAO9862A174"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A175" limsid="GAO9862A175"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A192" limsid="GAO9862A192"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A185" limsid="GAO9862A185"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A184" limsid="GAO9862A184"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A187" limsid="GAO9862A187"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A186" limsid="GAO9862A186"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A189" limsid="GAO9862A189"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A188" limsid="GAO9862A188"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A191" limsid="GAO9862A191"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A190" limsid="GAO9862A190"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A99" limsid="GAO9862A99"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A98" limsid="GAO9862A98"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A97" limsid="GAO9862A97"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A96" limsid="GAO9862A96"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A103" limsid="GAO9862A103"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A102" limsid="GAO9862A102"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A101" limsid="GAO9862A101"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A100" limsid="GAO9862A100"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A107" limsid="GAO9862A107"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A106" limsid="GAO9862A106"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A105" limsid="GAO9862A105"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A104" limsid="GAO9862A104"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A111" limsid="GAO9862A111"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A110" limsid="GAO9862A110"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A109" limsid="GAO9862A109"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A108" limsid="GAO9862A108"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A114" limsid="GAO9862A114"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A115" limsid="GAO9862A115"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A112" limsid="GAO9862A112"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A113" limsid="GAO9862A113"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A118" limsid="GAO9862A118"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A119" limsid="GAO9862A119"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A116" limsid="GAO9862A116"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A117" limsid="GAO9862A117"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A124" limsid="GAO9862A124"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A125" limsid="GAO9862A125"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A126" limsid="GAO9862A126"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A127" limsid="GAO9862A127"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A120" limsid="GAO9862A120"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A121" limsid="GAO9862A121"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A122" limsid="GAO9862A122"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A123" limsid="GAO9862A123"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A132" limsid="GAO9862A132"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A133" limsid="GAO9862A133"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A134" limsid="GAO9862A134"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A135" limsid="GAO9862A135"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A128" limsid="GAO9862A128"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A129" limsid="GAO9862A129"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A130" limsid="GAO9862A130"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A131" limsid="GAO9862A131"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A64" limsid="GAO9862A64"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A63" limsid="GAO9862A63"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A66" limsid="GAO9862A66"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A65" limsid="GAO9862A65"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A68" limsid="GAO9862A68"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A67" limsid="GAO9862A67"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A70" limsid="GAO9862A70"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A69" limsid="GAO9862A69"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A72" limsid="GAO9862A72"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A71" limsid="GAO9862A71"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A74" limsid="GAO9862A74"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A73" limsid="GAO9862A73"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A76" limsid="GAO9862A76"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A75" limsid="GAO9862A75"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A78" limsid="GAO9862A78"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A77" limsid="GAO9862A77"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A79" limsid="GAO9862A79"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A80" limsid="GAO9862A80"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A81" limsid="GAO9862A81"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A83" limsid="GAO9862A83"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A82" limsid="GAO9862A82"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A84" limsid="GAO9862A84"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A85" limsid="GAO9862A85"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A86" limsid="GAO9862A86"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A87" limsid="GAO9862A87"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A88" limsid="GAO9862A88"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A89" limsid="GAO9862A89"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A90" limsid="GAO9862A90"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A91" limsid="GAO9862A91"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A92" limsid="GAO9862A92"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A93" limsid="GAO9862A93"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A94" limsid="GAO9862A94"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A95" limsid="GAO9862A95"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A45" limsid="GAO9862A45"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A46" limsid="GAO9862A46"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A43" limsid="GAO9862A43"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A44" limsid="GAO9862A44"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A41" limsid="GAO9862A41"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A42" limsid="GAO9862A42"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A39" limsid="GAO9862A39"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A40" limsid="GAO9862A40"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A37" limsid="GAO9862A37"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A38" limsid="GAO9862A38"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A35" limsid="GAO9862A35"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A36" limsid="GAO9862A36"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A33" limsid="GAO9862A33"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A34" limsid="GAO9862A34"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A31" limsid="GAO9862A31"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A32" limsid="GAO9862A32"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A62" limsid="GAO9862A62"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A61" limsid="GAO9862A61"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A60" limsid="GAO9862A60"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A59" limsid="GAO9862A59"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A58" limsid="GAO9862A58"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A57" limsid="GAO9862A57"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A56" limsid="GAO9862A56"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A55" limsid="GAO9862A55"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A54" limsid="GAO9862A54"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A53" limsid="GAO9862A53"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A52" limsid="GAO9862A52"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A51" limsid="GAO9862A51"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A50" limsid="GAO9862A50"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A49" limsid="GAO9862A49"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A48" limsid="GAO9862A48"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A47" limsid="GAO9862A47"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A11" limsid="GAO9862A11"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A12" limsid="GAO9862A12"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A13" limsid="GAO9862A13"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A14" limsid="GAO9862A14"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A7" limsid="GAO9862A7"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A8" limsid="GAO9862A8"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A9" limsid="GAO9862A9"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A10" limsid="GAO9862A10"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A3" limsid="GAO9862A3"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A4" limsid="GAO9862A4"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A5" limsid="GAO9862A5"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A6" limsid="GAO9862A6"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A1" limsid="GAO9862A1"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A2" limsid="GAO9862A2"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A28" limsid="GAO9862A28"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A27" limsid="GAO9862A27"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A30" limsid="GAO9862A30"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A29" limsid="GAO9862A29"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A24" limsid="GAO9862A24"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A23" limsid="GAO9862A23"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A26" limsid="GAO9862A26"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A25" limsid="GAO9862A25"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A20" limsid="GAO9862A20"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A19" limsid="GAO9862A19"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A22" limsid="GAO9862A22"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A21" limsid="GAO9862A21"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A16" limsid="GAO9862A16"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A15" limsid="GAO9862A15"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A18" limsid="GAO9862A18"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A17" limsid="GAO9862A17"/>
+    <reagent-label name="FLD0193"/>
+    <reagent-label name="FLD0194"/>
+    <reagent-label name="FLD0195"/>
+    <reagent-label name="FLD0196"/>
+    <reagent-label name="FLD0197"/>
+    <reagent-label name="FLD0198"/>
+    <reagent-label name="FLD0199"/>
+    <reagent-label name="FLD0200"/>
+    <reagent-label name="FLD0201"/>
+    <reagent-label name="FLD0202"/>
+    <reagent-label name="FLD0203"/>
+    <reagent-label name="FLD0204"/>
+    <reagent-label name="FLD0205"/>
+    <reagent-label name="FLD0206"/>
+    <reagent-label name="FLD0207"/>
+    <reagent-label name="FLD0208"/>
+    <reagent-label name="FLD0209"/>
+    <reagent-label name="FLD0210"/>
+    <reagent-label name="FLD0211"/>
+    <reagent-label name="FLD0212"/>
+    <reagent-label name="FLD0213"/>
+    <reagent-label name="FLD0214"/>
+    <reagent-label name="FLD0215"/>
+    <reagent-label name="FLD0216"/>
+    <reagent-label name="FLD0217"/>
+    <reagent-label name="FLD0218"/>
+    <reagent-label name="FLD0219"/>
+    <reagent-label name="FLD0220"/>
+    <reagent-label name="FLD0221"/>
+    <reagent-label name="FLD0222"/>
+    <reagent-label name="FLD0223"/>
+    <reagent-label name="FLD0224"/>
+    <reagent-label name="FLD0225"/>
+    <reagent-label name="FLD0226"/>
+    <reagent-label name="FLD0227"/>
+    <reagent-label name="FLD0228"/>
+    <reagent-label name="FLD0229"/>
+    <reagent-label name="FLD0230"/>
+    <reagent-label name="FLD0231"/>
+    <reagent-label name="FLD0232"/>
+    <reagent-label name="FLD0233"/>
+    <reagent-label name="FLD0234"/>
+    <reagent-label name="FLD0235"/>
+    <reagent-label name="FLD0236"/>
+    <reagent-label name="FLD0237"/>
+    <reagent-label name="FLD0238"/>
+    <reagent-label name="FLD0239"/>
+    <reagent-label name="FLD0240"/>
+    <reagent-label name="FLD0241"/>
+    <reagent-label name="FLD0242"/>
+    <reagent-label name="FLD0243"/>
+    <reagent-label name="FLD0244"/>
+    <reagent-label name="FLD0245"/>
+    <reagent-label name="FLD0246"/>
+    <reagent-label name="FLD0247"/>
+    <reagent-label name="FLD0248"/>
+    <reagent-label name="FLD0249"/>
+    <reagent-label name="FLD0250"/>
+    <reagent-label name="FLD0251"/>
+    <reagent-label name="FLD0252"/>
+    <reagent-label name="FLD0253"/>
+    <reagent-label name="FLD0254"/>
+    <reagent-label name="FLD0255"/>
+    <reagent-label name="FLD0256"/>
+    <reagent-label name="FLD0257"/>
+    <reagent-label name="FLD0258"/>
+    <reagent-label name="FLD0259"/>
+    <reagent-label name="FLD0260"/>
+    <reagent-label name="FLD0261"/>
+    <reagent-label name="FLD0262"/>
+    <reagent-label name="FLD0263"/>
+    <reagent-label name="FLD0264"/>
+    <reagent-label name="FLD0265"/>
+    <reagent-label name="FLD0266"/>
+    <reagent-label name="FLD0267"/>
+    <reagent-label name="FLD0268"/>
+    <reagent-label name="FLD0269"/>
+    <reagent-label name="FLD0270"/>
+    <reagent-label name="FLD0271"/>
+    <reagent-label name="FLD0272"/>
+    <reagent-label name="FLD0273"/>
+    <reagent-label name="FLD0274"/>
+    <reagent-label name="FLD0275"/>
+    <reagent-label name="FLD0276"/>
+    <reagent-label name="FLD0277"/>
+    <reagent-label name="FLD0278"/>
+    <reagent-label name="FLD0279"/>
+    <reagent-label name="FLD0280"/>
+    <reagent-label name="FLD0281"/>
+    <reagent-label name="FLD0282"/>
+    <reagent-label name="FLD0283"/>
+    <reagent-label name="FLD0284"/>
+    <reagent-label name="FLD0285"/>
+    <reagent-label name="FLD0286"/>
+    <reagent-label name="FLD0287"/>
+    <reagent-label name="FLD0288"/>
+    <reagent-label name="FLD0289"/>
+    <reagent-label name="FLD0290"/>
+    <reagent-label name="FLD0291"/>
+    <reagent-label name="FLD0292"/>
+    <reagent-label name="FLD0293"/>
+    <reagent-label name="FLD0294"/>
+    <reagent-label name="FLD0295"/>
+    <reagent-label name="FLD0296"/>
+    <reagent-label name="FLD0297"/>
+    <reagent-label name="FLD0298"/>
+    <reagent-label name="FLD0299"/>
+    <reagent-label name="FLD0300"/>
+    <reagent-label name="FLD0301"/>
+    <reagent-label name="FLD0302"/>
+    <reagent-label name="FLD0303"/>
+    <reagent-label name="FLD0304"/>
+    <reagent-label name="FLD0305"/>
+    <reagent-label name="FLD0306"/>
+    <reagent-label name="FLD0307"/>
+    <reagent-label name="FLD0308"/>
+    <reagent-label name="FLD0309"/>
+    <reagent-label name="FLD0310"/>
+    <reagent-label name="FLD0311"/>
+    <reagent-label name="FLD0312"/>
+    <reagent-label name="FLD0313"/>
+    <reagent-label name="FLD0314"/>
+    <reagent-label name="FLD0315"/>
+    <reagent-label name="FLD0316"/>
+    <reagent-label name="FLD0317"/>
+    <reagent-label name="FLD0318"/>
+    <reagent-label name="FLD0319"/>
+    <reagent-label name="FLD0320"/>
+    <reagent-label name="FLD0321"/>
+    <reagent-label name="FLD0322"/>
+    <reagent-label name="FLD0323"/>
+    <reagent-label name="FLD0324"/>
+    <reagent-label name="FLD0325"/>
+    <reagent-label name="FLD0326"/>
+    <reagent-label name="FLD0327"/>
+    <reagent-label name="FLD0328"/>
+    <reagent-label name="FLD0329"/>
+    <reagent-label name="FLD0330"/>
+    <reagent-label name="FLD0331"/>
+    <reagent-label name="FLD0332"/>
+    <reagent-label name="FLD0333"/>
+    <reagent-label name="FLD0334"/>
+    <reagent-label name="FLD0335"/>
+    <reagent-label name="FLD0336"/>
+    <reagent-label name="FLD0337"/>
+    <reagent-label name="FLD0338"/>
+    <reagent-label name="FLD0339"/>
+    <reagent-label name="FLD0340"/>
+    <reagent-label name="FLD0341"/>
+    <reagent-label name="FLD0342"/>
+    <reagent-label name="FLD0343"/>
+    <reagent-label name="FLD0344"/>
+    <reagent-label name="FLD0345"/>
+    <reagent-label name="FLD0346"/>
+    <reagent-label name="FLD0347"/>
+    <reagent-label name="FLD0348"/>
+    <reagent-label name="FLD0349"/>
+    <reagent-label name="FLD0350"/>
+    <reagent-label name="FLD0351"/>
+    <reagent-label name="FLD0352"/>
+    <reagent-label name="FLD0353"/>
+    <reagent-label name="FLD0354"/>
+    <reagent-label name="FLD0355"/>
+    <reagent-label name="FLD0356"/>
+    <reagent-label name="FLD0357"/>
+    <reagent-label name="FLD0358"/>
+    <reagent-label name="FLD0359"/>
+    <reagent-label name="FLD0360"/>
+    <reagent-label name="FLD0361"/>
+    <reagent-label name="FLD0362"/>
+    <reagent-label name="FLD0363"/>
+    <reagent-label name="FLD0364"/>
+    <reagent-label name="FLD0365"/>
+    <reagent-label name="FLD0366"/>
+    <reagent-label name="FLD0367"/>
+    <reagent-label name="FLD0368"/>
+    <reagent-label name="FLD0369"/>
+    <reagent-label name="FLD0370"/>
+    <reagent-label name="FLD0371"/>
+    <reagent-label name="FLD0372"/>
+    <reagent-label name="FLD0373"/>
+    <reagent-label name="FLD0374"/>
+    <reagent-label name="FLD0375"/>
+    <reagent-label name="FLD0376"/>
+    <reagent-label name="FLD0377"/>
+    <reagent-label name="FLD0378"/>
+    <reagent-label name="FLD0379"/>
+    <reagent-label name="FLD0380"/>
+    <reagent-label name="FLD0381"/>
+    <reagent-label name="FLD0382"/>
+    <reagent-label name="FLD0383"/>
+    <reagent-label name="FLD0384"/>
+    <udf:field name="Intensity Cycle 1 R1" type="Numeric">280.04464285714283</udf:field>
+    <udf:field name="Intensity Cycle 1 R2" type="Numeric">302.625</udf:field>
+    <udf:field name="Library Type" type="String">Access Array</udf:field>
+    <udf:field name="PPMS Order ID" type="String">36278</udf:field>
+    <udf:field name="% Intensity Cycle 20 R2" type="Numeric">82.28299994099251</udf:field>
+    <udf:field name="Read Length" type="Numeric">150</udf:field>
+    <udf:field name="Sequencing Type" type="String">Paired End</udf:field>
+    <udf:field name="SLX Identifier" type="String">SLX-12321</udf:field>
+    <udf:field name="Yield (Mreads)" type="Numeric">422</udf:field>
+    <udf:field name="% Phasing R2" type="Numeric">0.10623682095943618</udf:field>
+    <udf:field name="% Lost Reads" type="Numeric">5.26</udf:field>
+    <udf:field name="% Bases &gt;=Q30 R1" type="Numeric">95.40424775711205</udf:field>
+    <udf:field name="% Aligned R1" type="Numeric">0.807003740221262</udf:field>
+    <udf:field name="% Aligned R2" type="Numeric">0.7565100054655757</udf:field>
+    <udf:field name="% Bases &gt;=Q30 R2" type="Numeric">88.76682982485745</udf:field>
+    <udf:field name="% Error Rate R1" type="Numeric">0.6595636779045747</udf:field>
+    <udf:field name="% Error Rate R2" type="Numeric">1.0661574334340163</udf:field>
+    <udf:field name="% Intensity Cycle 20 R1" type="Numeric">92.27801689781603</udf:field>
+    <udf:field name="% Phasing R1" type="Numeric">0.11821495822264946</udf:field>
+    <udf:field name="% Prephasing R1" type="Numeric">0.1333454135289815</udf:field>
+    <udf:field name="% Prephasing R2" type="Numeric">0.13966192532929458</udf:field>
+    <udf:field name="%PF R1" type="Numeric">87.49298947734215</udf:field>
+    <udf:field name="%PF R2" type="Numeric">87.49298947734215</udf:field>
+    <udf:field name="Avg Q Score R1" type="Numeric">39.3901770271042</udf:field>
+    <udf:field name="Avg Q Score R2" type="Numeric">37.481652366640276</udf:field>
+    <udf:field name="Yield PF (Gb) R1" type="Numeric">62.96454665</udf:field>
+    <udf:field name="Yield PF (Gb) R2" type="Numeric">62.96454665</udf:field>
+    <udf:field name="Billable" type="String">Bill</udf:field>
+    <udf:field name="Cluster Density (K/mm^2) R1" type="Numeric">2354.912</udf:field>
+    <udf:field name="Cluster Density (K/mm^2) R2" type="Numeric">2354.912</udf:field>
+    <udf:field name="Billing Information" type="String">SWAI/072</udf:field>
+    <udf:field name="Clustered Concentration" type="Numeric">200</udf:field>
+    <udf:field name="Clusters PF R1" type="Numeric">422580850</udf:field>
+    <udf:field name="Clusters PF R2" type="Numeric">422580850</udf:field>
+    <udf:field name="Clusters Raw R1" type="Numeric">482988240</udf:field>
+    <udf:field name="Clusters Raw R2" type="Numeric">482988240</udf:field>
+    <udf:field name="Average Library Length" type="Numeric">260</udf:field>
+    <udf:field name="Index Type" type="String">Fluidigm</udf:field>
+    <udf:field name="Billing Comments" type="String">good yield and overall Q30 hh 29.11.16</udf:field>
+    <udf:field name="Number of Lanes" type="Numeric">1</udf:field>
+    <udf:field name="Priority Status" type="String">Standard</udf:field>
+    <udf:field name="Workflow" type="String">HiSeq 4000</udf:field>
+    <workflow-stages>
+        <workflow-stage uri="https://limsdev.cruk.cam.ac.uk/api/v2/configuration/workflows/751/stages/1562" name="Illumina Sequencing Run" status="COMPLETE"/>
+        <workflow-stage uri="https://limsdev.cruk.cam.ac.uk/api/v2/configuration/workflows/251/stages/453" name="BIO: Publishing" status="COMPLETE"/>
+        <workflow-stage uri="https://limsdev.cruk.cam.ac.uk/api/v2/configuration/workflows/251/stages/454" name="Billing" status="COMPLETE"/>
+    </workflow-stages>
+</art:artifact>

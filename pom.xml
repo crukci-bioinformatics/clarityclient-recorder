@@ -1,0 +1,456 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+    CRUK-CI Genologics REST API Java Client Recorder.
+    Copyright (C) 2013 Cancer Research UK Cambridge Institute.
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.cruk.genologics</groupId>
+    <artifactId>clarity-client-recorder</artifactId>
+    <packaging>jar</packaging>
+    <version>2.24-SNAPSHOT</version>
+
+    <name>CRUK-CI Genologics API Recorder</name>
+    <description>
+        A library for recording Clarity API exchanges to files, which can then be used to form
+        the basis of unit tests when replayed.
+    </description>
+
+    <url>http://crukci-bioinformatics.github.io/clarityclientrecorder</url>
+
+    <inceptionYear>2013</inceptionYear>
+
+    <scm>
+        <connection>scm:git:https://github.com/crukci-bioinformatics/clarityclientrecorder</connection>
+        <developerConnection>scm:git:ssh://git@github.com/crukci-bioinformatics/clarityclientrecorder</developerConnection>
+        <url>https://github.com/crukci-bioinformatics/clarityclientrecorder</url>
+    </scm>
+
+    <issueManagement>
+        <system>GitHub</system>
+        <url>https://github.com/crukci-bioinformatics/clarityclientrecorder/issues</url>
+    </issueManagement>
+
+    <organization>
+        <name>Cancer Research UK Cambridge Institute</name>
+        <url>http://www.cruk.cam.ac.uk</url>
+    </organization>
+
+    <developers>
+        <developer>
+            <name>Richard Bowers</name>
+            <email>richard.bowers@cruk.cam.ac.uk</email>
+            <organization>Cancer Research UK Cambridge Institute</organization>
+            <roles>
+                <role>Author</role>
+                <role>Lead Developer</role>
+            </roles>
+        </developer>
+    </developers>
+
+    <licenses>
+        <license>
+            <name>GNU General Public License, version 3.0</name>
+            <url>http://www.gnu.org/licenses/gpl-3.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+        <license>
+            <name>GNU Lesser General Public License, version 3.0</name>
+            <url>http://www.gnu.org/licenses/lgpl-3.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <properties>
+        <dependency.locations.enabled>false</dependency.locations.enabled>
+        <api.release.version>2.24-SNAPSHOT</api.release.version>
+        <spring.version>4.3.19.RELEASE</spring.version>
+    </properties>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>mulesoft</id>
+            <url>https://repository-master.mulesoft.org/nexus/content/groups/public</url>
+            <layout>default</layout>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+        </pluginRepository>
+    </pluginRepositories>
+
+    <repositories>
+        <repository>
+            <id>mulesoft</id>
+            <url>https://repository-master.mulesoft.org/nexus/content/groups/public</url>
+            <layout>default</layout>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+        </repository>
+        <repository>
+            <id>crukci-bioinformatics</id>
+            <url>http://content.cruk.cam.ac.uk/bioinformatics/maven</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>bioinformatics</id>
+            <url>http://internal-bioinformatics.cruk.cam.ac.uk/maven</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>weekly</updatePolicy>
+            </snapshots>
+        </repository>
+    </repositories>
+
+    <distributionManagement>
+        <downloadUrl>https://github.com/crukci-bioinformatics/clarityclientrecorder/archive/master.zip</downloadUrl>
+        <site>
+            <id>github</id>
+            <name>GitHub Pages</name>
+            <url>ssh://git@github.com/crukci-bioinformatics/clarityclientrecorder</url>
+        </site>
+        <repository>
+            <id>crukci-bioinformatics</id>
+            <url>scpexe://comp-httpdev001.cri.camres.org/var/www/html/bioinformatics/maven</url>
+        </repository>
+        <snapshotRepository>
+            <id>bioinformatics</id>
+            <url>scpexe://internal-bioinformatics.cruk.cam.ac.uk/var/www/html/maven</url>
+        </snapshotRepository>
+    </distributionManagement>
+
+    <build>
+        <extensions>
+            <extension>
+                <groupId>org.apache.maven.wagon</groupId>
+                <artifactId>wagon-ssh</artifactId>
+                <version>2.6</version>
+            </extension>
+            <extension>
+                <groupId>org.apache.maven.wagon</groupId>
+                <artifactId>wagon-ssh-external</artifactId>
+                <version>2.6</version>
+            </extension>
+        </extensions>
+
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.6.1</version>
+                    <configuration>
+                        <source>1.6</source>
+                        <target>1.6</target>
+                        <encoding>UTF-8</encoding>
+                        <compilerArgs>
+                            <arg>-Xlint:all</arg>
+                        </compilerArgs>
+                        <fork>true</fork>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <version>3.0.2</version>
+                    <configuration>
+                        <encoding>UTF-8</encoding>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <version>3.0.2</version>
+                    <configuration>
+                        <archive>
+                            <index>true</index>
+                            <manifest>
+                                <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                                <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+                            </manifest>
+                        </archive>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-assembly-plugin</artifactId>
+                    <version>3.0.0</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-dependency-plugin</artifactId>
+                    <version>3.0.0</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-source-plugin</artifactId>
+                    <version>3.0.1</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>2.19.1</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-shade-plugin</artifactId>
+                    <version>2.4.3</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-site-plugin</artifactId>
+                    <version>3.6</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-toolchains-plugin</artifactId>
+                    <version>1.1</version>
+                </plugin>
+                <plugin>
+                    <groupId>com.github.github</groupId>
+                    <artifactId>site-maven-plugin</artifactId>
+                    <version>0.9</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.eclipse.m2e</groupId>
+                    <artifactId>lifecycle-mapping</artifactId>
+                    <version>1.0.0</version>
+                    <configuration>
+                        <lifecycleMappingMetadata>
+                            <pluginExecutions>
+                                <pluginExecution>
+                                    <pluginExecutionFilter>
+                                        <groupId>org.apache.maven.plugins</groupId>
+                                        <artifactId>maven-toolchains-plugin</artifactId>
+                                        <versionRange>[1.0,)</versionRange>
+                                        <goals>
+                                            <goal>toolchain</goal>
+                                        </goals>
+                                    </pluginExecutionFilter>
+                                    <action>
+                                        <ignore/>
+                                    </action>
+                                </pluginExecution>
+                            </pluginExecutions>
+                        </lifecycleMappingMetadata>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <systemPropertyVariables>
+                        <!-- Additional Java 6 certificates -->
+                        <javax.net.ssl.trustStore>${basedir}/java6-cacerts</javax.net.ssl.trustStore>
+                        <javax.net.ssl.trustStorePassword>changeit</javax.net.ssl.trustStorePassword>
+                  </systemPropertyVariables>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-toolchains-plugin</artifactId>
+                <configuration>
+                    <toolchains>
+                        <jdk>
+                            <version>1.6</version>
+                            <vendor>sun</vendor>
+                        </jdk>
+                    </toolchains>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>toolchain</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <!-- Seems that the configuration of this needs to be in the "reports"
+                     section when run as part of the site plugin, but needs to be here
+                     when run directly from the Javadoc plugin.
+                 -->
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.10.4</version>
+                <configuration>
+                    <overview>${project.build.sourceDirectory}/overview.html</overview>
+                    <source>1.6</source>
+                    <encoding>UTF-8</encoding>
+                    <breakiterator>true</breakiterator>
+                    <serialwarn>false</serialwarn>
+                    <show>protected</show>
+                    <links>
+                        <link>http://www.slf4j.org/apidocs/</link>
+                        <link>http://docs.spring.io/spring/docs/4.3.x/javadoc-api/</link>
+                        <link>http://docs.spring.io/spring-integration/docs/4.3.x/api/</link>
+                        <link>http://hc.apache.org/httpcomponents-client-4.5.x/httpclient/apidocs/</link>
+                        <link>http://hc.apache.org/httpcomponents-core-ga/httpcore/apidocs/</link>
+                        <link>http://eclipse.org/aspectj/doc/released/runtime-api/</link>
+                        <link>http://eclipse.org/aspectj/doc/released/aspectj5rt-api/</link>
+                        <link>http://ehcache.org/apidocs/2.6.9/</link>
+                        <link>http://crukci-bioinformatics.github.io/clarityclient/apidocs/</link>
+                    </links>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-site-plugin</artifactId>
+                <configuration>
+                    <skipDeploy>true</skipDeploy>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-project-info-reports-plugin</artifactId>
+                <version>2.9</version>
+                <configuration>
+                    <reportSets>
+                        <reportSet>
+                            <reports>
+                                <report>dependencies</report>
+                                <report>scm</report>
+                            </reports>
+                        </reportSet>
+                    </reportSets>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-report-plugin</artifactId>
+                <version>2.19.1</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <configuration>
+                    <overview>${project.build.sourceDirectory}/overview.html</overview>
+                    <source>1.6</source>
+                    <encoding>UTF-8</encoding>
+                    <breakiterator>true</breakiterator>
+                    <serialwarn>false</serialwarn>
+                    <show>protected</show>
+                    <links>
+                        <link>http://www.slf4j.org/apidocs/</link>
+                        <link>http://docs.spring.io/spring/docs/4.3.x/javadoc-api/</link>
+                        <link>http://docs.spring.io/spring-integration/docs/4.3.x/api/</link>
+                        <link>http://hc.apache.org/httpcomponents-client-4.5.x/httpclient/apidocs/</link>
+                        <link>http://hc.apache.org/httpcomponents-core-ga/httpcore/apidocs/</link>
+                        <link>http://eclipse.org/aspectj/doc/released/runtime-api/</link>
+                        <link>http://eclipse.org/aspectj/doc/released/aspectj5rt-api/</link>
+                        <link>http://ehcache.org/apidocs/2.6.9/</link>
+                        <link>http://crukci-bioinformatics.github.io/clarityclient/apidocs/</link>
+                    </links>
+                </configuration>
+                <reportSets>
+                    <reportSet>
+                        <id>default</id>
+                        <reports>
+                            <report>javadoc</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+        </plugins>
+    </reporting>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-framework-bom</artifactId>
+                <version>${spring.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.cruk.genologics</groupId>
+            <artifactId>clarity-client</artifactId>
+            <version>${api.release.version}</version>
+        </dependency>
+
+        <!-- Only used when run under Java 6.       -->
+        <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcprov-jdk15on</artifactId>
+            <version>1.54</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>1.7.13</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.easymock</groupId>
+            <artifactId>easymock</artifactId>
+            <version>3.4</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+</project>
