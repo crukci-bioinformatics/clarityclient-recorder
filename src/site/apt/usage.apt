@@ -7,7 +7,7 @@ to, or the pretend server reads from.
 
   By default, both the recording and playback aspects write and read into a
 directory <<<serverexchanges>>> in the current working directory. This can be
-configured by setting the <messagesDirectory> property in Spring configuration,
+configured by setting the <messageDirectory> property in Spring configuration,
 or fetching the aspect in code and setting the property:
 
 +---
