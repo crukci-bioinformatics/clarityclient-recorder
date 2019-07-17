@@ -24,11 +24,10 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Properties;
 
-import org.apache.commons.io.IOUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.cruk.genologics.api.GenologicsAPI;
 import org.junit.Assume;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -45,8 +44,7 @@ public final class UnitTestApplicationContextFactory
         {
             recordingContext = new ClassPathXmlApplicationContext(
                     "/org/cruk/genologics/api/genologics-client-context.xml",
-                    "/org/cruk/genologics/api/genologics-record-context.xml",
-                    "unittest-context.xml");
+                    "/org/cruk/genologics/api/genologics-record-context.xml");
 
             GenologicsAPI api = recordingContext.getBean("genologicsAPI", GenologicsAPI.class);
             setCredentialsOnApi(api);
@@ -60,8 +58,7 @@ public final class UnitTestApplicationContextFactory
         {
             playbackContext = new ClassPathXmlApplicationContext(
                     "/org/cruk/genologics/api/genologics-client-context.xml",
-                    "/org/cruk/genologics/api/genologics-playback-context.xml",
-                    "unittest-context.xml");
+                    "/org/cruk/genologics/api/genologics-playback-context.xml");
 
             GenologicsAPI api = playbackContext.getBean("genologicsAPI", GenologicsAPI.class);
             setCredentialsOnApi(api);
@@ -77,25 +74,20 @@ public final class UnitTestApplicationContextFactory
 
     public static boolean setCredentialsOnApi(GenologicsAPI api)
     {
-        InputStream propsIn = UnitTestApplicationContextFactory.class.getResourceAsStream(CREDENTIALS);
-        if (propsIn != null)
+        try (InputStream propsIn = UnitTestApplicationContextFactory.class.getResourceAsStream(CREDENTIALS))
         {
-            try
+            if (propsIn != null)
             {
                 Properties credentials = new Properties();
                 credentials.load(propsIn);
                 api.setConfiguration(credentials);
                 return true;
             }
-            catch (IOException e)
-            {
-                Logger logger = LoggerFactory.getLogger(UnitTestApplicationContextFactory.class);
-                logger.error("Could not read from credentials file: ", e);
-            }
-            finally
-            {
-                IOUtils.closeQuietly(propsIn);
-            }
+        }
+        catch (IOException e)
+        {
+            Logger logger = LoggerFactory.getLogger(UnitTestApplicationContextFactory.class);
+            logger.error("Could not read from credentials file: ", e);
         }
         return false;
     }
