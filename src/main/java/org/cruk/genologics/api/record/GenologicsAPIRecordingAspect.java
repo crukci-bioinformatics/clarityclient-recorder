@@ -253,7 +253,7 @@ public class GenologicsAPIRecordingAspect
                 }
             }
 
-            File searchFile = new File(searchDirectory, Integer.toHexString(search.getSearchTerms().hashCode()) + ".xml");
+            File searchFile = new File(searchDirectory, Search.getSearchFileName(search.getSearchTerms()));
 
             Writer out = new FileWriterWithEncoding(searchFile, ASCII, true);
             try

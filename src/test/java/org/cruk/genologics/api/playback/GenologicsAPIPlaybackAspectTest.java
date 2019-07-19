@@ -19,8 +19,7 @@
 package org.cruk.genologics.api.playback;
 
 import static org.cruk.genologics.api.unittests.UnitTestApplicationContextFactory.getPlaybackApplicationContext;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 
 import java.io.File;
 import java.net.MalformedURLException;
@@ -113,6 +112,7 @@ public class GenologicsAPIPlaybackAspectTest
         Map<String, Object> terms = new HashMap<String, Object>();
         terms.put("inputartifactlimsid", "2-1108999");
         List<LimsLink<GenologicsProcess>> processes = api.find(terms, GenologicsProcess.class);
+        assertNotNull("Nothing returned from search.", processes);
         assertEquals("Wrong number of processes returned from search.", 4, processes.size());
     }
 
@@ -122,6 +122,7 @@ public class GenologicsAPIPlaybackAspectTest
         Map<String, Object> terms = new HashMap<String, Object>();
         terms.put("projectlimsid", new HashSet<String>(Arrays.asList("COH605", "SER1015")));
         List<LimsLink<Sample>> samples = api.find(terms, Sample.class);
+        assertNotNull("Nothing returned from search.", samples);
         assertEquals("Wrong number of samples returned from search.", 8, samples.size());
     }
 

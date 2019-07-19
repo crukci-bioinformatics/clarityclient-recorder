@@ -18,9 +18,7 @@
 
 package org.cruk.genologics.api.playback;
 
-import java.io.EOFException;
 import java.io.File;
-import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -28,15 +26,12 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URI;
 import java.nio.charset.Charset;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Pattern;
 
 import javax.xml.transform.stream.StreamSource;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.io.filefilter.RegexFileFilter;
 import org.apache.commons.lang3.ClassUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Aspect;
@@ -90,11 +85,6 @@ public class GenologicsAPIPlaybackAspect
      * XStream XML serialiser.
      */
     private XStream xstream;
-
-    /**
-     * Map of search terms to the recorded searches.
-     */
-    private Map<SearchTerms, Search<?>> searches;
 
 
     /**
@@ -165,7 +155,6 @@ public class GenologicsAPIPlaybackAspect
     public void setSearchDirectory(File searchDirectory)
     {
         this.searchDirectory = searchDirectory;
-        searches = null;
     }
 
     /**
@@ -274,11 +263,6 @@ public class GenologicsAPIPlaybackAspect
      */
     public List<?> doFind(ProceedingJoinPoint pjp)
     {
-        if (searches == null)
-        {
-            loadSearches();
-        }
-
         @SuppressWarnings("unchecked")
         Map<String, ?> searchTerms = (Map<String, ?>)pjp.getArgs()[0];
 
@@ -287,7 +271,7 @@ public class GenologicsAPIPlaybackAspect
 
         SearchTerms terms = new SearchTerms(searchTerms, entityClass);
 
-        Search<?> search = searches.get(terms);
+        Search<?> search = loadSearch(terms);
 
         if (search == null)
         {
@@ -314,71 +298,49 @@ public class GenologicsAPIPlaybackAspect
      * Load the prerecorded searches from the search directory. Finds files in there
      * that match the expected file name format and brings them all into memory.
      */
-    private void loadSearches()
+    private Search<?> loadSearch(SearchTerms terms)
     {
-        searches = new HashMap<SearchTerms, Search<?>>();
+        File searchFile = new File(searchDirectory, Search.getSearchFileName(terms));
 
-        FileFilter filter = new RegexFileFilter("^[a-z0-9]+\\.xml$", Pattern.CASE_INSENSITIVE);
-        File[] searchFiles = searchDirectory.listFiles(filter);
-
-        if (searchFiles == null)
+        try
         {
-            logger.debug("Search directory {} does not exist.", searchDirectory.getAbsolutePath());
-        }
-        else
-        {
-            for (File searchFile : searchFiles)
+            Reader reader = new InputStreamReader(new FileInputStream(searchFile), ASCII);
+            try
             {
-                try
+                return (Search<?>)xstream.fromXML(reader);
+            }
+            catch (XStreamException xse)
+            {
+                if (xse.getCause() != null)
                 {
-                    Reader reader = new InputStreamReader(new FileInputStream(searchFile), ASCII);
                     try
                     {
-                        Search<?> search = (Search<?>)xstream.fromXML(reader);
-
-                        searches.put(search.getSearchTerms(), search);
+                        throw xse.getCause();
                     }
-                    catch (XStreamException xse)
+                    catch (IOException e)
                     {
-                        boolean rethrow = true;
-                        if (xse.getCause() != null)
-                        {
-                            try
-                            {
-                                throw xse.getCause();
-                            }
-                            catch (EOFException e)
-                            {
-                                rethrow = false;
-                            }
-                            catch (FileNotFoundException e)
-                            {
-                                // No searches.
-                                rethrow = false;
-                            }
-                            catch (IOException e)
-                            {
-                                throw e;
-                            }
-                            catch (Throwable t)
-                            {
-                            }
-                        }
-                        if (rethrow)
-                        {
-                            throw xse;
-                        }
+                        throw e;
                     }
-                    finally
+                    catch (Throwable t)
                     {
-                        IOUtils.closeQuietly(reader);
                     }
                 }
-                catch (IOException e)
-                {
-                    logger.warn("Cannot read from {}.", searchFile.getAbsolutePath());
-                }
+                throw xse;
+            }
+            finally
+            {
+                IOUtils.closeQuietly(reader);
             }
         }
+        catch (FileNotFoundException e)
+        {
+            logger.debug("Search file {} does not exist.", searchFile.getName());
+        }
+        catch (IOException e)
+        {
+            logger.warn("Cannot read from {}.", searchFile.getAbsolutePath());
+        }
+
+        return null;
     }
 }

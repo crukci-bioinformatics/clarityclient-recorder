@@ -129,8 +129,10 @@ public class SearchTerms implements Serializable
         // HashCodeBuilder is fussy about the order of addition. For this class,
         // we don't want to deal with that. If a collection has the same values
         // in a different order, it should be considered the same.
+        // Note: don't get the hash from the class object. Use its name. Class
+        // uses the system identity hash code.
 
-        int hash = entityClass.hashCode();
+        int hash = entityClass.getName().hashCode();
 
         for (Map.Entry<String, ?> entry : searchTerms.entrySet())
         {
@@ -145,7 +147,7 @@ public class SearchTerms implements Serializable
                 {
                     if (v != null)
                     {
-                        hash ^= v.getClass().hashCode();
+                        hash ^= v.getClass().getName().hashCode();
                         hash ^= v.hashCode();
                     }
                 }
@@ -155,7 +157,7 @@ public class SearchTerms implements Serializable
                 if (entry.getValue() != null)
                 {
                     Object v = entry.getValue();
-                    hash ^= v.getClass().hashCode();
+                    hash ^= v.getClass().getName().hashCode();
                     hash ^= v.hashCode();
                 }
             }

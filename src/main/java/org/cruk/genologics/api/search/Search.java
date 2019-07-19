@@ -141,4 +141,18 @@ public class Search<E extends Locatable> implements Serializable
 
         return b.toString();
     }
+
+    /**
+     * Get the name of the file that will store the result of the given search.
+     * Convenience method here meaning all calls for record and playback will be
+     * consistent.
+     *
+     * @param terms The search terms.
+     *
+     * @return The name of the file the search will be stored in.
+     */
+    public static String getSearchFileName(SearchTerms terms)
+    {
+        return Integer.toHexString(terms.hashCode()) + ".xml";
+    }
 }

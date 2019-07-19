@@ -35,6 +35,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.ClassUtils;
 import org.cruk.genologics.api.GenologicsAPI;
 import org.cruk.genologics.api.search.Search;
+import org.cruk.genologics.api.search.SearchTerms;
 import org.cruk.genologics.api.unittests.UnitTestApplicationContextFactory;
 import org.junit.After;
 import org.junit.Assume;
@@ -60,6 +61,7 @@ import com.genologics.ri.sample.Sample;
 public class GenologicsAPIRecordingAspectTest
 {
     private GenologicsAPI api;
+    private GenologicsAPIRecordingAspect aspect;
 
     private File messageDirectory = new File("target/messages");
 
@@ -68,7 +70,7 @@ public class GenologicsAPIRecordingAspectTest
         ApplicationContext ctx = getRecordingApplicationContext();
         api = ctx.getBean(GenologicsAPI.class);
 
-        GenologicsAPIRecordingAspect aspect = ctx.getBean(GenologicsAPIRecordingAspect.class);
+        aspect = ctx.getBean(GenologicsAPIRecordingAspect.class);
         aspect.setMessageDirectory(messageDirectory);
     }
 
@@ -131,23 +133,25 @@ public class GenologicsAPIRecordingAspectTest
         Assume.assumeTrue("Can only run the recording tests as written in CRUK-CI.", UnitTestApplicationContextFactory.inCrukCI());
         checkCredentialsFileExists();
 
-        File searchesDir = new File(messageDirectory, Search.DEFAULT_SEARCH_DIRECTORY);
-
         Map<String, Object> terms = new HashMap<String, Object>();
         terms.put("inputartifactlimsid", "2-1108999");
         api.find(terms, GenologicsProcess.class);
+
+        SearchTerms st1 = new SearchTerms(terms, GenologicsProcess.class);
+        assertSearchRecorded(st1);
 
         terms.clear();
         terms.put("projectlimsid", new HashSet<String>(Arrays.asList("COH605", "SER1015")));
         api.find(terms, Sample.class);
 
-        assertEquals("Have not recorded searches.", 2, searchesDir.listFiles().length);
+        SearchTerms st2 = new SearchTerms(terms, Sample.class);
+        assertSearchRecorded(st2);
     }
 
     private <E extends LimsEntity<E>, L extends LimsEntityLinkable<E>> void assertRecorded(L entity)
     {
         String className = ClassUtils.getShortClassName(entity.getClass());
-        File entityFile = new File(messageDirectory, className + "-" + entity.getLimsid() + ".xml");
+        File entityFile = new File(aspect.getMessageDirectory(), className + "-" + entity.getLimsid() + ".xml");
         assertTrue("Have not recorded " + className + " " + entity.getLimsid(), entityFile.exists());
     }
 
@@ -159,7 +163,14 @@ public class GenologicsAPIRecordingAspectTest
         int lastSlash = id.lastIndexOf('/');
         id = id.substring(lastSlash + 1);
 
-        File entityFile = new File(messageDirectory, className + "-" + id + ".xml");
+        File entityFile = new File(aspect.getMessageDirectory(), className + "-" + id + ".xml");
         assertTrue("Have not recorded " + className + " " + id, entityFile.exists());
     }
+
+    private void assertSearchRecorded(SearchTerms terms)
+    {
+        File searchFile = new File(aspect.getSearchDirectory(), Search.getSearchFileName(terms));
+        assertTrue("Have not recorded search.", searchFile.exists());
+    }
+
 }
