@@ -1,3 +1,21 @@
+/*
+ * CRUK-CI Genologics REST API Java Client.
+ * Copyright (C) 2013 Cancer Research UK Cambridge Institute.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package org.cruk.genologics.api.search;
 
 import java.io.Serializable;
@@ -8,8 +26,12 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.apache.commons.lang3.ClassUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 
@@ -64,30 +86,42 @@ public class SearchTerms implements Serializable
     @Override
     public int hashCode()
     {
-        HashCodeBuilder b = new HashCodeBuilder();
-        b.append(entityClass);
+        // HashCodeBuilder is fussy about the order of addition. For this class,
+        // we don't want to deal with that. If a collection has the same values
+        // in a different order, it should be considered the same.
+
+        int hash = entityClass.hashCode();
 
         for (Map.Entry<String, ?> entry : searchTerms.entrySet())
         {
-            b.append(entry.getKey());
+            hash ^= entry.getKey().hashCode();
 
-            // In the copy of the collection, we only have collections or simple values.
+            // In the copy of the collection, we only have collections or simple values. No arrays.
 
             if (entry.getValue() instanceof Collection)
             {
                 Collection<?> c = (Collection<?>)entry.getValue();
                 for (Object v : c)
                 {
-                    b.append(v);
+                    if (v != null)
+                    {
+                        hash ^= v.getClass().hashCode();
+                        hash ^= v.hashCode();
+                    }
                 }
             }
             else
             {
-                b.append(entry.getValue());
+                if (entry.getValue() != null)
+                {
+                    Object v = entry.getValue();
+                    hash ^= v.getClass().hashCode();
+                    hash ^= v.hashCode();
+                }
             }
         }
 
-        return b.toHashCode();
+        return hash;
     }
 
     @Override
@@ -113,7 +147,7 @@ public class SearchTerms implements Serializable
                     Object myValue = searchTerms.get(term);
                     Object otherValue = other.searchTerms.get(term);
 
-                    b.append(true, otherValue != null);
+                    b.append(myValue != null, otherValue != null);
                     b.append(myValue instanceof Collection, otherValue instanceof Collection);
 
                     if (b.isEquals())
@@ -142,5 +176,26 @@ public class SearchTerms implements Serializable
             }
         }
         return equal;
+    }
+
+    @Override
+    public String toString()
+    {
+        ToStringBuilder b = new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE);
+        b.append("entityClass", ClassUtils.getShortClassName(entityClass));
+
+        for (Map.Entry<String, ?> entry : searchTerms.entrySet())
+        {
+            if (entry.getValue() instanceof Collection)
+            {
+                b.append(entry.getKey(), StringUtils.join((Collection<?>)entry.getValue(), ","));
+            }
+            else
+            {
+                b.append(entry.getKey(), entry.getValue());
+            }
+        }
+
+        return b.toString();
     }
 }

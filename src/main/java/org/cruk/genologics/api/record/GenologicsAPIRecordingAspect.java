@@ -74,9 +74,9 @@ public class GenologicsAPIRecordingAspect
     private File messageDirectory;
 
     /**
-     * The file in the message directory to record searches in.
+     * The directory to write searches to.
      */
-    private File searchRecord;
+    private File searchDirectory;
 
     /**
      * The JAXB marshaller used to directly marshal the API entities into XML files.
@@ -126,13 +126,37 @@ public class GenologicsAPIRecordingAspect
 
     /**
      * Set the directory the messages are being written to.
+     * Also sets the search directory if it is not already set.
      *
      * @param messageDirectory The message directory.
      */
     public void setMessageDirectory(File messageDirectory)
     {
+        if (searchDirectory == null || searchDirectory.getParentFile().equals(this.messageDirectory))
+        {
+            setSearchDirectory(new File(messageDirectory, Search.DEFAULT_SEARCH_DIRECTORY));
+        }
         this.messageDirectory = messageDirectory;
-        this.searchRecord = new File(messageDirectory, Search.SEARCH_FILENAME);
+    }
+
+    /**
+     * Get the directory searches are being written to.
+     *
+     * @return The search directory.
+     */
+    public File getSearchDirectory()
+    {
+        return searchDirectory;
+    }
+
+    /**
+     * Set the directory the messages are being written to.
+     *
+     * @param searchDirectory The search directory.
+     */
+    public void setSearchDirectory(File searchDirectory)
+    {
+        this.searchDirectory = searchDirectory;
     }
 
     /**
@@ -209,7 +233,18 @@ public class GenologicsAPIRecordingAspect
             Search<E> search = new Search<E>(searchTerms, entityClass);
             search.setResults(results);
 
-            Writer out = new FileWriterWithEncoding(searchRecord, ASCII, true);
+            // Create the search directory if it's not there and is under the messages directory.
+            if (!searchDirectory.exists() && searchDirectory.getParentFile().equals(messageDirectory))
+            {
+                if (!searchDirectory.mkdir())
+                {
+                    throw new IOException("Cannot create search directory " + searchDirectory.getAbsolutePath());
+                }
+            }
+
+            File searchFile = new File(searchDirectory, Integer.toHexString(search.getSearchTerms().hashCode()) + ".xml");
+
+            Writer out = new FileWriterWithEncoding(searchFile, ASCII, true);
             try
             {
                 xstream.toXML(search, out);
@@ -224,7 +259,7 @@ public class GenologicsAPIRecordingAspect
         }
         catch (IOException e)
         {
-            logger.warn("Could not add search to search record: {}", e.getMessage());
+            logger.warn("Could not record search: {}", e.getMessage());
         }
 
         return reply;

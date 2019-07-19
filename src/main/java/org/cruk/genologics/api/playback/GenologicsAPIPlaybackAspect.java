@@ -20,6 +20,7 @@ package org.cruk.genologics.api.playback;
 
 import java.io.EOFException;
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -27,14 +28,14 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URI;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import javax.xml.transform.stream.StreamSource;
 
+import org.apache.commons.io.filefilter.RegexFileFilter;
 import org.apache.commons.lang3.ClassUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Aspect;
@@ -75,9 +76,9 @@ public class GenologicsAPIPlaybackAspect
     private File messageDirectory;
 
     /**
-     * The file in the message directory that recorded searches.
+     * The directory containing prerecorded searches.
      */
-    private File searchRecord;
+    private File searchDirectory;
 
     /**
      * The JAXB marshaller used to directly unmarshal the XML files into objects.
@@ -131,15 +132,39 @@ public class GenologicsAPIPlaybackAspect
     }
 
     /**
-     * Set the directory the messages are being read from.
+     * Set the directory the messages are being written to.
+     * Also sets the search directory if it is not already set.
      *
      * @param messageDirectory The message directory.
      */
     public void setMessageDirectory(File messageDirectory)
     {
+        if (searchDirectory == null || searchDirectory.getParentFile().equals(this.messageDirectory))
+        {
+            setSearchDirectory(new File(messageDirectory, Search.DEFAULT_SEARCH_DIRECTORY));
+        }
         this.messageDirectory = messageDirectory;
-        this.searchRecord = new File(messageDirectory, Search.SEARCH_FILENAME);
-        this.searches = null;
+    }
+
+    /**
+     * Get the directory searches are being written to.
+     *
+     * @return The search directory.
+     */
+    public File getSearchDirectory()
+    {
+        return searchDirectory;
+    }
+
+    /**
+     * Set the directory the messages are being written to.
+     *
+     * @param searchDirectory The search directory.
+     */
+    public void setSearchDirectory(File searchDirectory)
+    {
+        this.searchDirectory = searchDirectory;
+        searches = null;
     }
 
     /**
@@ -256,7 +281,8 @@ public class GenologicsAPIPlaybackAspect
 
         if (search == null)
         {
-            throw new FileNotFoundException("There is no recorded search with the parameters given.");
+            logger.warn("There is no recorded search with the parameters given:\n{}", searchTerms);
+            return null;
         }
 
         return search.getResults();
@@ -269,56 +295,62 @@ public class GenologicsAPIPlaybackAspect
 
     private void loadSearches() throws IOException, XStreamException
     {
-        try
-        {
-            Reader reader = new InputStreamReader(new FileInputStream(searchRecord), ASCII);
-            try
-            {
-                List<Search<?>> list = new ArrayList<Search<?>>(32);
-                xstream.fromXML(reader, list);
+        searches = new HashMap<SearchTerms, Search<?>>();
 
-                searches = new HashMap<SearchTerms, Search<?>>();
-                for (Search<?> search : list)
-                {
-                    searches.put(search.getSearchTerms(), search);
-                }
-            }
-            finally
-            {
-                reader.close();
-            }
-        }
-        catch (XStreamException xse)
+        FileFilter filter = new RegexFileFilter("^[a-z0-9]+\\.xml$", Pattern.CASE_INSENSITIVE);
+        File[] searchFiles = searchDirectory.listFiles(filter);
+
+        if (searchFiles == null)
         {
-            boolean rethrow = true;
-            if (xse.getCause() != null)
+            logger.debug("Search directory {} does not exist.", searchDirectory.getAbsolutePath());
+        }
+        else
+        {
+            for (File searchFile : searchFiles)
             {
+                Reader reader = new InputStreamReader(new FileInputStream(searchFile), ASCII);
                 try
                 {
-                    throw xse.getCause();
+                    Search<?> search = (Search<?>)xstream.fromXML(reader);
+
+                    searches.put(search.getSearchTerms(), search);
                 }
-                catch (EOFException e)
+                catch (XStreamException xse)
                 {
-                    rethrow = false;
+                    boolean rethrow = true;
+                    if (xse.getCause() != null)
+                    {
+                        try
+                        {
+                            throw xse.getCause();
+                        }
+                        catch (EOFException e)
+                        {
+                            rethrow = false;
+                        }
+                        catch (FileNotFoundException e)
+                        {
+                            // No searches.
+                            rethrow = false;
+                        }
+                        catch (IOException e)
+                        {
+                            logger.warn("Cannot read from {}.", searchFile.getAbsolutePath());
+                            rethrow = false;
+                        }
+                        catch (Throwable t)
+                        {
+                        }
+                    }
+                    if (rethrow)
+                    {
+                        throw xse;
+                    }
                 }
-                catch (FileNotFoundException e)
+                finally
                 {
-                    // No searches.
-                    searches = Collections.emptyMap();
-                    rethrow = false;
+                    reader.close();
                 }
-                catch (IOException e)
-                {
-                    logger.warn("Cannot read from {}. There will be no searches remembered.", searchRecord.getAbsolutePath());
-                    rethrow = false;
-                }
-                catch (Throwable t)
-                {
-                }
-            }
-            if (rethrow)
-            {
-                throw xse;
             }
         }
     }

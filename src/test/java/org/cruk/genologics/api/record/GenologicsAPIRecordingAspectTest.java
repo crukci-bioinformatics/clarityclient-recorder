@@ -128,10 +128,10 @@ public class GenologicsAPIRecordingAspectTest
     @Test
     public void testRecordSearch()
     {
-        File searchesFile = new File(messageDirectory, Search.SEARCH_FILENAME);
-
         Assume.assumeTrue("Can only run the recording tests as written in CRUK-CI.", UnitTestApplicationContextFactory.inCrukCI());
         checkCredentialsFileExists();
+
+        File searchesDir = new File(messageDirectory, Search.DEFAULT_SEARCH_DIRECTORY);
 
         Map<String, Object> terms = new HashMap<String, Object>();
         terms.put("inputartifactlimsid", "2-1108999");
@@ -141,7 +141,7 @@ public class GenologicsAPIRecordingAspectTest
         terms.put("projectlimsid", new HashSet<String>(Arrays.asList("COH605", "SER1015")));
         api.find(terms, Sample.class);
 
-        assertTrue("Have not recorded search.", searchesFile.exists());
+        assertEquals("Have not recorded searches.", 2, searchesDir.listFiles().length);
     }
 
     private <E extends LimsEntity<E>, L extends LimsEntityLinkable<E>> void assertRecorded(L entity)

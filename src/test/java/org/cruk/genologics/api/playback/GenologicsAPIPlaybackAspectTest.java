@@ -21,7 +21,6 @@ package org.cruk.genologics.api.playback;
 import static org.cruk.genologics.api.unittests.UnitTestApplicationContextFactory.getPlaybackApplicationContext;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.net.MalformedURLException;
@@ -102,6 +101,13 @@ public class GenologicsAPIPlaybackAspectTest
     }
 
     @Test
+    public void testNotRecorded()
+    {
+        Sample s = api.load("0000", Sample.class);
+        assertNull("Got something back from sample when expecting null.", s);
+    }
+
+    @Test
     public void testReplySearch1()
     {
         Map<String, Object> terms = new HashMap<String, Object>();
@@ -125,22 +131,7 @@ public class GenologicsAPIPlaybackAspectTest
         Map<String, Object> terms = new HashMap<String, Object>();
         terms.put("name", "SLX-7230_NORM");
 
-        try
-        {
-            api.find(terms, Sample.class);
-            fail("Executed search that was not recorded.");
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-            // Correct.
-        }
-    }
-
-    @Test
-    public void testNotRecorded()
-    {
-        Sample s = api.load("0000", Sample.class);
-        assertNull("Got something back from sample when expecting null.", s);
+        List<LimsLink<Artifact>> artifacts = api.find(terms, Artifact.class);
+        assertNull("Got a result when a search was not recorded.", artifacts);
     }
 }
