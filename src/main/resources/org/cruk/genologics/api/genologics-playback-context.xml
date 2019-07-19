@@ -46,6 +46,23 @@
                 pointcut="execution(public * getForEntity(..)) and bean(genologicsRestTemplate)"
                 method="doGetEntity"/>
         </aop:aspect>
+        <aop:aspect ref="genologicsPlaybackAspect">
+            <aop:around
+                pointcut="execution(public * find(..)) and bean(genologicsAPI)"
+                method="doFind"/>
+            <aop:around
+                pointcut="execution(public * create*(..)) and bean(genologicsAPI)"
+                method="blockWrite"/>
+            <aop:around
+                pointcut="execution(public * update*(..)) and bean(genologicsAPI)"
+                method="blockWrite"/>
+            <aop:around
+                pointcut="execution(public * delete*(..)) and bean(genologicsAPI)"
+                method="blockWrite"/>
+            <aop:around
+                pointcut="execution(public * upload*(..)) and bean(genologicsAPI)"
+                method="blockWrite"/>
+        </aop:aspect>
     </aop:config>
 
 </beans>

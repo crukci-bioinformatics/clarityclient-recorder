@@ -16,14 +16,14 @@ public class Search<E extends Locatable> implements Serializable
     private static final long serialVersionUID = -6611443224550823943L;
 
     @XStreamAlias("terms")
-    private SearchTerms<E> searchTerms;
+    private SearchTerms searchTerms;
 
     private List<LimsLink<E>> results;
 
 
     public Search(Map<String, ?> searchTerms, Class<E> entityClass)
     {
-        this.searchTerms = new SearchTerms<E>(searchTerms, entityClass);
+        this.searchTerms = new SearchTerms(searchTerms, entityClass);
     }
 
     public List<LimsLink<E>> getResults()
@@ -36,7 +36,7 @@ public class Search<E extends Locatable> implements Serializable
         this.results = results;
     }
 
-    public SearchTerms<E> getSearchTerms()
+    public SearchTerms getSearchTerms()
     {
         return searchTerms;
     }

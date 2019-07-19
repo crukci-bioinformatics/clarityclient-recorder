@@ -18,21 +18,39 @@
 
 package org.cruk.genologics.api.playback;
 
+import java.io.EOFException;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.net.URI;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.xml.transform.stream.StreamSource;
 
 import org.apache.commons.lang3.ClassUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Aspect;
+import org.cruk.genologics.api.GenologicsAPI;
+import org.cruk.genologics.api.search.Search;
+import org.cruk.genologics.api.search.SearchTerms;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 
 import com.genologics.ri.reagenttype.ReagentTypes;
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.XStreamException;
 
 /**
  * Aspect for replaying server exchanges from a directory containing XML representations
@@ -42,21 +60,64 @@ import com.genologics.ri.reagenttype.ReagentTypes;
 public class GenologicsAPIPlaybackAspect
 {
     /**
+     * ASCII character set.
+     */
+    private static final Charset ASCII = Charset.forName("US-ASCII");
+
+    /**
+     * Logger.
+     */
+    private Logger logger = LoggerFactory.getLogger(GenologicsAPI.class);
+
+    /**
      * The directory containing the prerecorded messages.
      */
-    private File messageDirectory = new File("serverexchanges");
+    private File messageDirectory;
+
+    /**
+     * The file in the message directory that recorded searches.
+     */
+    private File searchRecord;
 
     /**
      * The JAXB marshaller used to directly unmarshal the XML files into objects.
      */
     private Jaxb2Marshaller jaxbMarshaller;
 
+    /**
+     * XStream XML serialiser.
+     */
+    private XStream xstream;
+
+    /**
+     * Map of search terms to the recorded searches.
+     */
+    private Map<SearchTerms, Search<?>> searches;
+
+
+    /**
+     * Initialiser. Set up XStream.
+     */
+    {
+        xstream = new XStream();
+        xstream.processAnnotations(Search.class);
+        xstream.processAnnotations(SearchTerms.class);
+    }
 
     /**
      * Constructor.
      */
     public GenologicsAPIPlaybackAspect()
     {
+        this(new File("serverexchanges"));
+    }
+
+    /**
+     * Constructor.
+     */
+    public GenologicsAPIPlaybackAspect(File messageDirectory)
+    {
+        setMessageDirectory(messageDirectory);
     }
 
     /**
@@ -77,6 +138,8 @@ public class GenologicsAPIPlaybackAspect
     public void setMessageDirectory(File messageDirectory)
     {
         this.messageDirectory = messageDirectory;
+        this.searchRecord = new File(messageDirectory, Search.SEARCH_FILENAME);
+        this.searches = null;
     }
 
     /**
@@ -172,5 +235,91 @@ public class GenologicsAPIPlaybackAspect
         }
 
         return response;
+    }
+
+    public List<?> doFind(ProceedingJoinPoint pjp) throws Throwable
+    {
+        if (searches == null)
+        {
+            loadSearches();
+        }
+
+        @SuppressWarnings("unchecked")
+        Map<String, ?> searchTerms = (Map<String, ?>)pjp.getArgs()[0];
+
+        @SuppressWarnings("unchecked")
+        Class<?> entityClass = (Class<?>)pjp.getArgs()[1];
+
+        SearchTerms terms = new SearchTerms(searchTerms, entityClass);
+
+        Search<?> search = searches.get(terms);
+
+        if (search == null)
+        {
+            throw new FileNotFoundException("There is no recorded search with the parameters given.");
+        }
+
+        return search.getResults();
+    }
+
+    public void blockWrite(ProceedingJoinPoint pjp)
+    {
+        logger.warn("Call to {} blocked.", pjp.getSignature().getName());
+    }
+
+    private void loadSearches() throws IOException, XStreamException
+    {
+        try
+        {
+            Reader reader = new InputStreamReader(new FileInputStream(searchRecord), ASCII);
+            try
+            {
+                List<Search<?>> list = new ArrayList<Search<?>>(32);
+                xstream.fromXML(reader, list);
+
+                searches = new HashMap<SearchTerms, Search<?>>();
+                for (Search<?> search : list)
+                {
+                    searches.put(search.getSearchTerms(), search);
+                }
+            }
+            finally
+            {
+                reader.close();
+            }
+        }
+        catch (XStreamException xse)
+        {
+            boolean rethrow = true;
+            if (xse.getCause() != null)
+            {
+                try
+                {
+                    throw xse.getCause();
+                }
+                catch (EOFException e)
+                {
+                    rethrow = false;
+                }
+                catch (FileNotFoundException e)
+                {
+                    // No searches.
+                    searches = Collections.emptyMap();
+                    rethrow = false;
+                }
+                catch (IOException e)
+                {
+                    logger.warn("Cannot read from {}. There will be no searches remembered.", searchRecord.getAbsolutePath());
+                    rethrow = false;
+                }
+                catch (Throwable t)
+                {
+                }
+            }
+            if (rethrow)
+            {
+                throw xse;
+            }
+        }
     }
 }

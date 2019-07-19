@@ -21,20 +21,28 @@ package org.cruk.genologics.api.playback;
 import static org.cruk.genologics.api.unittests.UnitTestApplicationContextFactory.getPlaybackApplicationContext;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 
 import org.cruk.genologics.api.GenologicsAPI;
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 
+import com.genologics.ri.LimsLink;
 import com.genologics.ri.artifact.Artifact;
 import com.genologics.ri.container.Container;
 import com.genologics.ri.containertype.ContainerType;
 import com.genologics.ri.lab.Lab;
 import com.genologics.ri.permission.Permission;
+import com.genologics.ri.process.GenologicsProcess;
 import com.genologics.ri.project.Project;
 import com.genologics.ri.reagenttype.ReagentType;
 import com.genologics.ri.researcher.Researcher;
@@ -91,6 +99,42 @@ public class GenologicsAPIPlaybackAspectTest
 
         Permission perm = api.load("5", Permission.class);
         assertEquals("Permission name wrong", "Project", perm.getName());
+    }
+
+    @Test
+    public void testReplySearch1()
+    {
+        Map<String, Object> terms = new HashMap<String, Object>();
+        terms.put("inputartifactlimsid", "2-1108999");
+        List<LimsLink<GenologicsProcess>> processes = api.find(terms, GenologicsProcess.class);
+        assertEquals("Wrong number of processes returned from search.", 4, processes.size());
+    }
+
+    @Test
+    public void testReplySearch2()
+    {
+        Map<String, Object> terms = new HashMap<String, Object>();
+        terms.put("projectlimsid", new HashSet<String>(Arrays.asList("COH605", "SER1015")));
+        List<LimsLink<Sample>> samples = api.find(terms, Sample.class);
+        assertEquals("Wrong number of samples returned from search.", 8, samples.size());
+    }
+
+    @Test
+    public void testReplySearch3()
+    {
+        Map<String, Object> terms = new HashMap<String, Object>();
+        terms.put("name", "SLX-7230_NORM");
+
+        try
+        {
+            api.find(terms, Sample.class);
+            fail("Executed search that was not recorded.");
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            // Correct.
+        }
     }
 
     @Test
