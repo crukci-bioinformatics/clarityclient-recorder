@@ -25,11 +25,16 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.ClassUtils;
 import org.cruk.genologics.api.GenologicsAPI;
+import org.cruk.genologics.api.search.Search;
 import org.cruk.genologics.api.unittests.UnitTestApplicationContextFactory;
 import org.junit.After;
 import org.junit.Assume;
@@ -45,6 +50,7 @@ import com.genologics.ri.container.Container;
 import com.genologics.ri.containertype.ContainerType;
 import com.genologics.ri.lab.Lab;
 import com.genologics.ri.permission.Permission;
+import com.genologics.ri.process.GenologicsProcess;
 import com.genologics.ri.project.Project;
 import com.genologics.ri.reagenttype.ReagentType;
 import com.genologics.ri.researcher.Researcher;
@@ -82,7 +88,7 @@ public class GenologicsAPIRecordingAspectTest
     @Test
     public void testRecording()
     {
-        Assume.assumeTrue("Can only run the recording test as written in CRUK-CI.", UnitTestApplicationContextFactory.inCrukCI());
+        Assume.assumeTrue("Can only run the recording tests as written in CRUK-CI.", UnitTestApplicationContextFactory.inCrukCI());
         checkCredentialsFileExists();
 
         Container c = api.load("27-340091", Container.class);
@@ -117,6 +123,25 @@ public class GenologicsAPIRecordingAspectTest
 
         Permission perm = api.load("5", Permission.class);
         assertRecorded(perm);
+    }
+
+    @Test
+    public void testRecordSearch()
+    {
+        File searchesFile = new File(messageDirectory, Search.SEARCH_FILENAME);
+
+        Assume.assumeTrue("Can only run the recording tests as written in CRUK-CI.", UnitTestApplicationContextFactory.inCrukCI());
+        checkCredentialsFileExists();
+
+        Map<String, Object> terms = new HashMap<String, Object>();
+        terms.put("inputartifactlimsid", "2-1108999");
+        api.find(terms, GenologicsProcess.class);
+
+        terms.clear();
+        terms.put("projectlimsid", new HashSet<String>(Arrays.asList("COH605", "SER1015")));
+        api.find(terms, Sample.class);
+
+        assertTrue("Have not recorded search.", searchesFile.exists());
     }
 
     private <E extends LimsEntity<E>, L extends LimsEntityLinkable<E>> void assertRecorded(L entity)

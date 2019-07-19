@@ -19,18 +19,32 @@
 package org.cruk.genologics.api.record;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.Writer;
+import java.nio.charset.Charset;
 import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 import javax.xml.transform.stream.StreamResult;
 
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.io.output.FileWriterWithEncoding;
 import org.apache.commons.lang3.ClassUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Aspect;
+import org.cruk.genologics.api.GenologicsAPI;
+import org.cruk.genologics.api.search.Search;
+import org.cruk.genologics.api.search.SearchTerms;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 
 import com.genologics.ri.LimsEntity;
+import com.genologics.ri.LimsLink;
 import com.genologics.ri.Locatable;
+import com.thoughtworks.xstream.XStream;
 
 /**
  * Aspect for recording server exchanges with a real Clarity server as XML files
@@ -40,21 +54,64 @@ import com.genologics.ri.Locatable;
 public class GenologicsAPIRecordingAspect
 {
     /**
+     * ASCII character set.
+     */
+    private static final Charset ASCII = Charset.forName("US-ASCII");
+
+    /**
+     * End of line in byte form.
+     */
+    private static final String EOL = System.getProperty("line.separator", "\n");
+
+    /**
+     * Logger.
+     */
+    private Logger logger = LoggerFactory.getLogger(GenologicsAPI.class);
+
+    /**
      * The directory to write the messages to.
      */
-    private File messageDirectory = new File("serverexchanges");
+    private File messageDirectory;
+
+    /**
+     * The file in the message directory to record searches in.
+     */
+    private File searchRecord;
 
     /**
      * The JAXB marshaller used to directly marshal the API entities into XML files.
      */
     private Jaxb2Marshaller jaxbMarshaller;
 
+    /**
+     * XStream XML serialiser.
+     */
+    private XStream xstream;
+
+
+    /**
+     * Initialiser. Set up XStream.
+     */
+    {
+        xstream = new XStream();
+        xstream.processAnnotations(Search.class);
+        xstream.processAnnotations(SearchTerms.class);
+    }
 
     /**
      * Constructor.
      */
     public GenologicsAPIRecordingAspect()
     {
+        this(new File("serverexchanges"));
+    }
+
+    /**
+     * Constructor.
+     */
+    public GenologicsAPIRecordingAspect(File messageDirectory)
+    {
+        setMessageDirectory(messageDirectory);
     }
 
     /**
@@ -75,6 +132,7 @@ public class GenologicsAPIRecordingAspect
     public void setMessageDirectory(File messageDirectory)
     {
         this.messageDirectory = messageDirectory;
+        this.searchRecord = new File(messageDirectory, Search.SEARCH_FILENAME);
     }
 
     /**
@@ -131,6 +189,45 @@ public class GenologicsAPIRecordingAspect
         }
 
         return list;
+    }
+
+    public <E extends Locatable> Object doFind(ProceedingJoinPoint pjp) throws Throwable
+    {
+        @SuppressWarnings("unchecked")
+        Map<String, ?> searchTerms = (Map<String, ?>)pjp.getArgs()[0];
+
+        @SuppressWarnings("unchecked")
+        Class<E> entityClass = (Class<E>)pjp.getArgs()[1];
+
+        Object reply = pjp.proceed();
+
+        @SuppressWarnings("unchecked")
+        List<LimsLink<E>> results = (List<LimsLink<E>>)reply;
+
+        try
+        {
+            Search<E> search = new Search<E>(searchTerms, entityClass);
+            search.setResults(results);
+
+            Writer out = new FileWriterWithEncoding(searchRecord, ASCII, true);
+            try
+            {
+                xstream.toXML(search, out);
+
+                // Doesn't write a final end of line.
+                out.write(EOL);
+            }
+            finally
+            {
+                IOUtils.closeQuietly(out);
+            }
+        }
+        catch (IOException e)
+        {
+            logger.warn("Could not add search to search record: {}", e.getMessage());
+        }
+
+        return reply;
     }
 
     /**

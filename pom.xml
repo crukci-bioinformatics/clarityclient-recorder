@@ -406,12 +406,18 @@
             </plugin>
         </plugins>
     </reporting>
-
+    
     <dependencies>
         <dependency>
             <groupId>org.cruk.genologics</groupId>
             <artifactId>clarity-client</artifactId>
             <version>${api.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.thoughtworks.xstream</groupId>
+            <artifactId>xstream</artifactId>
+            <version>1.4.2</version>
         </dependency>
 
         <!-- Only used when run under Java 6.       -->
