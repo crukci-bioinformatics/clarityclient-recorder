@@ -215,7 +215,18 @@ public class GenologicsAPIRecordingAspect
         return list;
     }
 
-    public <E extends Locatable> Object doFind(ProceedingJoinPoint pjp) throws Throwable
+    /**
+     * Join point around the Clarity client's {@code find()} method. Runs the search
+     * and records the search terms and results in a file in the search directory.
+     *
+     * @param <E> The type of entity being searched for.
+     *
+     * @param pjp The join point.
+     * @return The result of the search (a list of links).
+     *
+     * @throws Throwable if there is an error invoking the underlying method.
+     */
+    public <E extends Locatable> List<LimsLink<E>> doFind(ProceedingJoinPoint pjp) throws Throwable
     {
         @SuppressWarnings("unchecked")
         Map<String, ?> searchTerms = (Map<String, ?>)pjp.getArgs()[0];
@@ -262,7 +273,7 @@ public class GenologicsAPIRecordingAspect
             logger.warn("Could not record search: {}", e.getMessage());
         }
 
-        return reply;
+        return results;
     }
 
     /**

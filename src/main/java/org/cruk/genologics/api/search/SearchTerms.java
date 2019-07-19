@@ -29,24 +29,46 @@ import java.util.Map;
 import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.cruk.genologics.api.GenologicsAPI;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 
+/**
+ * Class recording the parameters and entity class of a call to the API's
+ * {@code find} method.
+ *
+ * @see GenologicsAPI#find(Map, Class)
+ */
 @XStreamAlias("terms")
 public class SearchTerms implements Serializable
 {
+    /**
+     * Serialization version.
+     */
     private static final long serialVersionUID = 6086837837496759045L;
 
+    /**
+     * The search terms (parameters) of the search.
+     */
     @XStreamAlias("params")
     private Map<String, Object> searchTerms;
 
+    /**
+     * The class of the objects being searched for.
+     */
     @XStreamAlias("entity")
     private Class<?> entityClass;
 
 
+    /**
+     * Creates a new SearchTerms object with the given values (as have
+     * been passed to find).
+     *
+     * @param searchTerms The search parameters.
+     * @param entityClass The type of object being searched for.
+     */
     public SearchTerms(Map<String, ?> searchTerms, Class<?> entityClass)
     {
         this.entityClass = entityClass;
@@ -73,16 +95,34 @@ public class SearchTerms implements Serializable
         }
     }
 
+    /**
+     * Get the parameters of the search.
+     *
+     * @return A map of parameter name to value or values.
+     */
     public Map<String, Object> getSearchTerms()
     {
         return searchTerms;
     }
 
+    /**
+     * Get the class being searched for.
+     *
+     * @return The entity class.
+     * @return
+     */
     public Class<?> getEntityClass()
     {
         return entityClass;
     }
 
+    /**
+     * Override of hash code. The hash should be based on the class being searched
+     * for along with the names of the parameters and their individual types and
+     * values. The order of values in parameter values is not important.
+     *
+     * @return A hash code for these search terms.
+     */
     @Override
     public int hashCode()
     {
@@ -124,6 +164,17 @@ public class SearchTerms implements Serializable
         return hash;
     }
 
+    /**
+     * Test whether the given object is equal to these SearchTerms. It will
+     * be if it is also a SearchTerms object that records a search for the
+     * same type of object as this; if it has the same number of parameters
+     * with the same names; and if all the values of the parameters are the
+     * same (order unimportant for parameters that are collections).
+     *
+     * @param obj The object to compare to.
+     *
+     * @return True if this object is value equal to {@code obj}, false if not.
+     */
     @Override
     public boolean equals(Object obj)
     {
@@ -178,6 +229,12 @@ public class SearchTerms implements Serializable
         return equal;
     }
 
+    /**
+     * Get a human readable representation of this object. Gives the type of objects
+     * being searched for and the parameters used in the search.
+     *
+     * @return A printable representation of this object.
+     */
     @Override
     public String toString()
     {

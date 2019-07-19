@@ -35,6 +35,7 @@ import java.util.regex.Pattern;
 
 import javax.xml.transform.stream.StreamSource;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.filefilter.RegexFileFilter;
 import org.apache.commons.lang3.ClassUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -262,7 +263,16 @@ public class GenologicsAPIPlaybackAspect
         return response;
     }
 
-    public List<?> doFind(ProceedingJoinPoint pjp) throws Throwable
+    /**
+     * Join point around the Clarity client's {@code find()} method. Tries to find
+     * a prerecorded search in the search directory that matches the search parameters
+     * of this call.
+     *
+     * @param pjp The join point.
+     * @return The result of the search (a list of links). Will return null if there
+     * is no matching search recorded.
+     */
+    public List<?> doFind(ProceedingJoinPoint pjp)
     {
         if (searches == null)
         {
@@ -288,12 +298,23 @@ public class GenologicsAPIPlaybackAspect
         return search.getResults();
     }
 
+    /**
+     * Join point around methods that would cause a change in Clarity
+     * (create, update, delete, upload). These methods are not helpful when running
+     * from prerecorded messages, and should be quietly ignored (a warning is logged).
+     *
+     * @param pjp The join point.
+     */
     public void blockWrite(ProceedingJoinPoint pjp)
     {
         logger.warn("Call to {} blocked.", pjp.getSignature().getName());
     }
 
-    private void loadSearches() throws IOException, XStreamException
+    /**
+     * Load the prerecorded searches from the search directory. Finds files in there
+     * that match the expected file name format and brings them all into memory.
+     */
+    private void loadSearches()
     {
         searches = new HashMap<SearchTerms, Search<?>>();
 
@@ -308,48 +329,54 @@ public class GenologicsAPIPlaybackAspect
         {
             for (File searchFile : searchFiles)
             {
-                Reader reader = new InputStreamReader(new FileInputStream(searchFile), ASCII);
                 try
                 {
-                    Search<?> search = (Search<?>)xstream.fromXML(reader);
+                    Reader reader = new InputStreamReader(new FileInputStream(searchFile), ASCII);
+                    try
+                    {
+                        Search<?> search = (Search<?>)xstream.fromXML(reader);
 
-                    searches.put(search.getSearchTerms(), search);
-                }
-                catch (XStreamException xse)
-                {
-                    boolean rethrow = true;
-                    if (xse.getCause() != null)
+                        searches.put(search.getSearchTerms(), search);
+                    }
+                    catch (XStreamException xse)
                     {
-                        try
+                        boolean rethrow = true;
+                        if (xse.getCause() != null)
                         {
-                            throw xse.getCause();
+                            try
+                            {
+                                throw xse.getCause();
+                            }
+                            catch (EOFException e)
+                            {
+                                rethrow = false;
+                            }
+                            catch (FileNotFoundException e)
+                            {
+                                // No searches.
+                                rethrow = false;
+                            }
+                            catch (IOException e)
+                            {
+                                throw e;
+                            }
+                            catch (Throwable t)
+                            {
+                            }
                         }
-                        catch (EOFException e)
+                        if (rethrow)
                         {
-                            rethrow = false;
-                        }
-                        catch (FileNotFoundException e)
-                        {
-                            // No searches.
-                            rethrow = false;
-                        }
-                        catch (IOException e)
-                        {
-                            logger.warn("Cannot read from {}.", searchFile.getAbsolutePath());
-                            rethrow = false;
-                        }
-                        catch (Throwable t)
-                        {
+                            throw xse;
                         }
                     }
-                    if (rethrow)
+                    finally
                     {
-                        throw xse;
+                        IOUtils.closeQuietly(reader);
                     }
                 }
-                finally
+                catch (IOException e)
                 {
-                    reader.close();
+                    logger.warn("Cannot read from {}.", searchFile.getAbsolutePath());
                 }
             }
         }

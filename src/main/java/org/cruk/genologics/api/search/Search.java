@@ -24,44 +24,110 @@ import java.util.Map;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.cruk.genologics.api.GenologicsAPI;
 
 import com.genologics.ri.LimsLink;
 import com.genologics.ri.Locatable;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 
+/**
+ * A class holding both the parameters of a search and the links returned
+ * from that search.
+ *
+ * @param <E> The type of object the search is for.
+ *
+ * @see GenologicsAPI#find(Map, Class)
+ */
 @XStreamAlias("search")
 public class Search<E extends Locatable> implements Serializable
 {
+    /**
+     * The default name for the subdirectory of the messages directory
+     * into which the search results will be written.
+     */
     public static final String DEFAULT_SEARCH_DIRECTORY = "searches";
 
+    /**
+     * Serialization version.
+     */
     private static final long serialVersionUID = -6611443224550823943L;
 
+    /**
+     * The search terms used in this search.
+     */
     @XStreamAlias("terms")
     private SearchTerms searchTerms;
 
+    /**
+     * The results of the search.
+     */
     private List<LimsLink<E>> results;
 
 
+    /**
+     * Constructor that takes the parameters from a call to the API's
+     * {@code find} method.
+     *
+     * @param searchTerms The search parameters.
+     * @param entityClass The type of object being searched for.
+     */
     public Search(Map<String, ?> searchTerms, Class<E> entityClass)
     {
-        this.searchTerms = new SearchTerms(searchTerms, entityClass);
+        this(new SearchTerms(searchTerms, entityClass));
     }
 
-    public List<LimsLink<E>> getResults()
+    /**
+     * Constructor that accepts an already created {@code SearchTerms} object.
+     *
+     * @param searchTerms The search terms.
+     *
+     * @throws IllegalArgumentException if {@code searchTerms} is null.
+     */
+    public Search(SearchTerms searchTerms)
     {
-        return results;
+        if (searchTerms == null)
+        {
+            throw new IllegalArgumentException();
+        }
+        this.searchTerms = searchTerms;
     }
 
-    public void setResults(List<LimsLink<E>> results)
-    {
-        this.results = results;
-    }
-
+    /**
+     * Get the parameters of this search.
+     *
+     * @return The search terms.
+     */
     public SearchTerms getSearchTerms()
     {
         return searchTerms;
     }
 
+    /**
+     * Get the results of the search.
+     *
+     * @return A list of links to the entities searched for.
+     */
+    public List<LimsLink<E>> getResults()
+    {
+        return results;
+    }
+
+    /**
+     * Set the results of the search.
+     *
+     * @param results The links that are the result of the search.
+     */
+    public void setResults(List<LimsLink<E>> results)
+    {
+        this.results = results;
+    }
+
+    /**
+     * Get a human readable representation of this object. Shows the search terms
+     * and, if results are set, the number of links in the results.
+     *
+     * @return A printable representation of this object.
+     */
     @Override
     public String toString()
     {
