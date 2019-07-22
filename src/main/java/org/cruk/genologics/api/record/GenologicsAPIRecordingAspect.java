@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
 import java.nio.charset.Charset;
+import java.text.MessageFormat;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -53,6 +54,11 @@ import com.thoughtworks.xstream.XStream;
 @Aspect
 public class GenologicsAPIRecordingAspect
 {
+    /**
+     * Template for the file name pattern.
+     */
+    public static final String FILENAME_PATTERN = "{0}-{1}.xml";
+
     /**
      * ASCII character set.
      */
@@ -289,20 +295,7 @@ public class GenologicsAPIRecordingAspect
         {
             try
             {
-                String id;
-                if (thing instanceof LimsEntity<?>)
-                {
-                    id = ((LimsEntity<?>)thing).getLimsid();
-                }
-                else
-                {
-                    id = ((Locatable)thing).getUri().toString();
-                    int lastSlash = id.lastIndexOf('/');
-                    id = id.substring(lastSlash + 1);
-                }
-
-                String fileName = ClassUtils.getShortClassName(thing.getClass()) + "-" + id + ".xml";
-                File file = new File(messageDirectory, fileName);
+                File file = getFileForEntity(thing);
 
                 jaxbMarshaller.marshal(thing, new StreamResult(file));
             }
@@ -311,5 +304,33 @@ public class GenologicsAPIRecordingAspect
                 // Ignore.
             }
         }
+    }
+
+    /**
+     * Convenience method to get the file the given entity would be written to.
+     *
+     * @param thing The entity to store.
+     *
+     * @return The file for this entity.
+     */
+    private File getFileForEntity(Object thing)
+    {
+        assert thing != null : "Cannot get a name for null";
+
+        String id;
+        if (thing instanceof LimsEntity<?>)
+        {
+            id = ((LimsEntity<?>)thing).getLimsid();
+        }
+        else
+        {
+            id = ((Locatable)thing).getUri().toString();
+            int lastSlash = id.lastIndexOf('/');
+            id = id.substring(lastSlash + 1);
+        }
+
+        String name = MessageFormat.format(FILENAME_PATTERN, ClassUtils.getShortClassName(thing.getClass()), id);
+
+        return new File(messageDirectory, name);
     }
 }

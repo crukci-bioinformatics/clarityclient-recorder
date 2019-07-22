@@ -33,12 +33,12 @@
 
     <context:annotation-config />
 
-    <bean name="recordingApiAspect" class="org.cruk.genologics.api.record.GenologicsAPIRecordingAspect">
+    <bean name="genologicsRecordingAspect" class="org.cruk.genologics.api.record.GenologicsAPIRecordingAspect">
         <property name="jaxbMarshaller" ref="genologicsJaxbMarshaller"/>
     </bean>
 
     <aop:config>
-        <aop:aspect ref="recordingApiAspect">
+        <aop:aspect ref="genologicsRecordingAspect">
             <aop:around
                 pointcut="execution(public * retrieve(..)) and bean(genologicsAPI)"
                 method="doLoad"/>
