@@ -25,7 +25,6 @@ import java.nio.charset.Charset;
 import java.text.MessageFormat;
 import java.util.Collection;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Map;
 
 import javax.xml.transform.stream.StreamResult;
@@ -43,7 +42,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.http.ResponseEntity;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
-import org.springframework.util.CollectionUtils;
 
 import com.genologics.ri.Batch;
 import com.genologics.ri.LimsEntity;
@@ -98,7 +96,13 @@ public class GenologicsAPIRecordingAspect
      */
     private XStream xstream;
 
-    private ThreadLocal<Batch<?>> listIntercept = new ThreadLocal<Batch<?>>();
+    /**
+     * A record of the type of Batch object to create with all the links when
+     * intercepting list calls.
+     *
+     * @see #doList(ProceedingJoinPoint)
+     */
+    private ThreadLocal<Class<?>> listIntercept = new ThreadLocal<Class<?>>();
 
 
     /**
@@ -316,9 +320,10 @@ public class GenologicsAPIRecordingAspect
 
             try
             {
-                Batch batch = listIntercept.get();
-                if (batch != null)
+                Class batchClass = listIntercept.get();
+                if (batchClass != null)
                 {
+                    Batch batch = (Batch)batchClass.newInstance();
                     batch.getList().addAll(result);
                     writeList(batch);
                 }
@@ -364,9 +369,7 @@ public class GenologicsAPIRecordingAspect
         if (Batch.class.isAssignableFrom(entityClass) && listIntercept.get() == null)
         {
             ResponseEntity<Batch> entity = (ResponseEntity<Batch>)result;
-            Batch batch = entity.getBody();
-
-            listIntercept.set(batch.getClass().newInstance());
+            listIntercept.set(entity.getBody().getClass());
         }
 
         return result;
