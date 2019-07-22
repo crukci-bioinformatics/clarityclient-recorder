@@ -25,6 +25,7 @@ import java.nio.charset.Charset;
 import java.text.MessageFormat;
 import java.util.Collection;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 
 import javax.xml.transform.stream.StreamResult;
@@ -40,8 +41,11 @@ import org.cruk.genologics.api.search.SearchTerms;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
+import org.springframework.http.ResponseEntity;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
+import org.springframework.util.CollectionUtils;
 
+import com.genologics.ri.Batch;
 import com.genologics.ri.LimsEntity;
 import com.genologics.ri.LimsLink;
 import com.genologics.ri.Locatable;
@@ -93,6 +97,8 @@ public class GenologicsAPIRecordingAspect
      * XStream XML serialiser.
      */
     private XStream xstream;
+
+    private ThreadLocal<Batch<?>> listIntercept = new ThreadLocal<Batch<?>>();
 
 
     /**
@@ -283,6 +289,90 @@ public class GenologicsAPIRecordingAspect
     }
 
     /**
+     * Join point around the {@code listAll} and {@code listSome} methods that recreate
+     * the {@code Batch} object that holds the list of links to the real things and
+     * writes that list to an XML file in the messages directory.
+     *
+     * <p>
+     * Only one list is saved for each type, so if there are multiple calls to either
+     * list method in the calling code, the final file will be the latest list. It is
+     * envisaged that most of the time, each thing will be only listed once so this
+     * shouldn't in practice be an issue.
+     * </p>
+     *
+     * @param pjp The join point.
+     * @return The result of the search (a list of links).
+     *
+     * @throws Throwable if there is an error invoking the underlying method.
+     */
+    @SuppressWarnings("unchecked")
+    public List<LimsLink<?>> doList(ProceedingJoinPoint pjp) throws Throwable
+    {
+        List result;
+        try
+        {
+            listIntercept.set(null);
+            result = (List)pjp.proceed();
+
+            try
+            {
+                Batch batch = listIntercept.get();
+                if (batch != null)
+                {
+                    batch.getList().addAll(result);
+                    writeList(batch);
+                }
+            }
+            catch (Exception e)
+            {
+                Class<?> what = (Class<?>)pjp.getArgs()[0];
+
+                logger.warn("Could not record list of {}: {}", ClassUtils.getShortClassName(what), e.getMessage());
+            }
+        }
+        finally
+        {
+            listIntercept.set(null);
+        }
+
+        return result;
+    }
+
+    /**
+     * Join point around the REST template's {@code getForEntity} methods used by the
+     * {@code GenologicsAPI.doList) method. When invoked with a class that implements
+     * {@code Batch}, it creates a new empty object of the same type and stores it in
+     * the {@code listIntercept} local. This is used by the join point around the
+     * API's list methods to know what object to put the list of links returned from
+     * the API call into, so that writing to the file will have a class that can be
+     * marshalled to XML.
+     *
+     * @param pjp The join point.
+     * @return The result of the REST call (a {@code ResponseEntity}.
+     *
+     * @throws Throwable if there is an error invoking the underlying method.
+     *
+     * @see #doList(ProceedingJoinPoint)
+     */
+    @SuppressWarnings("unchecked")
+    public Object interceptGetForEntity(ProceedingJoinPoint pjp) throws Throwable
+    {
+        Object result = pjp.proceed();
+
+        Class<?> entityClass = (Class<?>)pjp.getArgs()[1];
+
+        if (Batch.class.isAssignableFrom(entityClass) && listIntercept.get() == null)
+        {
+            ResponseEntity<Batch> entity = (ResponseEntity<Batch>)result;
+            Batch batch = entity.getBody();
+
+            listIntercept.set(batch.getClass().newInstance());
+        }
+
+        return result;
+    }
+
+    /**
      * Method that writes the given entity to a suitably named file.
      * If there is an error writing the entity to the file, the file will not
      * be written and there is no logging of the error. It is quietly ignored.
@@ -332,5 +422,31 @@ public class GenologicsAPIRecordingAspect
         String name = MessageFormat.format(FILENAME_PATTERN, ClassUtils.getShortClassName(thing.getClass()), id);
 
         return new File(messageDirectory, name);
+    }
+
+    /**
+     * Method that writes a list of links to a suitably named file.
+     * If there is an error writing the batch object to the file, the file will not
+     * be written and there is no logging of the error. It is quietly ignored.
+     *
+     * @param list The batch object to write. Quietly ignores {@code null}.
+     */
+    private void writeList(Batch<?> list)
+    {
+        if (list != null)
+        {
+            try
+            {
+                String name = ClassUtils.getShortClassName(list.getClass()) + ".xml";
+
+                File file = new File(messageDirectory, name);
+
+                jaxbMarshaller.marshal(list, new StreamResult(file));
+            }
+            catch (Exception e)
+            {
+                // Ignore.
+            }
+        }
     }
 }

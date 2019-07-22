@@ -51,6 +51,12 @@
             <aop:around
                 pointcut="execution(public * find(..)) and bean(genologicsAPI)"
                 method="doFind"/>
+            <aop:around
+                pointcut="execution(public * list*(..)) and bean(genologicsAPI)"
+                method="doList"/>
+            <aop:around
+                pointcut="execution(public * getForEntity(..)) and bean(genologicsRestTemplate)"
+                method="interceptGetForEntity"/>
         </aop:aspect>
     </aop:config>
 

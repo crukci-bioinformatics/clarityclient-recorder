@@ -29,6 +29,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
@@ -45,6 +46,7 @@ import org.springframework.context.ApplicationContext;
 
 import com.genologics.ri.LimsEntity;
 import com.genologics.ri.LimsEntityLinkable;
+import com.genologics.ri.LimsLink;
 import com.genologics.ri.Locatable;
 import com.genologics.ri.artifact.Artifact;
 import com.genologics.ri.container.Container;
@@ -125,6 +127,25 @@ public class GenologicsAPIRecordingAspectTest
 
         Permission perm = api.load("5", Permission.class);
         assertRecorded(perm);
+    }
+
+    @Test
+    public void testRecordList()
+    {
+        Assume.assumeTrue("Can only run the recording tests as written in CRUK-CI.", UnitTestApplicationContextFactory.inCrukCI());
+        checkCredentialsFileExists();
+
+        api.listAll(ContainerType.class);
+
+        File containerTypesFile = new File(aspect.getMessageDirectory(), "ContainerTypes.xml");
+        assertTrue("Container types not recorded.", containerTypesFile.exists());
+
+        List<LimsLink<ReagentType>> rtLinks = api.listSome(ReagentType.class, 1, 119);
+
+        assertEquals("Wrong number of ReagentType links returned.", 119, rtLinks.size());
+
+        File reagentTypesFile = new File(aspect.getMessageDirectory(), "ReagentTypes.xml");
+        assertTrue("Reagent types not recorded.", reagentTypesFile.exists());
     }
 
     @Test
