@@ -32,6 +32,7 @@ import java.nio.charset.Charset;
 import java.text.MessageFormat;
 import java.text.NumberFormat;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -43,6 +44,7 @@ import org.apache.commons.lang3.ClassUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.cruk.genologics.api.GenologicsAPI;
+import org.cruk.genologics.api.impl.GenologicsAPIInternal;
 import org.cruk.genologics.api.search.Search;
 import org.cruk.genologics.api.search.SearchTerms;
 import org.slf4j.Logger;
@@ -52,7 +54,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 
+import com.genologics.ri.Batch;
 import com.genologics.ri.LimsEntity;
+import com.genologics.ri.LimsLink;
 import com.genologics.ri.Locatable;
 import com.genologics.ri.reagenttype.ReagentTypes;
 import com.thoughtworks.xstream.XStream;
@@ -109,6 +113,11 @@ public class GenologicsAPIPlaybackAspect
      * The JAXB marshaller used to directly unmarshal the XML files into objects.
      */
     private Jaxb2Marshaller jaxbMarshaller;
+
+    /**
+     * Access to the API, but through its internal interface.
+     */
+    private GenologicsAPIInternal apiInternal;
 
     /**
      * XStream XML serialiser.
@@ -229,6 +238,17 @@ public class GenologicsAPIPlaybackAspect
     }
 
     /**
+     * Set the internal interface access to the API.
+     *
+     * @param internalApi The API bean, but through its internal interface.
+     */
+    @Required
+    public void setInternalGenologicsAPI(GenologicsAPIInternal internalApi)
+    {
+        this.apiInternal = internalApi;
+    }
+
+    /**
      * Join point around the Spring REST client's {@code getForObject()} methods.
      * Looks for a file named with the required class's short name (no package) plus
      * either its LIMS id (if there is one) or the identifier given at the end of
@@ -246,16 +266,7 @@ public class GenologicsAPIPlaybackAspect
         Object uriObj = pjp.getArgs()[0];
         Class<?> type = (Class<?>)pjp.getArgs()[1];
 
-        File file;
-
-        if (type.equals(ReagentTypes.class))
-        {
-            file = new File(messageDirectory, "ReagentTypes.xml");
-        }
-        else
-        {
-            file = getFileForEntity(type, uriObj);
-        }
+        File file = getFileForEntity(type, uriObj);
 
         if (!file.exists())
         {
@@ -325,6 +336,61 @@ public class GenologicsAPIPlaybackAspect
         }
 
         return search.getResults();
+    }
+
+    /**
+     * Join point around the {@code listAll} and {@code listSome} methods load the list
+     * of links from a serialised {@code Batch} object in XML file in the messages directory.
+     *
+     * <p>
+     * No reference is made to the numbers in the {@code listSome} parameters. All the links
+     * stored in the file are returned regardless.
+     * </p>
+     *
+     * @param <E> The type of entity to list.
+     * @param <L> The type of link to the entity returned from the API.
+     * @param <BH> The batch class that is used to hold the links returned from the API.
+     *
+     * @param pjp The join point.
+     * @return The result of the search (a list of links). If there was no file recorded
+     * for a list of these entities, an empty list is returned.
+     *
+     * @throws FileNotFoundException if there is no list recorded for this type of entity.
+     *
+     * @throws Throwable if there is an error invoking the underlying method.
+     */
+    public <E extends Locatable, L extends LimsLink<E>, BH extends Batch<L>>
+    List<L> doList(ProceedingJoinPoint pjp) throws Throwable
+    {
+        @SuppressWarnings("unchecked")
+        Class<E> entityClass = (Class<E>)pjp.getArgs()[0];
+
+        Class<BH> batchClass = apiInternal.getQueryResultsClassForEntity(entityClass);
+
+        List<L> list = Collections.emptyList();
+
+        if (batchClass == null)
+        {
+            logger.warn("{} is not returned by any known Batch class.", entityClass.getName());
+        }
+        else
+        {
+            String listFileName = ClassUtils.getShortClassName(batchClass) + ".xml";
+            File listFile = new File(messageDirectory, listFileName);
+
+            if (listFile.exists())
+            {
+                @SuppressWarnings("unchecked")
+                BH batch = (BH)jaxbMarshaller.unmarshal(new StreamSource(listFile));
+                list = batch.getList();
+            }
+            else
+            {
+                throw new FileNotFoundException("There is no list file " + listFile.getName() + " recorded.");
+            }
+        }
+
+        return list;
     }
 
     /**

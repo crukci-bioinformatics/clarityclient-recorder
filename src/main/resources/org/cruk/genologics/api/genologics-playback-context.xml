@@ -35,6 +35,7 @@
 
     <bean name="genologicsPlaybackAspect" class="org.cruk.genologics.api.playback.GenologicsAPIPlaybackAspect">
         <property name="jaxbMarshaller" ref="genologicsJaxbMarshaller"/>
+        <property name="internalGenologicsAPI" ref="genologicsAPI"/>
     </bean>
 
     <aop:config>
@@ -48,6 +49,9 @@
             <aop:around
                 pointcut="execution(public * find(..)) and bean(genologicsAPI)"
                 method="doFind"/>
+            <aop:around
+                pointcut="execution(public * list*(..)) and bean(genologicsAPI)"
+                method="doList"/>
             <aop:around
                 pointcut="execution(public * update(..)) and bean(genologicsAPI)"
                 method="doUpdate"/>

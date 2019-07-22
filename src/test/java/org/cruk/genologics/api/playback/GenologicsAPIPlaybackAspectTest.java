@@ -186,6 +186,15 @@ public class GenologicsAPIPlaybackAspectTest
 
         Sample sv2 = (Sample)marshaller.unmarshal(new StreamSource(update2File));
         assertEquals("Version zero name wrong", "Second name change", sv2.getName());
+    }
 
+    @Test
+    public void testList()
+    {
+        List<LimsLink<ContainerType>> containerTypes = api.listAll(ContainerType.class);
+        assertEquals("Wrong number of container types returned.", 23, containerTypes.size());
+
+        List<LimsLink<ReagentType>> reagentTypes = api.listSome(ReagentType.class, 20, 50);
+        assertEquals("Wrong number of reagent types returned.", 120, reagentTypes.size());
     }
 }

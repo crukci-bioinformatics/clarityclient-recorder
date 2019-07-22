@@ -35,12 +35,12 @@ import org.apache.commons.lang3.ClassUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.cruk.genologics.api.GenologicsAPI;
+import org.cruk.genologics.api.impl.GenologicsAPIInternal;
 import org.cruk.genologics.api.search.Search;
 import org.cruk.genologics.api.search.SearchTerms;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
-import org.springframework.http.ResponseEntity;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 
 import com.genologics.ri.Batch;
@@ -92,17 +92,14 @@ public class GenologicsAPIRecordingAspect
     private Jaxb2Marshaller jaxbMarshaller;
 
     /**
+     * Access to the API, but through its internal interface.
+     */
+    private GenologicsAPIInternal apiInternal;
+
+    /**
      * XStream XML serialiser.
      */
     private XStream xstream;
-
-    /**
-     * A record of the type of Batch object to create with all the links when
-     * intercepting list calls.
-     *
-     * @see #doList(ProceedingJoinPoint)
-     */
-    private ThreadLocal<Class<?>> listIntercept = new ThreadLocal<Class<?>>();
 
 
     /**
@@ -184,6 +181,17 @@ public class GenologicsAPIRecordingAspect
     public void setJaxbMarshaller(Jaxb2Marshaller jaxbMarshaller)
     {
         this.jaxbMarshaller = jaxbMarshaller;
+    }
+
+    /**
+     * Set the internal interface access to the API.
+     *
+     * @param internalApi The API bean, but through its internal interface.
+     */
+    @Required
+    public void setInternalGenologicsAPI(GenologicsAPIInternal internalApi)
+    {
+        this.apiInternal = internalApi;
     }
 
     /**
@@ -304,75 +312,45 @@ public class GenologicsAPIRecordingAspect
      * shouldn't in practice be an issue.
      * </p>
      *
+     * @param <E> The type of entity to list.
+     * @param <L> The type of link to the entity returned from the API.
+     * @param <BH> The batch class that is used to hold the links returned from the API.
+     *
      * @param pjp The join point.
      * @return The result of the search (a list of links).
      *
      * @throws Throwable if there is an error invoking the underlying method.
      */
-    @SuppressWarnings("unchecked")
-    public List<LimsLink<?>> doList(ProceedingJoinPoint pjp) throws Throwable
+    public <E extends Locatable, L extends LimsLink<E>, BH extends Batch<L>>
+    List<L> doList(ProceedingJoinPoint pjp) throws Throwable
     {
-        List result;
+        @SuppressWarnings("unchecked")
+        Class<E> entityClass = (Class<E>)pjp.getArgs()[0];
+
+        @SuppressWarnings("unchecked")
+        List<L> links = (List<L>)pjp.proceed();
+
         try
         {
-            listIntercept.set(null);
-            result = (List)pjp.proceed();
+            Class<BH> batchClass = apiInternal.getQueryResultsClassForEntity(entityClass);
 
-            try
+            if (batchClass == null)
             {
-                Class batchClass = listIntercept.get();
-                if (batchClass != null)
-                {
-                    Batch batch = (Batch)batchClass.newInstance();
-                    batch.getList().addAll(result);
-                    writeList(batch);
-                }
+                logger.warn("{} is not returned by any known Batch class.", entityClass.getName());
             }
-            catch (Exception e)
+            else
             {
-                Class<?> what = (Class<?>)pjp.getArgs()[0];
-
-                logger.warn("Could not record list of {}: {}", ClassUtils.getShortClassName(what), e.getMessage());
+                BH batch = batchClass.newInstance();
+                batch.getList().addAll(links);
+                writeList(batch);
             }
         }
-        finally
+        catch (Exception e)
         {
-            listIntercept.set(null);
+            logger.warn("Could not record list of {}: {}", ClassUtils.getShortClassName(entityClass), e.getMessage());
         }
 
-        return result;
-    }
-
-    /**
-     * Join point around the REST template's {@code getForEntity} methods used by the
-     * {@code GenologicsAPI.doList) method. When invoked with a class that implements
-     * {@code Batch}, it creates a new empty object of the same type and stores it in
-     * the {@code listIntercept} local. This is used by the join point around the
-     * API's list methods to know what object to put the list of links returned from
-     * the API call into, so that writing to the file will have a class that can be
-     * marshalled to XML.
-     *
-     * @param pjp The join point.
-     * @return The result of the REST call (a {@code ResponseEntity}.
-     *
-     * @throws Throwable if there is an error invoking the underlying method.
-     *
-     * @see #doList(ProceedingJoinPoint)
-     */
-    @SuppressWarnings("unchecked")
-    public Object interceptGetForEntity(ProceedingJoinPoint pjp) throws Throwable
-    {
-        Object result = pjp.proceed();
-
-        Class<?> entityClass = (Class<?>)pjp.getArgs()[1];
-
-        if (Batch.class.isAssignableFrom(entityClass) && listIntercept.get() == null)
-        {
-            ResponseEntity<Batch> entity = (ResponseEntity<Batch>)result;
-            listIntercept.set(entity.getBody().getClass());
-        }
-
-        return result;
+        return links;
     }
 
     /**

@@ -128,7 +128,6 @@
             </releases>
             <snapshots>
                 <enabled>true</enabled>
-                <updatePolicy>weekly</updatePolicy>
             </snapshots>
         </repository>
     </repositories>
@@ -406,7 +405,7 @@
             </plugin>
         </plugins>
     </reporting>
-    
+
     <dependencies>
         <dependency>
             <groupId>org.cruk.genologics</groupId>

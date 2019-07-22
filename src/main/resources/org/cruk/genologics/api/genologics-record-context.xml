@@ -35,6 +35,7 @@
 
     <bean name="genologicsRecordingAspect" class="org.cruk.genologics.api.record.GenologicsAPIRecordingAspect">
         <property name="jaxbMarshaller" ref="genologicsJaxbMarshaller"/>
+        <property name="internalGenologicsAPI" ref="genologicsAPI"/>
     </bean>
 
     <aop:config>
@@ -54,9 +55,6 @@
             <aop:around
                 pointcut="execution(public * list*(..)) and bean(genologicsAPI)"
                 method="doList"/>
-            <aop:around
-                pointcut="execution(public * getForEntity(..)) and bean(genologicsRestTemplate)"
-                method="interceptGetForEntity"/>
         </aop:aspect>
     </aop:config>
 
