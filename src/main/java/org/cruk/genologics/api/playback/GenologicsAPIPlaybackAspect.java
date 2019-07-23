@@ -58,7 +58,6 @@ import com.genologics.ri.Batch;
 import com.genologics.ri.LimsEntity;
 import com.genologics.ri.LimsLink;
 import com.genologics.ri.Locatable;
-import com.genologics.ri.reagenttype.ReagentTypes;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.XStreamException;
 
@@ -98,11 +97,6 @@ public class GenologicsAPIPlaybackAspect
      * The directory containing the prerecorded messages.
      */
     private File messageDirectory;
-
-    /**
-     * The directory containing prerecorded searches.
-     */
-    private File searchDirectory;
 
     /**
      * The directory to write updated entities to.
@@ -177,31 +171,7 @@ public class GenologicsAPIPlaybackAspect
      */
     public void setMessageDirectory(File messageDirectory)
     {
-        if (searchDirectory == null || searchDirectory.getParentFile().equals(this.messageDirectory))
-        {
-            setSearchDirectory(new File(messageDirectory, Search.DEFAULT_SEARCH_DIRECTORY));
-        }
         this.messageDirectory = messageDirectory;
-    }
-
-    /**
-     * Get the directory searches are being written to.
-     *
-     * @return The search directory.
-     */
-    public File getSearchDirectory()
-    {
-        return searchDirectory;
-    }
-
-    /**
-     * Set the directory the messages are being written to.
-     *
-     * @param searchDirectory The search directory.
-     */
-    public void setSearchDirectory(File searchDirectory)
-    {
-        this.searchDirectory = searchDirectory;
     }
 
     /**
@@ -462,7 +432,7 @@ public class GenologicsAPIPlaybackAspect
      */
     private Search<?> loadSearch(SearchTerms terms)
     {
-        File searchFile = new File(searchDirectory, Search.getSearchFileName(terms));
+        File searchFile = new File(messageDirectory, Search.getSearchFileName(terms));
 
         try
         {

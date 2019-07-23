@@ -19,6 +19,7 @@
 package org.cruk.genologics.api.search;
 
 import java.io.Serializable;
+import java.text.MessageFormat;
 import java.util.List;
 import java.util.Map;
 
@@ -42,10 +43,12 @@ import com.thoughtworks.xstream.annotations.XStreamAlias;
 public class Search<E extends Locatable> implements Serializable
 {
     /**
-     * The default name for the subdirectory of the messages directory
-     * into which the search results will be written.
+     * The default name for search files. The parameter should be filled
+     * with the hexadecimal value of the search term's hash code.
+     *
+     * @see #getSearchFileName(SearchTerms)
      */
-    public static final String DEFAULT_SEARCH_DIRECTORY = "searches";
+    public static final String SEARCH_FILE_PATTERN = "search_{0}.xml";
 
     /**
      * Serialization version.
@@ -142,6 +145,17 @@ public class Search<E extends Locatable> implements Serializable
         return b.toString();
     }
 
+
+    /**
+     * Get the name of the file that will store the result of this search.
+     *
+     * @return The name of the file the search will be stored in.
+     */
+    public String getSearchFileName()
+    {
+        return getSearchFileName(searchTerms);
+    }
+
     /**
      * Get the name of the file that will store the result of the given search.
      * Convenience method here meaning all calls for record and playback will be
@@ -153,6 +167,6 @@ public class Search<E extends Locatable> implements Serializable
      */
     public static String getSearchFileName(SearchTerms terms)
     {
-        return Integer.toHexString(terms.hashCode()) + ".xml";
+        return MessageFormat.format(SEARCH_FILE_PATTERN, Integer.toHexString(terms.hashCode()));
     }
 }

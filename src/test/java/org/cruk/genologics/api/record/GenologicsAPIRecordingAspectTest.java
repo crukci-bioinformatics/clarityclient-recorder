@@ -92,7 +92,7 @@ public class GenologicsAPIRecordingAspectTest
     @After
     public void cleanup()
     {
-        // FileUtils.deleteQuietly(messageDirectory);
+        FileUtils.deleteQuietly(messageDirectory);
     }
 
     @Test
@@ -143,7 +143,7 @@ public class GenologicsAPIRecordingAspectTest
 
         List<LimsLink<ContainerType>> ctLinks = api.listAll(ContainerType.class);
 
-        File containerTypesFile = new File(aspect.getMessageDirectory(), "ContainerTypes.xml");
+        File containerTypesFile = new File(messageDirectory, "ContainerTypes.xml");
         assertTrue("Container types not recorded.", containerTypesFile.exists());
 
         @SuppressWarnings("unchecked")
@@ -157,7 +157,7 @@ public class GenologicsAPIRecordingAspectTest
 
         assertEquals("Wrong number of ReagentType links returned.", 120, rtLinks.size());
 
-        File reagentTypesFile = new File(aspect.getMessageDirectory(), "ReagentTypes.xml");
+        File reagentTypesFile = new File(messageDirectory, "ReagentTypes.xml");
         assertTrue("Reagent types not recorded.", reagentTypesFile.exists());
 
         @SuppressWarnings("unchecked")
@@ -191,7 +191,7 @@ public class GenologicsAPIRecordingAspectTest
     private <E extends LimsEntity<E>, L extends LimsEntityLinkable<E>> void assertRecorded(L entity)
     {
         String className = ClassUtils.getShortClassName(entity.getClass());
-        File entityFile = new File(aspect.getMessageDirectory(), className + "-" + entity.getLimsid() + ".xml");
+        File entityFile = new File(messageDirectory, className + "-" + entity.getLimsid() + ".xml");
         assertTrue("Have not recorded " + className + " " + entity.getLimsid(), entityFile.exists());
     }
 
@@ -203,13 +203,13 @@ public class GenologicsAPIRecordingAspectTest
         int lastSlash = id.lastIndexOf('/');
         id = id.substring(lastSlash + 1);
 
-        File entityFile = new File(aspect.getMessageDirectory(), className + "-" + id + ".xml");
+        File entityFile = new File(messageDirectory, className + "-" + id + ".xml");
         assertTrue("Have not recorded " + className + " " + id, entityFile.exists());
     }
 
     private void assertSearchRecorded(SearchTerms terms)
     {
-        File searchFile = new File(aspect.getSearchDirectory(), Search.getSearchFileName(terms));
+        File searchFile = new File(messageDirectory, Search.getSearchFileName(terms));
         assertTrue("Have not recorded search.", searchFile.exists());
     }
 

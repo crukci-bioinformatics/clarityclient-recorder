@@ -82,11 +82,6 @@ public class GenologicsAPIRecordingAspect
     private File messageDirectory;
 
     /**
-     * The directory to write searches to.
-     */
-    private File searchDirectory;
-
-    /**
      * The JAXB marshaller used to directly marshal the API entities into XML files.
      */
     private Jaxb2Marshaller jaxbMarshaller;
@@ -145,31 +140,7 @@ public class GenologicsAPIRecordingAspect
      */
     public void setMessageDirectory(File messageDirectory)
     {
-        if (searchDirectory == null || searchDirectory.getParentFile().equals(this.messageDirectory))
-        {
-            setSearchDirectory(new File(messageDirectory, Search.DEFAULT_SEARCH_DIRECTORY));
-        }
         this.messageDirectory = messageDirectory;
-    }
-
-    /**
-     * Get the directory searches are being written to.
-     *
-     * @return The search directory.
-     */
-    public File getSearchDirectory()
-    {
-        return searchDirectory;
-    }
-
-    /**
-     * Set the directory the messages are being written to.
-     *
-     * @param searchDirectory The search directory.
-     */
-    public void setSearchDirectory(File searchDirectory)
-    {
-        this.searchDirectory = searchDirectory;
     }
 
     /**
@@ -268,16 +239,7 @@ public class GenologicsAPIRecordingAspect
             Search<E> search = new Search<E>(searchTerms, entityClass);
             search.setResults(results);
 
-            // Create the search directory if it's not there and is under the messages directory.
-            if (!searchDirectory.exists() && searchDirectory.getParentFile().equals(messageDirectory))
-            {
-                if (!searchDirectory.mkdir())
-                {
-                    throw new IOException("Cannot create search directory " + searchDirectory.getAbsolutePath());
-                }
-            }
-
-            File searchFile = new File(searchDirectory, Search.getSearchFileName(search.getSearchTerms()));
+            File searchFile = new File(messageDirectory, search.getSearchFileName());
 
             Writer out = new FileWriterWithEncoding(searchFile, ASCII, true);
             try
