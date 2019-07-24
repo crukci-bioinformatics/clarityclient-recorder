@@ -147,6 +147,8 @@ public class GenologicsAPIPlaybackAspect
 
     /**
      * Constructor.
+     *
+     * @param messageDirectory The message directory.
      */
     public GenologicsAPIPlaybackAspect(File messageDirectory)
     {

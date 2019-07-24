@@ -116,6 +116,8 @@ public class GenologicsAPIRecordingAspect
 
     /**
      * Constructor.
+     *
+     * @param messageDirectory The message directory.
      */
     public GenologicsAPIRecordingAspect(File messageDirectory)
     {

@@ -109,7 +109,6 @@ public class SearchTerms implements Serializable
      * Get the class being searched for.
      *
      * @return The entity class.
-     * @return
      */
     public Class<?> getEntityClass()
     {
