@@ -20,21 +20,37 @@ package org.cruk.genologics.api.playback;
 
 import static org.cruk.genologics.api.unittests.UnitTestApplicationContextFactory.getPlaybackApplicationContext;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 
+import javax.xml.transform.stream.StreamSource;
+
+import org.apache.commons.io.FileUtils;
 import org.cruk.genologics.api.GenologicsAPI;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
+import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 
+import com.genologics.ri.LimsLink;
 import com.genologics.ri.artifact.Artifact;
 import com.genologics.ri.container.Container;
 import com.genologics.ri.containertype.ContainerType;
 import com.genologics.ri.lab.Lab;
 import com.genologics.ri.permission.Permission;
+import com.genologics.ri.process.GenologicsProcess;
 import com.genologics.ri.project.Project;
 import com.genologics.ri.reagenttype.ReagentType;
 import com.genologics.ri.researcher.Researcher;
@@ -43,20 +59,38 @@ import com.genologics.ri.sample.Sample;
 
 public class GenologicsAPIPlaybackAspectTest
 {
+    private Jaxb2Marshaller marshaller;
     private GenologicsAPI api;
+    private GenologicsAPIPlaybackAspect aspect;
 
     private File messageDirectory = new File("src/test/messages");
+    private File updateDirectory = new File("target/updates");
 
     public GenologicsAPIPlaybackAspectTest() throws MalformedURLException
     {
         ApplicationContext ctx = getPlaybackApplicationContext();
+        marshaller = ctx.getBean("genologicsJaxbMarshaller", Jaxb2Marshaller.class);
         api = ctx.getBean("genologicsAPI", GenologicsAPI.class);
 
         // To prove it's from the recording.
         api.setServer(new URL("http://localhost"));
 
-        GenologicsAPIPlaybackAspect aspect = ctx.getBean(GenologicsAPIPlaybackAspect.class);
+        aspect = ctx.getBean(GenologicsAPIPlaybackAspect.class);
         aspect.setMessageDirectory(messageDirectory);
+        aspect.setUpdatesDirectory(updateDirectory);
+    }
+
+    @Before
+    public void setup() throws IOException
+    {
+        FileUtils.deleteQuietly(updateDirectory);
+        FileUtils.forceMkdir(updateDirectory);
+    }
+
+    @After
+    public void cleanup()
+    {
+        FileUtils.deleteQuietly(updateDirectory);
     }
 
     @Test
@@ -98,5 +132,69 @@ public class GenologicsAPIPlaybackAspectTest
     {
         Sample s = api.load("0000", Sample.class);
         assertNull("Got something back from sample when expecting null.", s);
+    }
+
+    @Test
+    public void testReplySearch1()
+    {
+        Map<String, Object> terms = new HashMap<String, Object>();
+        terms.put("inputartifactlimsid", "2-1108999");
+        List<LimsLink<GenologicsProcess>> processes = api.find(terms, GenologicsProcess.class);
+        assertNotNull("Nothing returned from search.", processes);
+        assertEquals("Wrong number of processes returned from search.", 4, processes.size());
+    }
+
+    @Test
+    public void testReplySearch2()
+    {
+        Map<String, Object> terms = new HashMap<String, Object>();
+        terms.put("projectlimsid", new HashSet<String>(Arrays.asList("COH605", "SER1015")));
+        List<LimsLink<Sample>> samples = api.find(terms, Sample.class);
+        assertNotNull("Nothing returned from search.", samples);
+        assertEquals("Wrong number of samples returned from search.", 8, samples.size());
+    }
+
+    @Test
+    public void testReplySearch3()
+    {
+        Map<String, Object> terms = new HashMap<String, Object>();
+        terms.put("name", "SLX-7230_NORM");
+
+        List<LimsLink<Artifact>> artifacts = api.find(terms, Artifact.class);
+        assertNull("Got a result when a search was not recorded.", artifacts);
+    }
+
+    @Test
+    public void testUpdate()
+    {
+        Sample s = api.load("GAO9862A146", Sample.class);
+
+        s.setName("Name change one");
+        api.update(s);
+
+        File update1File = new File(updateDirectory, "Sample-GAO9862A146.000.xml");
+        assertTrue("Updated sample not written to " + update1File.getName(), update1File.exists());
+
+        s.setName("Second name change");
+        api.update(s);
+
+        File update2File = new File(updateDirectory, "Sample-GAO9862A146.001.xml");
+        assertTrue("Updated sample not written to " + update2File.getName(), update2File.exists());
+
+        Sample sv1 = (Sample)marshaller.unmarshal(new StreamSource(update1File));
+        assertEquals("Version zero name wrong", "Name change one", sv1.getName());
+
+        Sample sv2 = (Sample)marshaller.unmarshal(new StreamSource(update2File));
+        assertEquals("Version zero name wrong", "Second name change", sv2.getName());
+    }
+
+    @Test
+    public void testList()
+    {
+        List<LimsLink<ContainerType>> containerTypes = api.listAll(ContainerType.class);
+        assertEquals("Wrong number of container types returned.", 23, containerTypes.size());
+
+        List<LimsLink<ReagentType>> reagentTypes = api.listSome(ReagentType.class, 20, 50);
+        assertEquals("Wrong number of reagent types returned.", 120, reagentTypes.size());
     }
 }

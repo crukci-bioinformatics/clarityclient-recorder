@@ -33,12 +33,13 @@
 
     <context:annotation-config />
 
-    <bean name="recordingApiAspect" class="org.cruk.genologics.api.record.GenologicsAPIRecordingAspect">
+    <bean name="genologicsRecordingAspect" class="org.cruk.genologics.api.record.GenologicsAPIRecordingAspect">
         <property name="jaxbMarshaller" ref="genologicsJaxbMarshaller"/>
+        <property name="internalGenologicsAPI" ref="genologicsAPI"/>
     </bean>
 
     <aop:config>
-        <aop:aspect ref="recordingApiAspect">
+        <aop:aspect ref="genologicsRecordingAspect">
             <aop:around
                 pointcut="execution(public * retrieve(..)) and bean(genologicsAPI)"
                 method="doLoad"/>
@@ -48,6 +49,12 @@
             <aop:around
                 pointcut="execution(public * loadAll(..)) and bean(genologicsAPI)"
                 method="doLoadAll"/>
+            <aop:around
+                pointcut="execution(public * find(..)) and bean(genologicsAPI)"
+                method="doFind"/>
+            <aop:around
+                pointcut="execution(public * list*(..)) and bean(genologicsAPI)"
+                method="doList"/>
         </aop:aspect>
     </aop:config>
 

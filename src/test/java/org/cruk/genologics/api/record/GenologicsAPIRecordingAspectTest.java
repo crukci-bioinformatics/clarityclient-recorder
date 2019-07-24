@@ -25,26 +25,39 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+
+import javax.xml.transform.stream.StreamSource;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.ClassUtils;
 import org.cruk.genologics.api.GenologicsAPI;
+import org.cruk.genologics.api.search.Search;
+import org.cruk.genologics.api.search.SearchTerms;
 import org.cruk.genologics.api.unittests.UnitTestApplicationContextFactory;
 import org.junit.After;
 import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
+import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 
+import com.genologics.ri.Batch;
 import com.genologics.ri.LimsEntity;
 import com.genologics.ri.LimsEntityLinkable;
+import com.genologics.ri.LimsLink;
 import com.genologics.ri.Locatable;
 import com.genologics.ri.artifact.Artifact;
 import com.genologics.ri.container.Container;
 import com.genologics.ri.containertype.ContainerType;
 import com.genologics.ri.lab.Lab;
 import com.genologics.ri.permission.Permission;
+import com.genologics.ri.process.GenologicsProcess;
 import com.genologics.ri.project.Project;
 import com.genologics.ri.reagenttype.ReagentType;
 import com.genologics.ri.researcher.Researcher;
@@ -54,6 +67,8 @@ import com.genologics.ri.sample.Sample;
 public class GenologicsAPIRecordingAspectTest
 {
     private GenologicsAPI api;
+    private Jaxb2Marshaller marshaller;
+    private GenologicsAPIRecordingAspect aspect;
 
     private File messageDirectory = new File("target/messages");
 
@@ -61,8 +76,9 @@ public class GenologicsAPIRecordingAspectTest
     {
         ApplicationContext ctx = getRecordingApplicationContext();
         api = ctx.getBean(GenologicsAPI.class);
+        marshaller = ctx.getBean("genologicsJaxbMarshaller", Jaxb2Marshaller.class);
 
-        GenologicsAPIRecordingAspect aspect = ctx.getBean(GenologicsAPIRecordingAspect.class);
+        aspect = ctx.getBean(GenologicsAPIRecordingAspect.class);
         aspect.setMessageDirectory(messageDirectory);
     }
 
@@ -82,7 +98,7 @@ public class GenologicsAPIRecordingAspectTest
     @Test
     public void testRecording()
     {
-        Assume.assumeTrue("Can only run the recording test as written in CRUK-CI.", UnitTestApplicationContextFactory.inCrukCI());
+        Assume.assumeTrue("Can only run the recording tests as written in CRUK-CI.", UnitTestApplicationContextFactory.inCrukCI());
         checkCredentialsFileExists();
 
         Container c = api.load("27-340091", Container.class);
@@ -119,6 +135,59 @@ public class GenologicsAPIRecordingAspectTest
         assertRecorded(perm);
     }
 
+    @Test
+    public void testRecordList()
+    {
+        Assume.assumeTrue("Can only run the recording tests as written in CRUK-CI.", UnitTestApplicationContextFactory.inCrukCI());
+        checkCredentialsFileExists();
+
+        List<LimsLink<ContainerType>> ctLinks = api.listAll(ContainerType.class);
+
+        File containerTypesFile = new File(messageDirectory, "ContainerTypes.xml");
+        assertTrue("Container types not recorded.", containerTypesFile.exists());
+
+        @SuppressWarnings("unchecked")
+        Batch<? extends LimsLink<ContainerType>> ctBatch =
+                (Batch<? extends LimsLink<ContainerType>>)marshaller.unmarshal(new StreamSource(containerTypesFile));
+
+        assertEquals("Serialised container type links don't match the original.", ctLinks.size(), ctBatch.getSize());
+
+
+        List<LimsLink<ReagentType>> rtLinks = api.listSome(ReagentType.class, 0, 120);
+
+        assertEquals("Wrong number of ReagentType links returned.", 120, rtLinks.size());
+
+        File reagentTypesFile = new File(messageDirectory, "ReagentTypes.xml");
+        assertTrue("Reagent types not recorded.", reagentTypesFile.exists());
+
+        @SuppressWarnings("unchecked")
+        Batch<? extends LimsLink<ReagentType>> rtBatch =
+                (Batch<? extends LimsLink<ReagentType>>)marshaller.unmarshal(new StreamSource(reagentTypesFile));
+
+        assertEquals("Serialised reagent type links don't match the original.", rtLinks.size(), rtBatch.getSize());
+    }
+
+    @Test
+    public void testRecordSearch()
+    {
+        Assume.assumeTrue("Can only run the recording tests as written in CRUK-CI.", UnitTestApplicationContextFactory.inCrukCI());
+        checkCredentialsFileExists();
+
+        Map<String, Object> terms = new HashMap<String, Object>();
+        terms.put("inputartifactlimsid", "2-1108999");
+        api.find(terms, GenologicsProcess.class);
+
+        SearchTerms st1 = new SearchTerms(terms, GenologicsProcess.class);
+        assertSearchRecorded(st1);
+
+        terms.clear();
+        terms.put("projectlimsid", new HashSet<String>(Arrays.asList("COH605", "SER1015")));
+        api.find(terms, Sample.class);
+
+        SearchTerms st2 = new SearchTerms(terms, Sample.class);
+        assertSearchRecorded(st2);
+    }
+
     private <E extends LimsEntity<E>, L extends LimsEntityLinkable<E>> void assertRecorded(L entity)
     {
         String className = ClassUtils.getShortClassName(entity.getClass());
@@ -137,4 +206,11 @@ public class GenologicsAPIRecordingAspectTest
         File entityFile = new File(messageDirectory, className + "-" + id + ".xml");
         assertTrue("Have not recorded " + className + " " + id, entityFile.exists());
     }
+
+    private void assertSearchRecorded(SearchTerms terms)
+    {
+        File searchFile = new File(messageDirectory, Search.getSearchFileName(terms));
+        assertTrue("Have not recorded search.", searchFile.exists());
+    }
+
 }

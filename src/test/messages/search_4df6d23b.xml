@@ -1,0 +1,29 @@
+<search>
+  <terms>
+    <params>
+      <entry>
+        <string>inputartifactlimsid</string>
+        <string>2-1108999</string>
+      </entry>
+    </params>
+    <entity>com.genologics.ri.process.GenologicsProcess</entity>
+  </terms>
+  <results>
+    <com.genologics.ri.process.ProcessLink>
+      <uri>https://limsdev.cruk.cam.ac.uk/api/v2/processes/24-75735</uri>
+      <limsid>24-75735</limsid>
+    </com.genologics.ri.process.ProcessLink>
+    <com.genologics.ri.process.ProcessLink>
+      <uri>https://limsdev.cruk.cam.ac.uk/api/v2/processes/24-75746</uri>
+      <limsid>24-75746</limsid>
+    </com.genologics.ri.process.ProcessLink>
+    <com.genologics.ri.process.ProcessLink>
+      <uri>https://limsdev.cruk.cam.ac.uk/api/v2/processes/24-88248</uri>
+      <limsid>24-88248</limsid>
+    </com.genologics.ri.process.ProcessLink>
+    <com.genologics.ri.process.ProcessLink>
+      <uri>https://limsdev.cruk.cam.ac.uk/api/v2/processes/APR-API-161124-24-723175</uri>
+      <limsid>APR-API-161124-24-723175</limsid>
+    </com.genologics.ri.process.ProcessLink>
+  </results>
+</search>
