@@ -46,4 +46,7 @@ GenologicsAPI api = appContext.getBean("genologicsAPI", GenologicsAPI.class);
   Of course, if you're using Spring properly you'll be using dependency
 injection to insert the API into the classes that need it. The recording and
 playback wrappers are aspects around the internals of the API, and do not need
-additional wiring.
+additional wiring. One may want to programmatically set their messages
+directory and, in the case of the playback wrapper, its updates directory.
+See the page {{{./usage.html}Setting up the Record and Playback Wrappers}}
+for details.
