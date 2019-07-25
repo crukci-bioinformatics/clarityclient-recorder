@@ -1,4 +1,6 @@
-Setting the Message Directory
+Setting up the Record and Playback Wrappers
+
+* Setting the Message Directory
 
   The record and playback wrappers around the Clarity client need no additional
 configuration beyond what is supplied in the Spring files. The one property that
@@ -34,3 +36,28 @@ playbackAspect.setMessageDirectory(new File("src/test/messages"));
 
   This directory is not automatically created, so when recording make sure that it
 exists before communicating with the server.
+
+* Setting the Updates Directory during Playback
+
+  The playback wrapper returns results from previously recorded calls to
+the API's load, retrieve, load, find and list methods, finding the matching
+file in the messages directory, unmarshalling its XML and returning the object
+as the real API would. It quietly ignores create, delete and upload methods.
+Update calls can either by also quietly ignored, or they can be recorded
+in a separate directory. If one sets the <updatesDirectory>, any update calls
+will have the new versions of the entities written here with an incrementing
+index number.
+
+  For example, a sample with the id <S1234> has been read from the server
+and is recorded in the messages directory in a file <<<Sample-S1234.xml>>>.
+Each call to the API's <update> or <updateAll> methods for this sample will
+result in a file being added to the updates directory. The first will be
+<<<Sample-S1234.000.xml>>>, a second update will write <<<Sample-S1234.001.xml>>>
+and so forth. These updates can be checked as part of unit tests.
+
+  Update calls are ignored unless the <updatesDirectory> is set. Following
+from the example above, this would be done thus.
+
++---
+playbackAspect.setUpdatesDirectory(new File("target/updates"));
++---

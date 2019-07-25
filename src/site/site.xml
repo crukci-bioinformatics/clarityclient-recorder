@@ -19,9 +19,9 @@
                         Configuring Spring's application context.
                     </description>
                 </item>
-                <item name="Basic Usage" href="/usage.html">
+                <item name="Configuration in Code" href="/usage.html">
                     <description>
-                        Configuring the client recorder.
+                        Configuring the client recorder in Java.
                     </description>
                 </item>
             </item>
