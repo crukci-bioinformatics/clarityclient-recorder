@@ -35,6 +35,7 @@
 
     <bean name="genologicsPlaybackAspect" class="org.cruk.genologics.api.playback.GenologicsAPIPlaybackAspect">
         <property name="jaxbMarshaller" ref="genologicsJaxbMarshaller"/>
+        <property name="genologicsAPI" ref="genologicsAPI"/>
         <property name="internalGenologicsAPI" ref="genologicsAPI"/>
     </bean>
 

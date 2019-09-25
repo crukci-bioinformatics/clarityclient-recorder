@@ -111,6 +111,11 @@ public class GenologicsAPIPlaybackAspect
     private Jaxb2Marshaller jaxbMarshaller;
 
     /**
+     * Access to the API through its public interface.
+     */
+    private GenologicsAPI api;
+
+    /**
      * Access to the API, but through its internal interface.
      */
     private GenologicsAPIInternal apiInternal;
@@ -212,6 +217,17 @@ public class GenologicsAPIPlaybackAspect
     }
 
     /**
+     * Set the public interface access to the API.
+     *
+     * @param api The API bean, through its public interface.
+     */
+    @Required
+    public void setGenologicsAPI(GenologicsAPI api)
+    {
+        this.api = api;
+    }
+
+    /**
      * Set the internal interface access to the API.
      *
      * @param internalApi The API bean, but through its internal interface.
@@ -283,9 +299,17 @@ public class GenologicsAPIPlaybackAspect
     }
 
     /**
-     * Join point around calls to the API's {@code loadAll} method. Loads each
-     * entity in the list of links from the messages directory. At this point
-     * the link object provides the type and the URI.
+     * Join point around calls to the API's {@code loadAll} method. Iterates
+     * through the links asking the API for them individually, before returning
+     * a collection of the entities.
+     *
+     * <p>
+     * This slightly convoluted route allows the cache to return cache hits
+     * if it is in use. The actual loading, when there is a cache miss, comes
+     * from the call coming through this object again but via the
+     * {@link #doGet(ProceedingJoinPoint)} method, which loads the entity from
+     * file.
+     * </p>
      *
      * @param pjp The join point.
      *
@@ -303,14 +327,11 @@ public class GenologicsAPIPlaybackAspect
         while (iter.hasNext())
         {
             LimsLink<?> link = (LimsLink<?>)iter.next();
-            File file = getFileForEntity(link.getEntityClass(), link.getUri());
 
-            if (!file.exists())
-            {
-                throw new FileNotFoundException("There is no file " + file.getName() + " recorded.");
-            }
-
-            replies.add(jaxbMarshaller.unmarshal(new StreamSource(file)));
+            // Call through to the API again for this link only.
+            // This will come through this class again, but through the doGet interceptors.
+            // It will also go through the cache too.
+            replies.add(api.load(link));
         }
         return replies;
     }
