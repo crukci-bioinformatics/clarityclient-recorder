@@ -33,11 +33,13 @@
 
     <context:annotation-config />
 
-    <bean name="genologicsPlaybackAspect" class="org.cruk.genologics.api.playback.GenologicsAPIPlaybackAspect">
+    <bean name="genologicsPlaybackAspectBase" abstract="true" class="org.cruk.genologics.api.playback.GenologicsAPIPlaybackAspect">
         <property name="jaxbMarshaller" ref="genologicsJaxbMarshaller"/>
         <property name="genologicsAPI" ref="genologicsAPI"/>
         <property name="internalGenologicsAPI" ref="genologicsAPI"/>
     </bean>
+
+    <bean name="genologicsPlaybackAspect" parent="genologicsPlaybackAspectBase" />
 
     <aop:config>
         <aop:aspect ref="genologicsPlaybackAspect">
