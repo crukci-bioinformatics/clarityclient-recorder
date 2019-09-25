@@ -23,11 +23,14 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -37,15 +40,18 @@ import java.util.Map;
 import javax.xml.transform.stream.StreamSource;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.http.conn.HttpHostConnectException;
 import org.cruk.genologics.api.GenologicsAPI;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
+import org.springframework.web.client.ResourceAccessException;
 
 import com.genologics.ri.LimsLink;
 import com.genologics.ri.artifact.Artifact;
+import com.genologics.ri.artifact.ArtifactLink;
 import com.genologics.ri.container.Container;
 import com.genologics.ri.containertype.ContainerType;
 import com.genologics.ri.lab.Lab;
@@ -56,6 +62,7 @@ import com.genologics.ri.reagenttype.ReagentType;
 import com.genologics.ri.researcher.Researcher;
 import com.genologics.ri.role.Role;
 import com.genologics.ri.sample.Sample;
+import com.genologics.ri.sample.SampleLink;
 
 public class GenologicsAPIPlaybackAspectTest
 {
@@ -96,52 +103,96 @@ public class GenologicsAPIPlaybackAspectTest
     @Test
     public void testReplay()
     {
-        Container c = api.load("27-340091", Container.class);
-        assertEquals("Container name wrong", "HFTC7BBXX", c.getName());
+        try
+        {
+            Container c = api.load("27-340091", Container.class);
+            assertEquals("Container name wrong", "HFTC7BBXX", c.getName());
 
-        ContainerType ct = api.load(c.getContainerType());
-        assertEquals("Container type name wrong", "Illumina HiSeq 4000 Flow Cell", ct.getName());
+            ContainerType ct = api.load(c.getContainerType());
+            assertEquals("Container type name wrong", "Illumina HiSeq 4000 Flow Cell", ct.getName());
 
-        Artifact a = api.load("2-5898189", Artifact.class);
-        assertEquals("Artifact name wrong", "SLX-12321_NORM-1", a.getName());
+            Artifact a = api.load("2-5898189", Artifact.class);
+            assertEquals("Artifact name wrong", "SLX-12321_NORM-1", a.getName());
 
-        Sample s = api.load("GAO9862A146", Sample.class);
-        assertEquals("Sample name wrong", "34_a", s.getName());
+            Sample s = api.load("GAO9862A146", Sample.class);
+            assertEquals("Sample name wrong", "34_a", s.getName());
 
-        Project p = api.load(s.getProject());
-        assertEquals("Project name wrong", "Poseidon-NGTAS-201611", p.getName());
+            Project p = api.load(s.getProject());
+            assertEquals("Project name wrong", "Poseidon-NGTAS-201611", p.getName());
 
-        Researcher r = api.load(p.getResearcher());
-        assertEquals("Researcher name wrong", "Meiling", r.getFirstName());
+            Researcher r = api.load(p.getResearcher());
+            assertEquals("Researcher name wrong", "Meiling", r.getFirstName());
 
-        Lab l = api.load(r.getLab());
-        assertEquals("Lab name wrong", "CRUKCI", l.getName());
+            Lab l = api.load(r.getLab());
+            assertEquals("Lab name wrong", "CRUKCI", l.getName());
 
-        ReagentType rt = api.load("374", ReagentType.class);
-        assertEquals("Reagent category wrong", "Fluidigm", rt.getReagentCategory());
+            ReagentType rt = api.load("374", ReagentType.class);
+            assertEquals("Reagent category wrong", "Fluidigm", rt.getReagentCategory());
 
-        Role role = api.load("3", Role.class);
-        assertEquals("Role name wrong", "Collaborator", role.getName());
+            Role role = api.load("3", Role.class);
+            assertEquals("Role name wrong", "Collaborator", role.getName());
 
-        Permission perm = api.load("5", Permission.class);
-        assertEquals("Permission name wrong", "Project", perm.getName());
+            Permission perm = api.load("5", Permission.class);
+            assertEquals("Permission name wrong", "Project", perm.getName());
+        }
+        catch (ResourceAccessException e)
+        {
+            realServerAccess(e);
+        }
+    }
+
+    @Test
+    public void testLoadAll() throws Exception
+    {
+        try
+        {
+            List<LimsLink<Artifact>> alinks = new ArrayList<LimsLink<Artifact>>();
+            alinks.add(new ArtifactLink(new URI("https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/2-5898189")));
+            alinks.add(new ArtifactLink(new URI("https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/2-6764648")));
+
+            api.loadAll(alinks);
+
+            List<LimsLink<Sample>> slinks = new ArrayList<LimsLink<Sample>>();
+            slinks.add(new SampleLink(new URI("https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A146")));
+            slinks.add(new SampleLink(new URI("https://limsdev.cruk.cam.ac.uk/api/v2/samples/LEU10792A392")));
+
+            api.loadAll(slinks);
+        }
+        catch (ResourceAccessException e)
+        {
+            realServerAccess(e);
+        }
     }
 
     @Test
     public void testNotRecorded()
     {
-        Sample s = api.load("0000", Sample.class);
-        assertNull("Got something back from sample when expecting null.", s);
+        try
+        {
+            Sample s = api.load("0000", Sample.class);
+            assertNull("Got something back from sample when expecting null.", s);
+        }
+        catch (ResourceAccessException e)
+        {
+            realServerAccess(e);
+        }
     }
 
     @Test
     public void testReplySearch1()
     {
-        Map<String, Object> terms = new HashMap<String, Object>();
-        terms.put("inputartifactlimsid", "2-1108999");
-        List<LimsLink<GenologicsProcess>> processes = api.find(terms, GenologicsProcess.class);
-        assertNotNull("Nothing returned from search.", processes);
-        assertEquals("Wrong number of processes returned from search.", 4, processes.size());
+        try
+        {
+            Map<String, Object> terms = new HashMap<String, Object>();
+            terms.put("inputartifactlimsid", "2-1108999");
+            List<LimsLink<GenologicsProcess>> processes = api.find(terms, GenologicsProcess.class);
+            assertNotNull("Nothing returned from search.", processes);
+            assertEquals("Wrong number of processes returned from search.", 4, processes.size());
+        }
+        catch (ResourceAccessException e)
+        {
+            realServerAccess(e);
+        }
     }
 
     @Test
@@ -157,44 +208,81 @@ public class GenologicsAPIPlaybackAspectTest
     @Test
     public void testReplySearch3()
     {
-        Map<String, Object> terms = new HashMap<String, Object>();
-        terms.put("name", "SLX-7230_NORM");
+        try
+        {
+            Map<String, Object> terms = new HashMap<String, Object>();
+            terms.put("name", "SLX-7230_NORM");
 
-        List<LimsLink<Artifact>> artifacts = api.find(terms, Artifact.class);
-        assertNull("Got a result when a search was not recorded.", artifacts);
+            List<LimsLink<Artifact>> artifacts = api.find(terms, Artifact.class);
+            assertNull("Got a result when a search was not recorded.", artifacts);
+        }
+        catch (ResourceAccessException e)
+        {
+            realServerAccess(e);
+        }
     }
 
     @Test
     public void testUpdate()
     {
-        Sample s = api.load("GAO9862A146", Sample.class);
+        try
+        {
+            Sample s = api.load("GAO9862A146", Sample.class);
 
-        s.setName("Name change one");
-        api.update(s);
+            s.setName("Name change one");
+            api.update(s);
 
-        File update1File = new File(updateDirectory, "Sample-GAO9862A146.000.xml");
-        assertTrue("Updated sample not written to " + update1File.getName(), update1File.exists());
+            File update1File = new File(updateDirectory, "Sample-GAO9862A146.000.xml");
+            assertTrue("Updated sample not written to " + update1File.getName(), update1File.exists());
 
-        s.setName("Second name change");
-        api.update(s);
+            s.setName("Second name change");
+            api.update(s);
 
-        File update2File = new File(updateDirectory, "Sample-GAO9862A146.001.xml");
-        assertTrue("Updated sample not written to " + update2File.getName(), update2File.exists());
+            File update2File = new File(updateDirectory, "Sample-GAO9862A146.001.xml");
+            assertTrue("Updated sample not written to " + update2File.getName(), update2File.exists());
 
-        Sample sv1 = (Sample)marshaller.unmarshal(new StreamSource(update1File));
-        assertEquals("Version zero name wrong", "Name change one", sv1.getName());
+            Sample sv1 = (Sample)marshaller.unmarshal(new StreamSource(update1File));
+            assertEquals("Version zero name wrong", "Name change one", sv1.getName());
 
-        Sample sv2 = (Sample)marshaller.unmarshal(new StreamSource(update2File));
-        assertEquals("Version zero name wrong", "Second name change", sv2.getName());
+            Sample sv2 = (Sample)marshaller.unmarshal(new StreamSource(update2File));
+            assertEquals("Version zero name wrong", "Second name change", sv2.getName());
+        }
+        catch (ResourceAccessException e)
+        {
+            realServerAccess(e);
+        }
     }
 
     @Test
     public void testList()
     {
-        List<LimsLink<ContainerType>> containerTypes = api.listAll(ContainerType.class);
-        assertEquals("Wrong number of container types returned.", 23, containerTypes.size());
+        try
+        {
+            List<LimsLink<ContainerType>> containerTypes = api.listAll(ContainerType.class);
+            assertEquals("Wrong number of container types returned.", 23, containerTypes.size());
 
-        List<LimsLink<ReagentType>> reagentTypes = api.listSome(ReagentType.class, 20, 50);
-        assertEquals("Wrong number of reagent types returned.", 120, reagentTypes.size());
+            List<LimsLink<ReagentType>> reagentTypes = api.listSome(ReagentType.class, 20, 50);
+            assertEquals("Wrong number of reagent types returned.", 120, reagentTypes.size());
+        }
+        catch (ResourceAccessException e)
+        {
+            realServerAccess(e);
+        }
+    }
+
+    private void realServerAccess(ResourceAccessException rae)
+    {
+        try
+        {
+            throw rae.getCause();
+        }
+        catch (HttpHostConnectException hhce)
+        {
+            fail("Tried to access the real server " + hhce.getHost() + " during playback.");
+        }
+        catch (Throwable e)
+        {
+        }
+        fail("Tried to access a real server during playback: " + rae.getMessage());
     }
 }

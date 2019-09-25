@@ -36,6 +36,7 @@ import javax.xml.transform.stream.StreamSource;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.ClassUtils;
+import org.apache.http.conn.HttpHostConnectException;
 import org.cruk.genologics.api.GenologicsAPI;
 import org.cruk.genologics.api.search.Search;
 import org.cruk.genologics.api.search.SearchTerms;
@@ -46,6 +47,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
+import org.springframework.web.client.ResourceAccessException;
 
 import com.genologics.ri.Batch;
 import com.genologics.ri.LimsEntity;
@@ -101,38 +103,45 @@ public class GenologicsAPIRecordingAspectTest
         Assume.assumeTrue("Can only run the recording tests as written in CRUK-CI.", UnitTestApplicationContextFactory.inCrukCI());
         checkCredentialsFileExists();
 
-        Container c = api.load("27-340091", Container.class);
-        assertRecorded(c);
+        try
+        {
+            Container c = api.load("27-340091", Container.class);
+            assertRecorded(c);
 
-        ContainerType ct = api.load(c.getContainerType());
-        assertRecorded(ct);
+            ContainerType ct = api.load(c.getContainerType());
+            assertRecorded(ct);
 
-        Collections.sort(c.getPlacements());
+            Collections.sort(c.getPlacements());
 
-        Artifact pool = api.load(c.getPlacements().get(4));
-        assertEquals("Mismatched ids", "2-5898189", pool.getLimsid());
-        assertRecorded(pool);
+            Artifact pool = api.load(c.getPlacements().get(4));
+            assertEquals("Mismatched ids", "2-5898189", pool.getLimsid());
+            assertRecorded(pool);
 
-        Sample s = api.load("GAO9862A146", Sample.class);
-        assertRecorded(s);
+            Sample s = api.load("GAO9862A146", Sample.class);
+            assertRecorded(s);
 
-        Project p = api.load(s.getProject());
-        assertRecorded(p);
+            Project p = api.load(s.getProject());
+            assertRecorded(p);
 
-        Researcher r = api.load(p.getResearcher());
-        assertRecorded(r);
+            Researcher r = api.load(p.getResearcher());
+            assertRecorded(r);
 
-        Lab l = api.load(r.getLab());
-        assertRecorded(l);
+            Lab l = api.load(r.getLab());
+            assertRecorded(l);
 
-        ReagentType rg = api.load("374", ReagentType.class);
-        assertRecorded(rg);
+            ReagentType rg = api.load("374", ReagentType.class);
+            assertRecorded(rg);
 
-        Role role = api.load(r.getCredentials().getRoles().get(0));
-        assertRecorded(role);
+            Role role = api.load(r.getCredentials().getRoles().get(0));
+            assertRecorded(role);
 
-        Permission perm = api.load("5", Permission.class);
-        assertRecorded(perm);
+            Permission perm = api.load("5", Permission.class);
+            assertRecorded(perm);
+        }
+        catch (ResourceAccessException e)
+        {
+            realServerDown(e);
+        }
     }
 
     @Test
@@ -141,51 +150,65 @@ public class GenologicsAPIRecordingAspectTest
         Assume.assumeTrue("Can only run the recording tests as written in CRUK-CI.", UnitTestApplicationContextFactory.inCrukCI());
         checkCredentialsFileExists();
 
-        List<LimsLink<ContainerType>> ctLinks = api.listAll(ContainerType.class);
+        try
+        {
+            List<LimsLink<ContainerType>> ctLinks = api.listAll(ContainerType.class);
 
-        File containerTypesFile = new File(messageDirectory, "ContainerTypes.xml");
-        assertTrue("Container types not recorded.", containerTypesFile.exists());
+            File containerTypesFile = new File(messageDirectory, "ContainerTypes.xml");
+            assertTrue("Container types not recorded.", containerTypesFile.exists());
 
-        @SuppressWarnings("unchecked")
-        Batch<? extends LimsLink<ContainerType>> ctBatch =
-                (Batch<? extends LimsLink<ContainerType>>)marshaller.unmarshal(new StreamSource(containerTypesFile));
+            @SuppressWarnings("unchecked")
+            Batch<? extends LimsLink<ContainerType>> ctBatch =
+                    (Batch<? extends LimsLink<ContainerType>>)marshaller.unmarshal(new StreamSource(containerTypesFile));
 
-        assertEquals("Serialised container type links don't match the original.", ctLinks.size(), ctBatch.getSize());
+            assertEquals("Serialised container type links don't match the original.", ctLinks.size(), ctBatch.getSize());
 
 
-        List<LimsLink<ReagentType>> rtLinks = api.listSome(ReagentType.class, 0, 120);
+            List<LimsLink<ReagentType>> rtLinks = api.listSome(ReagentType.class, 0, 120);
 
-        assertEquals("Wrong number of ReagentType links returned.", 120, rtLinks.size());
+            assertEquals("Wrong number of ReagentType links returned.", 120, rtLinks.size());
 
-        File reagentTypesFile = new File(messageDirectory, "ReagentTypes.xml");
-        assertTrue("Reagent types not recorded.", reagentTypesFile.exists());
+            File reagentTypesFile = new File(messageDirectory, "ReagentTypes.xml");
+            assertTrue("Reagent types not recorded.", reagentTypesFile.exists());
 
-        @SuppressWarnings("unchecked")
-        Batch<? extends LimsLink<ReagentType>> rtBatch =
-                (Batch<? extends LimsLink<ReagentType>>)marshaller.unmarshal(new StreamSource(reagentTypesFile));
+            @SuppressWarnings("unchecked")
+            Batch<? extends LimsLink<ReagentType>> rtBatch =
+                    (Batch<? extends LimsLink<ReagentType>>)marshaller.unmarshal(new StreamSource(reagentTypesFile));
 
-        assertEquals("Serialised reagent type links don't match the original.", rtLinks.size(), rtBatch.getSize());
+            assertEquals("Serialised reagent type links don't match the original.", rtLinks.size(), rtBatch.getSize());
+        }
+        catch (ResourceAccessException e)
+        {
+            realServerDown(e);
+        }
     }
 
     @Test
     public void testRecordSearch()
     {
-        Assume.assumeTrue("Can only run the recording tests as written in CRUK-CI.", UnitTestApplicationContextFactory.inCrukCI());
-        checkCredentialsFileExists();
+        try
+        {
+            Assume.assumeTrue("Can only run the recording tests as written in CRUK-CI.", UnitTestApplicationContextFactory.inCrukCI());
+            checkCredentialsFileExists();
 
-        Map<String, Object> terms = new HashMap<String, Object>();
-        terms.put("inputartifactlimsid", "2-1108999");
-        api.find(terms, GenologicsProcess.class);
+            Map<String, Object> terms = new HashMap<String, Object>();
+            terms.put("inputartifactlimsid", "2-1108999");
+            api.find(terms, GenologicsProcess.class);
 
-        SearchTerms st1 = new SearchTerms(terms, GenologicsProcess.class);
-        assertSearchRecorded(st1);
+            SearchTerms st1 = new SearchTerms(terms, GenologicsProcess.class);
+            assertSearchRecorded(st1);
 
-        terms.clear();
-        terms.put("projectlimsid", new HashSet<String>(Arrays.asList("COH605", "SER1015")));
-        api.find(terms, Sample.class);
+            terms.clear();
+            terms.put("projectlimsid", new HashSet<String>(Arrays.asList("COH605", "SER1015")));
+            api.find(terms, Sample.class);
 
-        SearchTerms st2 = new SearchTerms(terms, Sample.class);
-        assertSearchRecorded(st2);
+            SearchTerms st2 = new SearchTerms(terms, Sample.class);
+            assertSearchRecorded(st2);
+        }
+        catch (ResourceAccessException e)
+        {
+            realServerDown(e);
+        }
     }
 
     private <E extends LimsEntity<E>, L extends LimsEntityLinkable<E>> void assertRecorded(L entity)
@@ -213,4 +236,20 @@ public class GenologicsAPIRecordingAspectTest
         assertTrue("Have not recorded search.", searchFile.exists());
     }
 
+    private void realServerDown(ResourceAccessException rae) throws ResourceAccessException
+    {
+        try
+        {
+            throw rae.getCause();
+        }
+        catch (HttpHostConnectException hhce)
+        {
+            Assume.assumeNoException("The server " + hhce.getHost() + " is not available. Test cannot run.", hhce);
+        }
+        catch (Throwable e)
+        {
+        }
+
+        throw rae;
+    }
 }
