@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<smp:sample xmlns:itp="http://genologics.com/ri/instrumenttype" xmlns:protstepcnf="http://genologics.com/ri/stepconfiguration" xmlns:udf="http://genologics.com/ri/userdefined" xmlns:stp="http://genologics.com/ri/step" xmlns:file="http://genologics.com/ri/file" xmlns:wkfcnf="http://genologics.com/ri/workflowconfiguration" xmlns:role="http://genologics.com/ri/role" xmlns:cnf="http://genologics.com/ri/configuration" xmlns:inst="http://genologics.com/ri/instrument" xmlns:ri="http://genologics.com/ri" xmlns:lab="http://genologics.com/ri/lab" xmlns:kit="http://genologics.com/ri/reagentkit" xmlns:lot="http://genologics.com/ri/reagentlot" xmlns:con="http://genologics.com/ri/container" xmlns:prc="http://genologics.com/ri/process" xmlns:ptp="http://genologics.com/ri/processtype" xmlns:smp="http://genologics.com/ri/sample" xmlns:stg="http://genologics.com/ri/stage" xmlns:rt="http://genologics.com/ri/routing" xmlns:prj="http://genologics.com/ri/project" xmlns:rtp="http://genologics.com/ri/reagenttype" xmlns:res="http://genologics.com/ri/researcher" xmlns:que="http://genologics.com/ri/queue" xmlns:ctp="http://genologics.com/ri/containertype" xmlns:art="http://genologics.com/ri/artifact" xmlns:ver="http://genologics.com/ri/version" xmlns:artgr="http://genologics.com/ri/artifactgroup" xmlns:ctrltp="http://genologics.com/ri/controltype" xmlns:exc="http://genologics.com/ri/exception" xmlns:ptm="http://genologics.com/ri/processtemplate" xmlns:perm="http://genologics.com/ri/permission" xmlns:prx="http://genologics.com/ri/processexecution" xmlns:protcnf="http://genologics.com/ri/protocolconfiguration" xmlns:prop="http://genologics.com/ri/property" xmlns:ns36="SAMPLE_NAMESPACE" limsid="LEU10792A392" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/LEU10792A392">
+    <name>2728_13_N slice 2</name>
+    <date-received>2018-12-19</date-received>
+    <project uri="https://limsdev.cruk.cam.ac.uk/api/v2/projects/LEU10792" limsid="LEU10792"/>
+    <submitter uri="https://limsdev.cruk.cam.ac.uk/api/v2/researchers/7204">
+        <first-name>Wing-Kit</first-name>
+        <last-name>Leung</last-name>
+    </submitter>
+    <artifact uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/LEU10792A392PA1?state=5751416" limsid="LEU10792A392PA1"/>
+    <udf:field name="Index Type" type="String">Truseq DNA LT</udf:field>
+    <udf:field name="Library Type" type="String">Bisulphite Converted</udf:field>
+    <udf:field name="Number of Lanes" type="Numeric">2</udf:field>
+    <udf:field name="Priority Status" type="String">Standard</udf:field>
+    <udf:field name="Progress" type="String">Accepted, Clustered:8, Published:8.</udf:field>
+    <udf:field name="Read Length" type="Numeric">150</udf:field>
+    <udf:field name="Reference Genome" type="String">Homo sapiens [GRCh37]</udf:field>
+    <udf:field name="Row" type="String">A</udf:field>
+    <udf:field name="Billing Information" type="String">SWAH/060</udf:field>
+    <udf:field name="Column" type="String">1</udf:field>
+    <udf:field name="Average Library Length" type="Numeric">415</udf:field>
+    <udf:field name="Pool Size" type="Numeric">12</udf:field>
+    <udf:field name="Sample Source" type="String">Primary Tissue</udf:field>
+    <udf:field name="Sample Type" type="String">DNA</udf:field>
+    <udf:field name="Sequencing Type" type="String">Single Read</udf:field>
+    <udf:field name="SLX Identifier" type="String">SLX-16196</udf:field>
+    <udf:field name="Version Number" type="String">SLX Version 56</udf:field>
+    <udf:field name="Workflow" type="String">HiSeq 4000</udf:field>
+</smp:sample>

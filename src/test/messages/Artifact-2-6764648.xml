@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<art:artifact xmlns:itp="http://genologics.com/ri/instrumenttype" xmlns:protstepcnf="http://genologics.com/ri/stepconfiguration" xmlns:udf="http://genologics.com/ri/userdefined" xmlns:stp="http://genologics.com/ri/step" xmlns:file="http://genologics.com/ri/file" xmlns:wkfcnf="http://genologics.com/ri/workflowconfiguration" xmlns:role="http://genologics.com/ri/role" xmlns:cnf="http://genologics.com/ri/configuration" xmlns:inst="http://genologics.com/ri/instrument" xmlns:ri="http://genologics.com/ri" xmlns:lab="http://genologics.com/ri/lab" xmlns:kit="http://genologics.com/ri/reagentkit" xmlns:lot="http://genologics.com/ri/reagentlot" xmlns:con="http://genologics.com/ri/container" xmlns:prc="http://genologics.com/ri/process" xmlns:ptp="http://genologics.com/ri/processtype" xmlns:smp="http://genologics.com/ri/sample" xmlns:stg="http://genologics.com/ri/stage" xmlns:rt="http://genologics.com/ri/routing" xmlns:prj="http://genologics.com/ri/project" xmlns:rtp="http://genologics.com/ri/reagenttype" xmlns:res="http://genologics.com/ri/researcher" xmlns:que="http://genologics.com/ri/queue" xmlns:ctp="http://genologics.com/ri/containertype" xmlns:art="http://genologics.com/ri/artifact" xmlns:ver="http://genologics.com/ri/version" xmlns:artgr="http://genologics.com/ri/artifactgroup" xmlns:ctrltp="http://genologics.com/ri/controltype" xmlns:exc="http://genologics.com/ri/exception" xmlns:ptm="http://genologics.com/ri/processtemplate" xmlns:perm="http://genologics.com/ri/permission" xmlns:prx="http://genologics.com/ri/processexecution" xmlns:protcnf="http://genologics.com/ri/protocolconfiguration" xmlns:prop="http://genologics.com/ri/property" xmlns:ns36="SAMPLE_NAMESPACE" limsid="2-6764648" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/2-6764648?state=5763393">
+    <name>SLX-17120-1</name>
+    <type>Analyte</type>
+    <output-type>Analyte</output-type>
+    <parent-process uri="https://limsdev.cruk.cam.ac.uk/api/v2/processes/24-1365511" limsid="24-1365511"/>
+    <qc-flag>PASSED</qc-flag>
+    <location>
+        <container uri="https://limsdev.cruk.cam.ac.uk/api/v2/containers/27-588513" limsid="27-588513"/>
+        <value>7:1</value>
+    </location>
+    <working-flag>true</working-flag>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/TAN20804A61" limsid="TAN20804A61"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/TAN20804A62" limsid="TAN20804A62"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/TAN20804A59" limsid="TAN20804A59"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/TAN20804A60" limsid="TAN20804A60"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/TAN20804A50" limsid="TAN20804A50"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/TAN20804A52" limsid="TAN20804A52"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/TAN20804A51" limsid="TAN20804A51"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/TAN20804A54" limsid="TAN20804A54"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/TAN20804A53" limsid="TAN20804A53"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/TAN20804A56" limsid="TAN20804A56"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/TAN20804A55" limsid="TAN20804A55"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/TAN20804A58" limsid="TAN20804A58"/>
+    <sample uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/TAN20804A57" limsid="TAN20804A57"/>
+    <reagent-label name="NEBNext01"/>
+    <reagent-label name="NEBNext03"/>
+    <reagent-label name="NEBNext04"/>
+    <reagent-label name="NEBNext05"/>
+    <reagent-label name="NEBNext06"/>
+    <reagent-label name="NEBNext07"/>
+    <reagent-label name="NEBNext08"/>
+    <reagent-label name="NEBNext09"/>
+    <reagent-label name="NEBNext10"/>
+    <reagent-label name="NEBNext12"/>
+    <reagent-label name="NEBNext18"/>
+    <reagent-label name="NEBNext20"/>
+    <reagent-label name="NEBNext19"/>
+    <udf:field name="Intensity Cycle 1 R1" type="Numeric">300.50892857142856</udf:field>
+    <udf:field name="Intensity Cycle 1 R2" type="Numeric">431.6517857142857</udf:field>
+    <udf:field name="Library Type" type="String">Standard DNA Illumina prep</udf:field>
+    <udf:field name="PPMS Order ID" type="String">79754</udf:field>
+    <udf:field name="% Intensity Cycle 20 R2" type="Numeric">86.18885096700797</udf:field>
+    <udf:field name="Read Length" type="Numeric">50</udf:field>
+    <udf:field name="Sequencing Type" type="String">Paired End</udf:field>
+    <udf:field name="SLX Identifier" type="String">SLX-17120</udf:field>
+    <udf:field name="Total Volume" type="Numeric">18</udf:field>
+    <udf:field name="Yield (Mreads)" type="Numeric">326</udf:field>
+    <udf:field name="% Phasing R2" type="Numeric">0.12793679364092117</udf:field>
+    <udf:field name="% Lost Reads" type="Numeric">3.43</udf:field>
+    <udf:field name="% Bases &gt;=Q30 R1" type="Numeric">97.77586908408064</udf:field>
+    <udf:field name="% Aligned R1" type="Numeric">0.618755865842104</udf:field>
+    <udf:field name="% Aligned R2" type="Numeric">0.5911927585090909</udf:field>
+    <udf:field name="% Bases &gt;=Q30 R2" type="Numeric">96.89382635831085</udf:field>
+    <udf:field name="% Error Rate R1" type="Numeric">0.137998247657612</udf:field>
+    <udf:field name="% Error Rate R2" type="Numeric">0.3565342018262649</udf:field>
+    <udf:field name="% Intensity Cycle 20 R1" type="Numeric">97.4269839855008</udf:field>
+    <udf:field name="% Phasing R1" type="Numeric">0.09753919044409745</udf:field>
+    <udf:field name="% Prephasing R1" type="Numeric">0.06298119499531042</udf:field>
+    <udf:field name="% Prephasing R2" type="Numeric">0.07615142000889007</udf:field>
+    <udf:field name="%PF R1" type="Numeric">67.48125999920826</udf:field>
+    <udf:field name="%PF R2" type="Numeric">67.48125999920826</udf:field>
+    <udf:field name="Concentration" type="Numeric">37.47657321</udf:field>
+    <udf:field name="Yield PF (Gb) R1" type="Numeric">15.97040095</udf:field>
+    <udf:field name="Yield PF (Gb) R2" type="Numeric">15.97040095</udf:field>
+    <udf:field name="Billable" type="String">Bill</udf:field>
+    <udf:field name="Cluster Density (K/mm^2) R1" type="Numeric">2354.912</udf:field>
+    <udf:field name="Cluster Density (K/mm^2) R2" type="Numeric">2354.912</udf:field>
+    <udf:field name="Billing Information" type="String">000194</udf:field>
+    <udf:field name="Clustered Concentration" type="Numeric">200</udf:field>
+    <udf:field name="Clustering" type="String">cBot</udf:field>
+    <udf:field name="Clusters PF R1" type="Numeric">325926550</udf:field>
+    <udf:field name="Clusters PF R2" type="Numeric">325926550</udf:field>
+    <udf:field name="Clusters Raw R1" type="Numeric">482988240</udf:field>
+    <udf:field name="Clusters Raw R2" type="Numeric">482988240</udf:field>
+    <udf:field name="Average Library Length" type="Numeric">321</udf:field>
+    <udf:field name="Index Type" type="String">NEBNext Multiplex Oligos</udf:field>
+    <udf:field name="Number of Lanes" type="Numeric">1</udf:field>
+    <udf:field name="Priority Status" type="String">Standard</udf:field>
+    <udf:field name="Workflow" type="String">HiSeq 4000</udf:field>
+    <workflow-stages>
+        <workflow-stage uri="https://limsdev.cruk.cam.ac.uk/api/v2/configuration/workflows/751/stages/1562" name="Illumina Sequencing Run" status="COMPLETE"/>
+        <workflow-stage uri="https://limsdev.cruk.cam.ac.uk/api/v2/configuration/workflows/251/stages/453" name="BIO: Publishing" status="QUEUED"/>
+        <workflow-stage uri="https://limsdev.cruk.cam.ac.uk/api/v2/configuration/workflows/251/stages/453" name="BIO: Publishing" status="REMOVED"/>
+    </workflow-stages>
+</art:artifact>

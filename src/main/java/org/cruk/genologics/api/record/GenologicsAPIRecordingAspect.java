@@ -29,7 +29,6 @@ import java.util.Map;
 
 import javax.xml.transform.stream.StreamResult;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.output.FileWriterWithEncoding;
 import org.apache.commons.lang3.ClassUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -243,17 +242,12 @@ public class GenologicsAPIRecordingAspect
 
             File searchFile = new File(messageDirectory, search.getSearchFileName());
 
-            Writer out = new FileWriterWithEncoding(searchFile, ASCII, true);
-            try
+            try (Writer out = new FileWriterWithEncoding(searchFile, ASCII, true))
             {
                 xstream.toXML(search, out);
 
                 // Doesn't write a final end of line.
                 out.write(EOL);
-            }
-            finally
-            {
-                IOUtils.closeQuietly(out);
             }
         }
         catch (IOException e)
