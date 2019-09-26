@@ -31,8 +31,10 @@ import java.net.URISyntaxException;
 import java.nio.charset.Charset;
 import java.text.MessageFormat;
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -261,7 +263,7 @@ public class GenologicsAPIPlaybackAspect
      * code if the file exists, or one with no body and a "not found" status if it
      * does not.
      *
-     * @throws Throwable if there is anything fails.
+     * @throws Throwable if there is anything that fails.
      */
     public ResponseEntity<?> doGetEntity(ProceedingJoinPoint pjp) throws Throwable
     {
@@ -281,6 +283,42 @@ public class GenologicsAPIPlaybackAspect
     }
 
     /**
+<<<<<<< HEAD
+=======
+     * Join point around calls to the API's {@code loadAll} method. Loads each
+     * entity in the list of links from the messages directory. At this point
+     * the link object provides the type and the URI.
+     *
+     * @param pjp The join point.
+     *
+     * @return A list of the entities loaded from the links.
+     *
+     * @throws FileNotFoundException if there is no entity file recorded for any of the links.
+     *
+     * @throws Throwable if there is anything else that fails.
+     */
+    public List<?> doLoadAll(ProceedingJoinPoint pjp) throws Throwable
+    {
+        Collection<?> links = (Collection<?>)pjp.getArgs()[0];
+        List<Object> replies = new ArrayList<Object>(links.size());
+        Iterator<?> iter = links.iterator();
+        while (iter.hasNext())
+        {
+            LimsLink<?> link = (LimsLink<?>)iter.next();
+            File file = getFileForEntity(link.getEntityClass(), link.getUri());
+
+            if (!file.exists())
+            {
+                throw new FileNotFoundException("There is no file " + file.getName() + " recorded.");
+            }
+
+            replies.add(jaxbMarshaller.unmarshal(new StreamSource(file)));
+        }
+        return replies;
+    }
+
+    /**
+>>>>>>> 9d124ac6a9077df07133db1c8ca60cd7dcd43deb
      * Join point around the Clarity client's {@code find()} method. Tries to find
      * a prerecorded search in the search directory that matches the search parameters
      * of this call.
@@ -438,8 +476,7 @@ public class GenologicsAPIPlaybackAspect
 
         try
         {
-            Reader reader = new InputStreamReader(new FileInputStream(searchFile), ASCII);
-            try
+            try (Reader reader = new InputStreamReader(new FileInputStream(searchFile), ASCII))
             {
                 return (Search<?>)xstream.fromXML(reader);
             }
@@ -460,10 +497,6 @@ public class GenologicsAPIPlaybackAspect
                     }
                 }
                 throw xse;
-            }
-            finally
-            {
-                IOUtils.closeQuietly(reader);
             }
         }
         catch (FileNotFoundException e)

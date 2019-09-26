@@ -47,6 +47,9 @@
                 pointcut="execution(public * getForEntity(..)) and bean(genologicsRestTemplate)"
                 method="doGetEntity"/>
             <aop:around
+                pointcut="execution(public * loadAll(..)) and bean(genologicsAPI)"
+                method="doLoadAll"/>
+            <aop:around
                 pointcut="execution(public * find(..)) and bean(genologicsAPI)"
                 method="doFind"/>
             <aop:around
