@@ -51,7 +51,7 @@
 
     <organization>
         <name>Cancer Research UK Cambridge Institute</name>
-        <url>http://www.cruk.cam.ac.uk</url>
+        <url>https://www.cruk.cam.ac.uk/</url>
     </organization>
 
     <developers>
@@ -80,21 +80,39 @@
     </licenses>
 
     <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <dependency.locations.enabled>false</dependency.locations.enabled>
         <api.version>${project.version}</api.version>
     </properties>
+
+    <distributionManagement>
+        <downloadUrl>https://github.com/crukci-bioinformatics/clarityclientrecorder/archive/master.zip</downloadUrl>
+        <site>
+            <id>github</id>
+            <name>GitHub Pages</name>
+            <url>ssh://git@github.com/crukci-bioinformatics/clarityclientrecorder</url>
+        </site>
+        <repository>
+            <id>crukci-bioinformatics</id>
+            <url>scpexe://comp-httpdev001.cri.camres.org/var/www/html/bioinformatics/maven</url>
+        </repository>
+        <snapshotRepository>
+            <id>bioinformatics</id>
+            <url>scpexe://internal-bioinformatics.cruk.cam.ac.uk/var/www/html/maven</url>
+        </snapshotRepository>
+    </distributionManagement>
 
     <pluginRepositories>
         <pluginRepository>
             <id>mulesoft</id>
             <url>https://repository-master.mulesoft.org/nexus/content/groups/public</url>
-            <layout>default</layout>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
             <releases>
                 <enabled>true</enabled>
             </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
         </pluginRepository>
     </pluginRepositories>
 
@@ -102,13 +120,12 @@
         <repository>
             <id>mulesoft</id>
             <url>https://repository-master.mulesoft.org/nexus/content/groups/public</url>
-            <layout>default</layout>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
             <releases>
                 <enabled>true</enabled>
             </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
         </repository>
         <repository>
             <id>crukci-bioinformatics</id>
@@ -132,65 +149,63 @@
         </repository>
     </repositories>
 
-    <distributionManagement>
-        <downloadUrl>https://github.com/crukci-bioinformatics/clarityclientrecorder/archive/master.zip</downloadUrl>
-        <site>
-            <id>github</id>
-            <name>GitHub Pages</name>
-            <url>ssh://git@github.com/crukci-bioinformatics/clarityclientrecorder</url>
-        </site>
-        <repository>
-            <id>crukci-bioinformatics</id>
-            <url>scpexe://comp-httpdev001.cri.camres.org/var/www/html/bioinformatics/maven</url>
-        </repository>
-        <snapshotRepository>
-            <id>bioinformatics</id>
-            <url>scpexe://internal-bioinformatics.cruk.cam.ac.uk/var/www/html/maven</url>
-        </snapshotRepository>
-    </distributionManagement>
-
     <build>
         <extensions>
             <extension>
                 <groupId>org.apache.maven.wagon</groupId>
                 <artifactId>wagon-ssh</artifactId>
-                <version>2.6</version>
+                <version>2.12</version>
             </extension>
             <extension>
                 <groupId>org.apache.maven.wagon</groupId>
                 <artifactId>wagon-ssh-external</artifactId>
-                <version>2.6</version>
+                <version>2.12</version>
             </extension>
         </extensions>
 
         <pluginManagement>
             <plugins>
+
+                <!-- Build plugins -->
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-clean-plugin</artifactId>
+                    <version>3.1.0</version>
+                </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.6.1</version>
+                    <version>3.8.1</version>
                     <configuration>
                         <source>1.6</source>
                         <target>1.6</target>
                         <encoding>UTF-8</encoding>
                         <compilerArgs>
-                            <arg>-Xlint:all</arg>
+                            <compilerArg>-Xlint:all</compilerArg>
                         </compilerArgs>
                         <fork>true</fork>
                     </configuration>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-resources-plugin</artifactId>
-                    <version>3.0.2</version>
-                    <configuration>
-                        <encoding>UTF-8</encoding>
-                    </configuration>
+                    <artifactId>maven-dependency-plugin</artifactId>
+                    <version>3.1.2</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-deploy-plugin</artifactId>
+                    <version>3.0.0-M1</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-install-plugin</artifactId>
+                    <version>3.0.0-M1</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-jar-plugin</artifactId>
-                    <version>3.0.2</version>
+                    <version>3.2.0</version>
                     <configuration>
                         <archive>
                             <index>true</index>
@@ -203,44 +218,73 @@
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-assembly-plugin</artifactId>
-                    <version>3.0.0</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-dependency-plugin</artifactId>
-                    <version>3.0.0</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-source-plugin</artifactId>
-                    <version>3.0.1</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-surefire-plugin</artifactId>
-                    <version>2.19.1</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-shade-plugin</artifactId>
-                    <version>2.4.3</version>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <version>3.1.0</version>
+                    <configuration>
+                        <encoding>UTF-8</encoding>
+                    </configuration>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-site-plugin</artifactId>
-                    <version>3.6</version>
+                    <version>3.9.0</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-source-plugin</artifactId>
+                    <version>3.2.1</version>
+                </plugin>
+                <plugin>
+                    <!-- Note: the newest versions (3.0.x) do not work -->
+                    <!-- https://stackoverflow.com/questions/36970384/surefire-is-not-picking-up-junit-5-tests -->
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>2.22.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-toolchains-plugin</artifactId>
-                    <version>1.1</version>
+                    <version>3.0.0</version>
+                </plugin>
+
+                <!-- Reporting plugins -->
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <version>3.2.0</version>
+                    <configuration>
+                        <source>1.6</source>
+                        <target>1.6</target>
+                        <encoding>UTF-8</encoding>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-project-info-reports-plugin</artifactId>
+                    <version>3.0.0</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-report-plugin</artifactId>
+                    <version>3.0.0-M4</version>
+                </plugin>
+
+                <!-- Third party plugins -->
+
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>jaxb2-maven-plugin</artifactId>
+                    <version>2.5.0</version>
                 </plugin>
                 <plugin>
                     <groupId>com.github.github</groupId>
                     <artifactId>site-maven-plugin</artifactId>
-                    <version>0.9</version>
+                    <version>0.12</version>
                 </plugin>
+
+                <!-- Eclipse helper -->
+
                 <plugin>
                     <groupId>org.eclipse.m2e</groupId>
                     <artifactId>lifecycle-mapping</artifactId>
@@ -252,7 +296,7 @@
                                     <pluginExecutionFilter>
                                         <groupId>org.apache.maven.plugins</groupId>
                                         <artifactId>maven-toolchains-plugin</artifactId>
-                                        <versionRange>[1.0,)</versionRange>
+                                        <versionRange>[3.0,)</versionRange>
                                         <goals>
                                             <goal>toolchain</goal>
                                         </goals>
@@ -287,7 +331,6 @@
                     <toolchains>
                         <jdk>
                             <version>1.6</version>
-                            <vendor>sun</vendor>
                         </jdk>
                     </toolchains>
                 </configuration>
@@ -312,40 +355,34 @@
                     </execution>
                 </executions>
             </plugin>
+            
             <plugin>
-                <!-- Seems that the configuration of this needs to be in the "reports"
-                     section when run as part of the site plugin, but needs to be here
-                     when run directly from the Javadoc plugin.
-                 -->
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>2.10.4</version>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>versions-maven-plugin</artifactId>
+                <version>2.7</version>
                 <configuration>
-                    <overview>${project.build.sourceDirectory}/overview.html</overview>
-                    <source>1.6</source>
-                    <encoding>UTF-8</encoding>
-                    <breakiterator>true</breakiterator>
-                    <serialwarn>false</serialwarn>
-                    <show>protected</show>
-                    <links>
-                        <link>https://www.slf4j.org/apidocs/</link>
-                        <link>https://docs.spring.io/spring/docs/4.3.x/javadoc-api/</link>
-                        <link>https://docs.spring.io/spring-integration/docs/4.3.x/api/</link>
-                        <link>http://hc.apache.org/httpcomponents-client-4.5.x/httpclient/apidocs/</link>
-                        <link>http://hc.apache.org/httpcomponents-core-ga/httpcore/apidocs/</link>
-                        <link>https://eclipse.org/aspectj/doc/released/runtime-api/</link>
-                        <link>https://eclipse.org/aspectj/doc/released/aspectj5rt-api/</link>
-                        <link>http://ehcache.org/apidocs/2.6.9/</link>
-                        <link>http://crukci-bioinformatics.github.io/clarityclient/apidocs/</link>
-                    </links>
+                    <generateBackupPoms>false</generateBackupPoms>
                 </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-site-plugin</artifactId>
-                <configuration>
-                    <skipDeploy>true</skipDeploy>
-                </configuration>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <version>3.0.0-M3</version>
+                <executions>
+                    <execution>
+                        <id>enforce-maven</id>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <requireMavenVersion>
+                                    <version>3.5.0</version>
+                                </requireMavenVersion>
+                            </rules>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
@@ -355,7 +392,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-project-info-reports-plugin</artifactId>
-                <version>2.9</version>
                 <configuration>
                     <reportSets>
                         <reportSet>
@@ -370,20 +406,29 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-report-plugin</artifactId>
-                <version>2.19.1</version>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <report>javadoc</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
                 <configuration>
                     <overview>${project.build.sourceDirectory}/overview.html</overview>
-                    <source>1.6</source>
-                    <encoding>UTF-8</encoding>
                     <breakiterator>true</breakiterator>
                     <serialwarn>false</serialwarn>
                     <show>protected</show>
                     <links>
+                        <link>https://docs.oracle.com/javase/6/docs/api</link>
                         <link>https://www.slf4j.org/apidocs/</link>
+                        <link>http://commons.apache.org/proper/commons-beanutils/javadocs/v1.9.4/apidocs</link>
+                        <link>http://commons.apache.org/proper/commons-collections/javadocs/api-4.4</link>
+                        <link>http://commons.apache.org/proper/commons-io/javadocs/api-release</link>
+                        <link>http://commons.apache.org/proper/commons-lang/javadocs/api-release</link>
                         <link>https://docs.spring.io/spring/docs/4.3.x/javadoc-api/</link>
                         <link>https://docs.spring.io/spring-integration/docs/4.3.x/api/</link>
                         <link>http://hc.apache.org/httpcomponents-client-4.5.x/httpclient/apidocs/</link>
@@ -394,14 +439,6 @@
                         <link>http://crukci-bioinformatics.github.io/clarityclient/apidocs/</link>
                     </links>
                 </configuration>
-                <reportSets>
-                    <reportSet>
-                        <id>default</id>
-                        <reports>
-                            <report>javadoc</report>
-                        </reports>
-                    </reportSet>
-                </reportSets>
             </plugin>
         </plugins>
     </reporting>
@@ -429,7 +466,7 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
-            <version>1.7.13</version>
+            <version>1.7.25</version>
             <scope>test</scope>
         </dependency>
         <dependency>
