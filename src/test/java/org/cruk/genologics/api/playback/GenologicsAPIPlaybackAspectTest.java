@@ -26,7 +26,9 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.lang.reflect.UndeclaredThrowableException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
@@ -206,15 +208,30 @@ public class GenologicsAPIPlaybackAspectTest
     }
 
     @Test
-    public void testReplySearch3()
+    public void testReplySearch3() throws Throwable
     {
         try
         {
             Map<String, Object> terms = new HashMap<String, Object>();
             terms.put("name", "SLX-7230_NORM");
 
-            List<LimsLink<Artifact>> artifacts = api.find(terms, Artifact.class);
-            assertNull("Got a result when a search was not recorded.", artifacts);
+            api.find(terms, Artifact.class);
+            fail("Got a result when a search was not recorded.");
+        }
+        catch (UndeclaredThrowableException e1)
+        {
+            try
+            {
+                throw e1.getUndeclaredThrowable();
+            }
+            catch (FileNotFoundException e2)
+            {
+                // Expected.
+            }
+            catch (Throwable e2)
+            {
+                throw e2;
+            }
         }
         catch (ResourceAccessException e)
         {

@@ -341,10 +341,13 @@ public class GenologicsAPIPlaybackAspect
      * of this call.
      *
      * @param pjp The join point.
-     * @return The result of the search (a list of links). Will return null if there
-     * is no matching search recorded.
+     *
+     * @return The result of the search (a list of links).
+     *
+     * @throws FileNotFoundException if there is no search recorded for the parameters
+     * given.
      */
-    public List<?> doFind(ProceedingJoinPoint pjp)
+    public List<?> doFind(ProceedingJoinPoint pjp) throws FileNotFoundException
     {
         @SuppressWarnings("unchecked")
         Map<String, ?> searchTerms = (Map<String, ?>)pjp.getArgs()[0];
@@ -358,8 +361,7 @@ public class GenologicsAPIPlaybackAspect
 
         if (search == null)
         {
-            logger.warn("There is no recorded search with the parameters given:\n{}", searchTerms);
-            return null;
+            throw new FileNotFoundException("There is no recorded search with the parameters given:\n" + searchTerms);
         }
 
         return search.getResults();
