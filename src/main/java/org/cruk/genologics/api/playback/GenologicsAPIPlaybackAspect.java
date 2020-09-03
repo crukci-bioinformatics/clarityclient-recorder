@@ -346,8 +346,10 @@ public class GenologicsAPIPlaybackAspect
      *
      * @throws FileNotFoundException if there is no search recorded for the parameters
      * given.
+     *
+     * @throws Throwable if there is anything else that fails.
      */
-    public List<?> doFind(ProceedingJoinPoint pjp) throws FileNotFoundException
+    public List<?> doFind(ProceedingJoinPoint pjp) throws Throwable
     {
         @SuppressWarnings("unchecked")
         Map<String, ?> searchTerms = (Map<String, ?>)pjp.getArgs()[0];
