@@ -215,7 +215,7 @@ public class GenologicsAPIPlaybackAspectTest
             Map<String, Object> terms = new HashMap<String, Object>();
             terms.put("name", "SLX-7230_NORM");
 
-            List<LimsLink<Artifact>> artifacts = api.find(terms, Artifact.class);
+            api.find(terms, Artifact.class);
             fail("Got a result when a search was not recorded.");
         }
         catch (UndeclaredThrowableException e1)
