@@ -21,6 +21,7 @@ package org.cruk.genologics.api.record;
 import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
+import java.lang.reflect.Constructor;
 import java.nio.charset.Charset;
 import java.text.MessageFormat;
 import java.util.Collection;
@@ -304,7 +305,8 @@ public class GenologicsAPIRecordingAspect
             }
             else
             {
-                BH batch = batchClass.newInstance();
+                Constructor<BH> batchConstructor = batchClass.getConstructor();
+                BH batch = batchConstructor.newInstance();
                 batch.getList().addAll(links);
                 writeList(batch);
             }
