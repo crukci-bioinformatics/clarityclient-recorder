@@ -555,14 +555,14 @@
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-framework-bom</artifactId>
-                <version>4.3.26.RELEASE</version>
+                <version>4.3.29.RELEASE</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-core</artifactId>
-                <version>4.3.26.RELEASE</version>
+                <version>4.3.29.RELEASE</version>
                 <exclusions>
                     <exclusion>
                         <groupId>commons-logging</groupId>
@@ -572,8 +572,8 @@
             </dependency>
             <dependency>
                 <groupId>org.springframework.integration</groupId>
-                <artifactId>spring-integration-sftp</artifactId>
-                <version>4.3.22.RELEASE</version>
+                <artifactId>spring-integration-bom</artifactId>
+                <version>4.3.23.RELEASE</version>
                 <exclusions>
                     <exclusion>
                         <groupId>com.jcraft</groupId>
@@ -591,7 +591,7 @@
             <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
-                <version>4.12</version>
+                <version>4.13.1</version>
             </dependency>
             <dependency>
                 <groupId>org.easymock</groupId>
