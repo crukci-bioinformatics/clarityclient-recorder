@@ -33,6 +33,8 @@
 
     <context:annotation-config />
 
+    <bean id="searchXStream" class="org.cruk.genologics.api.xstream.XStreamFactory" />
+
     <bean name="genologicsRecordingAspectBase" abstract="true" class="org.cruk.genologics.api.record.GenologicsAPIRecordingAspect">
         <property name="jaxbMarshaller" ref="genologicsJaxbMarshaller"/>
         <property name="internalGenologicsAPI" ref="genologicsAPI"/>

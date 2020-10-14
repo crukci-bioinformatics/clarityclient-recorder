@@ -38,9 +38,10 @@ import org.aspectj.lang.annotation.Aspect;
 import org.cruk.genologics.api.GenologicsAPI;
 import org.cruk.genologics.api.impl.GenologicsAPIInternal;
 import org.cruk.genologics.api.search.Search;
-import org.cruk.genologics.api.search.SearchTerms;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 
@@ -95,17 +96,10 @@ public class GenologicsAPIRecordingAspect
     /**
      * XStream XML serialiser.
      */
+    @Autowired
+    @Qualifier("searchXStream")
     private XStream xstream;
 
-
-    /**
-     * Initialiser. Set up XStream.
-     */
-    {
-        xstream = new XStream();
-        xstream.processAnnotations(Search.class);
-        xstream.processAnnotations(SearchTerms.class);
-    }
 
     /**
      * Constructor.
