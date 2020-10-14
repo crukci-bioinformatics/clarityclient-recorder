@@ -21,6 +21,7 @@ package org.cruk.genologics.api.record;
 import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
+import java.lang.reflect.Constructor;
 import java.nio.charset.Charset;
 import java.text.MessageFormat;
 import java.util.Collection;
@@ -36,9 +37,10 @@ import org.aspectj.lang.annotation.Aspect;
 import org.cruk.genologics.api.GenologicsAPI;
 import org.cruk.genologics.api.impl.GenologicsAPIInternal;
 import org.cruk.genologics.api.search.Search;
-import org.cruk.genologics.api.search.SearchTerms;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 
@@ -93,17 +95,10 @@ public class GenologicsAPIRecordingAspect
     /**
      * XStream XML serialiser.
      */
+    @Autowired
+    @Qualifier("searchXStream")
     private XStream xstream;
 
-
-    /**
-     * Initialiser. Set up XStream.
-     */
-    {
-        xstream = new XStream();
-        xstream.processAnnotations(Search.class);
-        xstream.processAnnotations(SearchTerms.class);
-    }
 
     /**
      * Constructor.
@@ -298,7 +293,8 @@ public class GenologicsAPIRecordingAspect
             }
             else
             {
-                BH batch = batchClass.newInstance();
+                Constructor<BH> batchConstructor = batchClass.getConstructor();
+                BH batch = batchConstructor.newInstance();
                 batch.getList().addAll(links);
                 writeList(batch);
             }
