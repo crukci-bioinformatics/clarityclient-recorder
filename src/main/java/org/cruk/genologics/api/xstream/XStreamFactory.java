@@ -26,12 +26,30 @@ import com.thoughtworks.xstream.security.NoTypePermission;
 import com.thoughtworks.xstream.security.NullPermission;
 import com.thoughtworks.xstream.security.PrimitiveTypePermission;
 
+
+/**
+ * A factory bean for XStream instances. These instances are set up to allow
+ * deserialisation of the API classes and some core Java classes only.
+ *
+ * @since 2.24.17
+ */
 public class XStreamFactory implements FactoryBean<XStream>
 {
+    /**
+     * Logger.
+     */
     private Logger logger = LoggerFactory.getLogger(XStreamFactory.class);
 
+    /**
+     * List of packages whose classes are allowed to be deserialised by XStream.
+     * These are read from the "packagelist.txt" file on the class path.
+     */
     private final List<String> packageWildcards;
 
+    /**
+     * Create the factory. Read the API packages from the package list file on the
+     * class path.
+     */
     public XStreamFactory()
     {
         final String packagesList = "/com/genologics/ri/packagelist.txt";
@@ -69,6 +87,11 @@ public class XStreamFactory implements FactoryBean<XStream>
         packageWildcards = Collections.unmodifiableList(packages);
     }
 
+    /**
+     * Create an instance of XStream set up for deserialising search objects.
+     *
+     * @return An XStream object configured for reading and writing searches.
+     */
     @Override
     public XStream getObject()
     {
@@ -94,12 +117,20 @@ public class XStreamFactory implements FactoryBean<XStream>
         return xstream;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Class<XStream> getObjectType()
     {
         return XStream.class;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @return false, always.
+     */
     @Override
     public boolean isSingleton()
     {
