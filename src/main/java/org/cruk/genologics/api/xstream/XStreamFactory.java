@@ -31,7 +31,7 @@ import com.thoughtworks.xstream.security.PrimitiveTypePermission;
  * A factory bean for XStream instances. These instances are set up to allow
  * deserialisation of the API classes and some core Java classes only.
  *
- * @since 2.24.17
+ * @since 2.27.2
  */
 public class XStreamFactory implements FactoryBean<XStream>
 {
