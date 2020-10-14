@@ -1,3 +1,4 @@
 org.cruk.genologics.api.playback
 org.cruk.genologics.api.record
 org.cruk.genologics.api.search
+org.cruk.genologics.api.xstream
