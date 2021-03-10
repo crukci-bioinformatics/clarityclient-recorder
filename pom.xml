@@ -93,7 +93,7 @@
             <url>ssh://git@github.com/crukci-bioinformatics/clarityclientrecorder</url>
         </site>
         <repository>
-            <id>crukci-bioinformatics</id>
+            <id>bioinformatics</id>
             <url>scpexe://comp-httpdev001.cri.camres.org/var/www/html/bioinformatics/maven</url>
         </repository>
         <snapshotRepository>
