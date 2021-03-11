@@ -52,7 +52,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Required;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
@@ -204,7 +203,8 @@ public class GenologicsAPIPlaybackAspect
      *
      * @param jaxbMarshaller The marshaller.
      */
-    @Required
+    @Autowired
+    @Qualifier("genologicsJaxbMarshaller")
     public void setJaxbMarshaller(Jaxb2Marshaller jaxbMarshaller)
     {
         this.jaxbMarshaller = jaxbMarshaller;
@@ -215,7 +215,8 @@ public class GenologicsAPIPlaybackAspect
      *
      * @param api The API bean, through its public interface.
      */
-    @Required
+    @Autowired
+    @Qualifier("genologicsAPI")
     public void setGenologicsAPI(GenologicsAPI api)
     {
         this.api = api;
@@ -226,7 +227,8 @@ public class GenologicsAPIPlaybackAspect
      *
      * @param internalApi The API bean, but through its internal interface.
      */
-    @Required
+    @Autowired
+    @Qualifier("genologicsAPI")
     public void setInternalGenologicsAPI(GenologicsAPIInternal internalApi)
     {
         this.apiInternal = internalApi;

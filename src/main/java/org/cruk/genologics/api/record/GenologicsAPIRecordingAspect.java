@@ -41,7 +41,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Required;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 
 import com.genologics.ri.Batch;
@@ -144,7 +143,8 @@ public class GenologicsAPIRecordingAspect
      *
      * @param jaxbMarshaller The marshaller.
      */
-    @Required
+    @Autowired
+    @Qualifier("genologicsJaxbMarshaller")
     public void setJaxbMarshaller(Jaxb2Marshaller jaxbMarshaller)
     {
         this.jaxbMarshaller = jaxbMarshaller;
@@ -155,7 +155,8 @@ public class GenologicsAPIRecordingAspect
      *
      * @param internalApi The API bean, but through its internal interface.
      */
-    @Required
+    @Autowired
+    @Qualifier("genologicsAPI")
     public void setInternalGenologicsAPI(GenologicsAPIInternal internalApi)
     {
         this.apiInternal = internalApi;
