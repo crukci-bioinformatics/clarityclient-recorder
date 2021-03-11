@@ -24,6 +24,7 @@ import java.util.Properties;
 
 import javax.annotation.PostConstruct;
 
+import org.apache.commons.io.IOUtils;
 import org.cruk.genologics.api.GenologicsAPI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,19 +46,25 @@ public abstract class ClarityClientRecorderTestConfiguration
     @PostConstruct
     public void setCredentialsOnApi()
     {
-        try (InputStream propsIn = getClass().getResourceAsStream("/testcredentials.properties"))
+        InputStream propsIn = getClass().getResourceAsStream("/testcredentials.properties");
+
+        if (propsIn != null)
         {
-            if (propsIn != null)
+            try
             {
                 Properties credentials = new Properties();
                 credentials.load(propsIn);
                 api.setConfiguration(credentials);
             }
-        }
-        catch (IOException e)
-        {
-            Logger logger = LoggerFactory.getLogger(getClass());
-            logger.error("Could not read from credentials file: ", e);
+            catch (IOException e)
+            {
+                Logger logger = LoggerFactory.getLogger(getClass());
+                logger.error("Could not read from credentials file: ", e);
+            }
+            finally
+            {
+                IOUtils.closeQuietly(propsIn);
+            }
         }
     }
 }
