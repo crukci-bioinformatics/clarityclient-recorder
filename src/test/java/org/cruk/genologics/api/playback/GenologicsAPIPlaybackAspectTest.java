@@ -18,7 +18,6 @@
 
 package org.cruk.genologics.api.playback;
 
-import static org.cruk.genologics.api.unittests.UnitTestApplicationContextFactory.getPlaybackApplicationContext;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -39,16 +38,21 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.PostConstruct;
 import javax.xml.transform.stream.StreamSource;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.http.conn.HttpHostConnectException;
 import org.cruk.genologics.api.GenologicsAPI;
+import org.cruk.genologics.api.unittests.ClarityClientRecorderPlaybackTestConfiguration;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.context.ApplicationContext;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.web.client.ResourceAccessException;
 
 import com.genologics.ri.LimsLink;
@@ -66,25 +70,32 @@ import com.genologics.ri.role.Role;
 import com.genologics.ri.sample.Sample;
 import com.genologics.ri.sample.SampleLink;
 
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes = ClarityClientRecorderPlaybackTestConfiguration.class)
 public class GenologicsAPIPlaybackAspectTest
 {
+    @Autowired
     private Jaxb2Marshaller marshaller;
+
+    @Autowired
     private GenologicsAPI api;
+
+    @Autowired
     private GenologicsAPIPlaybackAspect aspect;
 
     private File messageDirectory = new File("src/test/messages");
     private File updateDirectory = new File("target/updates");
 
-    public GenologicsAPIPlaybackAspectTest() throws MalformedURLException
+    public GenologicsAPIPlaybackAspectTest()
     {
-        ApplicationContext ctx = getPlaybackApplicationContext();
-        marshaller = ctx.getBean("genologicsJaxbMarshaller", Jaxb2Marshaller.class);
-        api = ctx.getBean("genologicsAPI", GenologicsAPI.class);
+    }
 
+    @PostConstruct
+    public void completeWiring() throws MalformedURLException
+    {
         // To prove it's from the recording.
         api.setServer(new URL("http://localhost"));
 
-        aspect = ctx.getBean(GenologicsAPIPlaybackAspect.class);
         aspect.setMessageDirectory(messageDirectory);
         aspect.setUpdatesDirectory(updateDirectory);
     }

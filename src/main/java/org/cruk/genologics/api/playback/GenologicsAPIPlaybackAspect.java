@@ -18,6 +18,7 @@
 
 package org.cruk.genologics.api.playback;
 
+import static java.nio.charset.StandardCharsets.US_ASCII;
 import static org.cruk.genologics.api.record.GenologicsAPIRecordingAspect.FILENAME_PATTERN;
 
 import java.io.File;
@@ -28,7 +29,6 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.nio.charset.Charset;
 import java.text.MessageFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -79,11 +79,6 @@ public class GenologicsAPIPlaybackAspect
      * Template for the file name pattern for updated entities.
      */
     private static final String UPDATE_FILENAME_PATTERN = "{0}-{1}.{2}.xml";
-
-    /**
-     * ASCII character set.
-     */
-    private static final Charset ASCII = Charset.forName("US-ASCII");
 
     /**
      * An object to synchronized on while finding a version of a file to use.
@@ -494,7 +489,7 @@ public class GenologicsAPIPlaybackAspect
 
         try
         {
-            try (Reader reader = new InputStreamReader(new FileInputStream(searchFile), ASCII))
+            try (Reader reader = new InputStreamReader(new FileInputStream(searchFile), US_ASCII))
             {
                 return (Search<?>)xstream.fromXML(reader);
             }

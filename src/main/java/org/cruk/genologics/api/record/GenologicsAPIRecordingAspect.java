@@ -18,11 +18,12 @@
 
 package org.cruk.genologics.api.record;
 
+import static java.nio.charset.StandardCharsets.US_ASCII;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
 import java.lang.reflect.Constructor;
-import java.nio.charset.Charset;
 import java.text.MessageFormat;
 import java.util.Collection;
 import java.util.List;
@@ -60,11 +61,6 @@ public class GenologicsAPIRecordingAspect
      * Template for the file name pattern.
      */
     public static final String FILENAME_PATTERN = "{0}-{1}.xml";
-
-    /**
-     * ASCII character set.
-     */
-    private static final Charset ASCII = Charset.forName("US-ASCII");
 
     /**
      * End of line in byte form.
@@ -238,7 +234,7 @@ public class GenologicsAPIRecordingAspect
 
             File searchFile = new File(messageDirectory, search.getSearchFileName());
 
-            try (Writer out = new FileWriterWithEncoding(searchFile, ASCII, true))
+            try (Writer out = new FileWriterWithEncoding(searchFile, US_ASCII, true))
             {
                 xstream.toXML(search, out);
 
