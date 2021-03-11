@@ -66,7 +66,7 @@ public class GenologicsAPIRecordingAspect
     /**
      * ASCII character set.
      */
-    private static final Charset ASCII = Charset.forName("US-ASCII");
+    private static final Charset US_ASCII = Charset.forName("US-ASCII");
 
     /**
      * End of line in byte form.
@@ -145,7 +145,8 @@ public class GenologicsAPIRecordingAspect
      *
      * @param jaxbMarshaller The marshaller.
      */
-    @Required
+    @Autowired
+    @Qualifier("genologicsJaxbMarshaller")
     public void setJaxbMarshaller(Jaxb2Marshaller jaxbMarshaller)
     {
         this.jaxbMarshaller = jaxbMarshaller;
@@ -156,7 +157,8 @@ public class GenologicsAPIRecordingAspect
      *
      * @param internalApi The API bean, but through its internal interface.
      */
-    @Required
+    @Autowired
+    @Qualifier("genologicsAPI")
     public void setInternalGenologicsAPI(GenologicsAPIInternal internalApi)
     {
         this.apiInternal = internalApi;
@@ -238,7 +240,7 @@ public class GenologicsAPIRecordingAspect
 
             File searchFile = new File(messageDirectory, search.getSearchFileName());
 
-            Writer out = new FileWriterWithEncoding(searchFile, ASCII, true);
+            Writer out = new FileWriterWithEncoding(searchFile, US_ASCII, true);
             try
             {
                 xstream.toXML(search, out);

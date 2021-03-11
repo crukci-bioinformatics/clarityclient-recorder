@@ -18,8 +18,6 @@
 
 package org.cruk.genologics.api.record;
 
-import static org.cruk.genologics.api.unittests.UnitTestApplicationContextFactory.checkCredentialsFileExists;
-import static org.cruk.genologics.api.unittests.UnitTestApplicationContextFactory.getRecordingApplicationContext;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -32,21 +30,28 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.PostConstruct;
 import javax.xml.transform.stream.StreamSource;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.ClassUtils;
 import org.apache.http.conn.HttpHostConnectException;
 import org.cruk.genologics.api.GenologicsAPI;
+import org.cruk.genologics.api.http.AuthenticatingClientHttpRequestFactory;
 import org.cruk.genologics.api.search.Search;
 import org.cruk.genologics.api.search.SearchTerms;
-import org.cruk.genologics.api.unittests.UnitTestApplicationContextFactory;
+import org.cruk.genologics.api.unittests.CRUKCICheck;
+import org.cruk.genologics.api.unittests.ClarityClientRecorderRecordTestConfiguration;
 import org.junit.After;
 import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.context.ApplicationContext;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.web.client.ResourceAccessException;
 
 import com.genologics.ri.Batch;
@@ -66,21 +71,32 @@ import com.genologics.ri.researcher.Researcher;
 import com.genologics.ri.role.Role;
 import com.genologics.ri.sample.Sample;
 
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes = ClarityClientRecorderRecordTestConfiguration.class)
 public class GenologicsAPIRecordingAspectTest
 {
+    @Autowired
     private GenologicsAPI api;
+
+    @Autowired
     private Jaxb2Marshaller marshaller;
+
+    @Autowired
     private GenologicsAPIRecordingAspect aspect;
+
+    @Autowired
+    @Qualifier("genologicsClientHttpRequestFactory")
+    protected AuthenticatingClientHttpRequestFactory httpRequestFactory;
 
     private File messageDirectory = new File("target/messages");
 
     public GenologicsAPIRecordingAspectTest()
     {
-        ApplicationContext ctx = getRecordingApplicationContext();
-        api = ctx.getBean(GenologicsAPI.class);
-        marshaller = ctx.getBean("genologicsJaxbMarshaller", Jaxb2Marshaller.class);
+    }
 
-        aspect = ctx.getBean(GenologicsAPIRecordingAspect.class);
+    @PostConstruct
+    public void completeWiring()
+    {
         aspect.setMessageDirectory(messageDirectory);
     }
 
@@ -97,10 +113,17 @@ public class GenologicsAPIRecordingAspectTest
         FileUtils.deleteQuietly(messageDirectory);
     }
 
+    private void checkCredentialsFileExists()
+    {
+        Assume.assumeTrue("Could not set credentials for the API, which is needed for this test. " +
+                          "Put a \"testcredentials.properties\" file on the class path.",
+                          httpRequestFactory.getCredentials() != null);
+    }
+
     @Test
     public void testRecording()
     {
-        Assume.assumeTrue("Can only run the recording tests as written in CRUK-CI.", UnitTestApplicationContextFactory.inCrukCI());
+        CRUKCICheck.assumeInCrukCI();
         checkCredentialsFileExists();
 
         try
@@ -147,7 +170,7 @@ public class GenologicsAPIRecordingAspectTest
     @Test
     public void testRecordList()
     {
-        Assume.assumeTrue("Can only run the recording tests as written in CRUK-CI.", UnitTestApplicationContextFactory.inCrukCI());
+        CRUKCICheck.assumeInCrukCI();
         checkCredentialsFileExists();
 
         try
@@ -186,11 +209,11 @@ public class GenologicsAPIRecordingAspectTest
     @Test
     public void testRecordSearch()
     {
+        CRUKCICheck.assumeInCrukCI();
+        checkCredentialsFileExists();
+
         try
         {
-            Assume.assumeTrue("Can only run the recording tests as written in CRUK-CI.", UnitTestApplicationContextFactory.inCrukCI());
-            checkCredentialsFileExists();
-
             Map<String, Object> terms = new HashMap<String, Object>();
             terms.put("inputartifactlimsid", "2-1108999");
             api.find(terms, GenologicsProcess.class);
