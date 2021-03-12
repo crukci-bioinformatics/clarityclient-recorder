@@ -33,7 +33,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ImportResource;
 
 @Configuration
-@ImportResource("classpath:/org/cruk/genologics/api/genologics-client-context.xml")
+@ImportResource({
+    "classpath:/org/cruk/genologics/api/genologics-client-context.xml",
+    "classpath:/unittest-context.xml"
+})
 public abstract class ClarityClientRecorderTestConfiguration
 {
     @Autowired

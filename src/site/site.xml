@@ -4,6 +4,9 @@
          name="CRUK-CI Genologics API Client Recorder">
 
     <body>
+        <links>
+            <item name="Clarity Java Client" href="https://crukci-bioinformatics.github.io/clarityclient"/>
+        </links>
         <menu name="User Guide">
             <item name="Installation" href="/installing.html">
                 <description>
@@ -17,9 +20,6 @@
             </item>
         </menu>
         <menu ref="reports"/>
-        <links>
-            <item name="Clarity Java Client" href="http://crukci-bioinformatics.github.io/clarityclient"/>
-        </links>
     </body>
 </project>
 
