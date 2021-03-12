@@ -437,7 +437,7 @@
                         <link>https://eclipse.org/aspectj/doc/released/aspectj5rt-api/</link>
                         <link>https://www.ehcache.org/apidocs/2.6.9</link>
                         <link>https://x-stream.github.io/javadoc</link>
-                        <link>http://crukci-bioinformatics.github.io/clarityclient/apidocs</link>
+                        <link>https://crukci-bioinformatics.github.io/clarityclient/apidocs</link>
                     </links>
                 </configuration>
             </plugin>
