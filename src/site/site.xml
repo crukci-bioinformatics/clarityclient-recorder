@@ -10,23 +10,16 @@
                     How to build the client recorder and include it in your programs.
                 </description>
             </item>
-            <item name="Usage" href="/usageoverview.html">
+            <item name="Usage" href="/usage.html">
                 <description>
                     How to work with the client recorder in your own code.
                 </description>
-                <item name="Spring Configuration" href="/spring.html">
-                    <description>
-                        Configuring Spring's application context.
-                    </description>
-                </item>
-                <item name="Configuration in Code" href="/usage.html">
-                    <description>
-                        Configuring the client recorder in Java.
-                    </description>
-                </item>
             </item>
         </menu>
         <menu ref="reports"/>
+        <links>
+            <item name="Clarity Java Client" href="http://crukci-bioinformatics.github.io/clarityclient"/>
+        </links>
     </body>
 </project>
 
