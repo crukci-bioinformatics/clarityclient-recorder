@@ -79,7 +79,7 @@ public class GenologicsAPIRecordingAspect
     /**
      * Logger.
      */
-    private Logger logger = LoggerFactory.getLogger(GenologicsAPI.class);
+    Logger logger = LoggerFactory.getLogger(GenologicsAPI.class);
 
     /**
      * The directory to write the messages to.
@@ -245,18 +245,7 @@ public class GenologicsAPIRecordingAspect
 
             if (checkAndMergeWithExisting(search, searchFile))
             {
-                Writer out = new FileWriterWithEncoding(searchFile, US_ASCII, false);
-                try
-                {
-                    xstream.toXML(search, out);
-
-                    // Doesn't write a final end of line.
-                    out.write(EOL);
-                }
-                finally
-                {
-                    IOUtils.closeQuietly(out);
-                }
+                serialiseSearch(search, searchFile);
             }
         }
         catch (IOException e)
@@ -265,6 +254,32 @@ public class GenologicsAPIRecordingAspect
         }
 
         return results;
+    }
+
+    /**
+     * Write a search object to file with XStream.
+     *
+     * @param <E> The type of entity being searched for.
+     *
+     * @param search The current search object.
+     * @param searchFile The file the search will be serialized to.
+     *
+     * @throws IOException if there is an error writing the file.
+     */
+    <E extends Locatable> void serialiseSearch(Search<E> search, File searchFile) throws IOException
+    {
+        Writer out = new FileWriterWithEncoding(searchFile, US_ASCII, false);
+        try
+        {
+            xstream.toXML(search, out);
+
+            // Doesn't write a final end of line.
+            out.write(EOL);
+        }
+        finally
+        {
+            IOUtils.closeQuietly(out);
+        }
     }
 
     /**
@@ -281,7 +296,7 @@ public class GenologicsAPIRecordingAspect
      * @return true if the search result file needs to be rewritten, false if the previous
      * search has resulted in the same links (so no need to rewrite the file).
      */
-    private <E extends Locatable> boolean checkAndMergeWithExisting(Search<E> search, File searchFile)
+    <E extends Locatable> boolean checkAndMergeWithExisting(Search<E> search, File searchFile)
     {
         if (!searchFile.exists())
         {
