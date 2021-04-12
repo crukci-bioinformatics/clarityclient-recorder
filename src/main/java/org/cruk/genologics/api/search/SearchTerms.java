@@ -18,6 +18,9 @@
 
 package org.cruk.genologics.api.search;
 
+import static org.apache.commons.lang3.ClassUtils.getShortClassName;
+import static org.apache.commons.lang3.StringUtils.join;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,23 +29,24 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.apache.commons.lang3.ClassUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.cruk.genologics.api.GenologicsAPI;
 
+import com.genologics.ri.Locatable;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 
 /**
  * Class recording the parameters and entity class of a call to the API's
  * {@code find} method.
  *
+ * @param <E> The type of object the search terms are for.
+ *
  * @see GenologicsAPI#find(Map, Class)
  */
 @XStreamAlias("terms")
-public class SearchTerms implements Serializable
+public class SearchTerms<E extends Locatable> implements Serializable
 {
     /**
      * Serialization version.
@@ -59,7 +63,7 @@ public class SearchTerms implements Serializable
      * The class of the objects being searched for.
      */
     @XStreamAlias("entity")
-    private Class<?> entityClass;
+    private Class<E> entityClass;
 
 
     /**
@@ -69,7 +73,7 @@ public class SearchTerms implements Serializable
      * @param searchTerms The search parameters.
      * @param entityClass The type of object being searched for.
      */
-    public SearchTerms(Map<String, ?> searchTerms, Class<?> entityClass)
+    public SearchTerms(Map<String, ?> searchTerms, Class<E> entityClass)
     {
         this.entityClass = entityClass;
 
@@ -110,7 +114,7 @@ public class SearchTerms implements Serializable
      *
      * @return The entity class.
      */
-    public Class<?> getEntityClass()
+    public Class<E> getEntityClass()
     {
         return entityClass;
     }
@@ -186,7 +190,7 @@ public class SearchTerms implements Serializable
             {
                 EqualsBuilder b = new EqualsBuilder();
 
-                SearchTerms other = (SearchTerms)obj;
+                SearchTerms<?> other = (SearchTerms<?>)obj;
 
                 b.append(entityClass, other.entityClass);
                 b.append(searchTerms.size(), other.searchTerms.size());
@@ -240,13 +244,13 @@ public class SearchTerms implements Serializable
     public String toString()
     {
         ToStringBuilder b = new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE);
-        b.append("entityClass", ClassUtils.getShortClassName(entityClass));
+        b.append("entityClass", getShortClassName(entityClass));
 
         for (Map.Entry<String, ?> entry : searchTerms.entrySet())
         {
             if (entry.getValue() instanceof Collection)
             {
-                b.append(entry.getKey(), StringUtils.join((Collection<?>)entry.getValue(), ","));
+                b.append(entry.getKey(), join((Collection<?>)entry.getValue(), ","));
             }
             else
             {

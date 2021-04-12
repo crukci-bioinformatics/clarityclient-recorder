@@ -218,14 +218,14 @@ public class GenologicsAPIRecordingAspectTest
             terms.put("inputartifactlimsid", "2-1108999");
             api.find(terms, GenologicsProcess.class);
 
-            SearchTerms st1 = new SearchTerms(terms, GenologicsProcess.class);
+            SearchTerms<GenologicsProcess> st1 = new SearchTerms<GenologicsProcess>(terms, GenologicsProcess.class);
             assertSearchRecorded(st1);
 
             terms.clear();
             terms.put("projectlimsid", new HashSet<String>(Arrays.asList("COH605", "SER1015")));
             api.find(terms, Sample.class);
 
-            SearchTerms st2 = new SearchTerms(terms, Sample.class);
+            SearchTerms<Sample> st2 = new SearchTerms<Sample>(terms, Sample.class);
             assertSearchRecorded(st2);
         }
         catch (ResourceAccessException e)
@@ -253,7 +253,7 @@ public class GenologicsAPIRecordingAspectTest
         assertTrue("Have not recorded " + className + " " + id, entityFile.exists());
     }
 
-    private void assertSearchRecorded(SearchTerms terms)
+    private void assertSearchRecorded(SearchTerms<?> terms)
     {
         File searchFile = new File(messageDirectory, Search.getSearchFileName(terms));
         assertTrue("Have not recorded search.", searchFile.exists());

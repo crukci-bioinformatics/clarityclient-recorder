@@ -18,8 +18,12 @@
 
 package org.cruk.genologics.api.search;
 
+import static org.apache.commons.lang3.ClassUtils.getShortClassName;
+
 import java.io.Serializable;
 import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -59,7 +63,7 @@ public class Search<E extends Locatable> implements Serializable
      * The search terms used in this search.
      */
     @XStreamAlias("terms")
-    private SearchTerms searchTerms;
+    private SearchTerms<E> searchTerms;
 
     /**
      * The results of the search.
@@ -76,7 +80,7 @@ public class Search<E extends Locatable> implements Serializable
      */
     public Search(Map<String, ?> searchTerms, Class<E> entityClass)
     {
-        this(new SearchTerms(searchTerms, entityClass));
+        this(new SearchTerms<E>(searchTerms, entityClass));
     }
 
     /**
@@ -86,11 +90,11 @@ public class Search<E extends Locatable> implements Serializable
      *
      * @throws IllegalArgumentException if {@code searchTerms} is null.
      */
-    public Search(SearchTerms searchTerms)
+    public Search(SearchTerms<E> searchTerms)
     {
         if (searchTerms == null)
         {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Cannot create a search without search terms.");
         }
         this.searchTerms = searchTerms;
     }
@@ -100,7 +104,7 @@ public class Search<E extends Locatable> implements Serializable
      *
      * @return The search terms.
      */
-    public SearchTerms getSearchTerms()
+    public SearchTerms<E> getSearchTerms()
     {
         return searchTerms;
     }
@@ -123,6 +127,64 @@ public class Search<E extends Locatable> implements Serializable
     public void setResults(List<LimsLink<E>> results)
     {
         this.results = results;
+    }
+
+    /**
+     * Merge the results of another search into this search's results.
+     *
+     * @param otherSearch The search to merge in. Must be a search for the same type of
+     * entities as this search.
+     *
+     * @return true if any results have been added to this search's results from
+     * the other search, false if not (i.e. if this search's results have not changed).
+     *
+     * @throws IllegalArgumentException if {@code otherSearch} is a search for a different
+     * type of entity.
+     */
+    public boolean merge(Search<E> otherSearch)
+    {
+        if (otherSearch == null || otherSearch == this)
+        {
+            // Just don't do anything.
+            return false;
+        }
+
+        if (!searchTerms.getEntityClass().equals(otherSearch.searchTerms.getEntityClass()))
+        {
+            throw new IllegalArgumentException("Can't merge searches for different entity types. This search is " +
+                    getShortClassName(searchTerms.getEntityClass()) + ", the search to merge in is " +
+                    getShortClassName(otherSearch.searchTerms.getEntityClass()));
+        }
+
+        List<LimsLink<E>> otherResults = otherSearch.getResults();
+
+        if (otherResults == null || otherResults.isEmpty())
+        {
+            // Nothing to do.
+            return false;
+        }
+
+        if (results == null || results.isEmpty())
+        {
+            // Take the other results.
+            results = new ArrayList<LimsLink<E>>(otherResults);
+            return true;
+        }
+
+        // Merge based on URI paths.
+
+        Map<String, LimsLink<E>> map = new HashMap<String, LimsLink<E>>();
+        for (LimsLink<E> link : results)
+        {
+            map.put(link.getUri().getPath(), link);
+        }
+        for (LimsLink<E> link : otherResults)
+        {
+            map.put(link.getUri().getPath(), link);
+        }
+
+        results = new ArrayList<LimsLink<E>>(map.values());
+        return true;
     }
 
     /**
@@ -165,7 +227,7 @@ public class Search<E extends Locatable> implements Serializable
      *
      * @return The name of the file the search will be stored in.
      */
-    public static String getSearchFileName(SearchTerms terms)
+    public static String getSearchFileName(SearchTerms<?> terms)
     {
         return MessageFormat.format(SEARCH_FILE_PATTERN, Integer.toHexString(terms.hashCode()));
     }

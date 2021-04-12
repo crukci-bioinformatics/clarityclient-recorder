@@ -355,7 +355,8 @@ public class GenologicsAPIPlaybackAspect
         @SuppressWarnings("unchecked")
         Class<?> entityClass = (Class<?>)pjp.getArgs()[1];
 
-        SearchTerms terms = new SearchTerms(searchTerms, entityClass);
+        @SuppressWarnings("unchecked")
+        SearchTerms<?> terms = new SearchTerms(searchTerms, entityClass);
 
         Search<?> search = loadSearch(terms);
 
@@ -489,7 +490,7 @@ public class GenologicsAPIPlaybackAspect
      * Load the prerecorded searches from the search directory. Finds files in there
      * that match the expected file name format and brings them all into memory.
      */
-    private Search<?> loadSearch(SearchTerms terms)
+    private Search<?> loadSearch(SearchTerms<?> terms)
     {
         File searchFile = new File(messageDirectory, Search.getSearchFileName(terms));
 
@@ -502,21 +503,23 @@ public class GenologicsAPIPlaybackAspect
             }
             catch (XStreamException xse)
             {
-                if (xse.getCause() != null)
+                Throwable t = xse;
+                while (t.getCause() != null)
                 {
-                    try
-                    {
-                        throw xse.getCause();
-                    }
-                    catch (IOException e)
-                    {
-                        throw e;
-                    }
-                    catch (Throwable t)
-                    {
-                    }
+                    t = t.getCause();
                 }
-                throw xse;
+                try
+                {
+                    throw t;
+                }
+                catch (IOException e)
+                {
+                    throw e;
+                }
+                catch (Throwable t2)
+                {
+                    throw xse;
+                }
             }
             finally
             {
