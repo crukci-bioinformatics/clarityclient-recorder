@@ -42,11 +42,13 @@ import org.cruk.genologics.api.search.Search;
 import org.cruk.genologics.api.search.SearchTerms;
 import org.cruk.genologics.api.unittests.CRUKCICheck;
 import org.cruk.genologics.api.unittests.ClarityClientRecorderRecordTestConfiguration;
+import org.easymock.EasyMock;
 import org.junit.After;
 import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
@@ -218,14 +220,14 @@ public class GenologicsAPIRecordingAspectTest
             terms.put("inputartifactlimsid", "2-1108999");
             api.find(terms, GenologicsProcess.class);
 
-            SearchTerms st1 = new SearchTerms(terms, GenologicsProcess.class);
+            SearchTerms<GenologicsProcess> st1 = new SearchTerms<GenologicsProcess>(terms, GenologicsProcess.class);
             assertSearchRecorded(st1);
 
             terms.clear();
             terms.put("projectlimsid", new HashSet<String>(Arrays.asList("COH605", "SER1015")));
             api.find(terms, Sample.class);
 
-            SearchTerms st2 = new SearchTerms(terms, Sample.class);
+            SearchTerms<Sample> st2 = new SearchTerms<Sample>(terms, Sample.class);
             assertSearchRecorded(st2);
         }
         catch (ResourceAccessException e)
@@ -234,14 +236,114 @@ public class GenologicsAPIRecordingAspectTest
         }
     }
 
-    private <E extends LimsEntity<E>, L extends LimsEntityLinkable<E>> void assertRecorded(L entity)
+    @Test
+    public void testSearchCheckAndMergeDifferentParams() throws IOException
+    {
+        Map<String, Object> terms1 = new HashMap<String, Object>();
+        terms1.put("inputartifactlimsid", "2-1108999");
+
+        Search<GenologicsProcess> s1 = new Search<GenologicsProcess>(terms1, GenologicsProcess.class);
+
+        File s1File = new File(messageDirectory, s1.getSearchFileName());
+
+        aspect.serialiseSearch(s1, s1File);
+
+        File s1Written = assertSearchRecorded(s1);
+        assertEquals("Written in wrong file", s1File, s1Written);
+
+        // We'll fix this to rename the file as if it is an incompatible search which a hash clash.
+
+        Map<String, Object> terms2 = new HashMap<String, Object>();
+        terms1.put("inputartifactlimsid", "2-746813");
+
+        Search<GenologicsProcess> s2 = new Search<GenologicsProcess>(terms2, GenologicsProcess.class);
+
+        File s2File = new File(messageDirectory, s2.getSearchFileName());
+
+        assertTrue("Could not change file name for test.", s1File.renameTo(s2File));
+
+        Logger realLogger = aspect.logger;
+        try
+        {
+            Logger mockLogger = EasyMock.createMock(Logger.class);
+            mockLogger.error("Have two incompatible searches that reduce to the same hash:");
+            mockLogger.error(s2.getSearchTerms().toString());
+            mockLogger.error(s1.getSearchTerms().toString());
+
+            aspect.logger = mockLogger;
+
+            EasyMock.replay(mockLogger);
+
+            boolean mergeResult = aspect.checkAndMergeWithExisting(s2, s2File);
+
+            assertTrue("Incompatible merging says not to do anything", mergeResult);
+
+            EasyMock.verify(mockLogger);
+        }
+        finally
+        {
+            aspect.logger = realLogger;
+        }
+    }
+
+    @Test
+    public void testSearchCheckAndMergeDifferentTypes() throws IOException
+    {
+        Map<String, Object> terms1 = new HashMap<String, Object>();
+        terms1.put("inputartifactlimsid", "2-1108999");
+
+        Search<GenologicsProcess> s1 = new Search<GenologicsProcess>(terms1, GenologicsProcess.class);
+
+        File s1File = new File(messageDirectory, s1.getSearchFileName());
+
+        aspect.serialiseSearch(s1, s1File);
+
+        File s1Written = assertSearchRecorded(s1);
+        assertEquals("Written in wrong file", s1File, s1Written);
+
+        // We'll fix this to rename the file as if it is an incompatible search which a hash clash.
+
+        Map<String, Object> terms2 = new HashMap<String, Object>(terms1);
+
+        Search<Artifact> s2 = new Search<Artifact>(terms2, Artifact.class);
+
+        File s2File = new File(messageDirectory, s2.getSearchFileName());
+
+        assertTrue("Could not change file name for test.", s1File.renameTo(s2File));
+
+        Logger realLogger = aspect.logger;
+        try
+        {
+            Logger mockLogger = EasyMock.createMock(Logger.class);
+            mockLogger.error("Have two incompatible searches that reduce to the same hash:");
+            mockLogger.error(s2.getSearchTerms().toString());
+            mockLogger.error(s1.getSearchTerms().toString());
+
+            aspect.logger = mockLogger;
+
+            EasyMock.replay(mockLogger);
+
+            boolean mergeResult = aspect.checkAndMergeWithExisting(s2, s2File);
+
+            assertTrue("Incompatible merging says not to do anything", mergeResult);
+
+            EasyMock.verify(mockLogger);
+        }
+        finally
+        {
+            aspect.logger = realLogger;
+        }
+    }
+
+    private <E extends LimsEntity<E>, L extends LimsEntityLinkable<E>> File assertRecorded(L entity)
     {
         String className = ClassUtils.getShortClassName(entity.getClass());
         File entityFile = new File(messageDirectory, className + "-" + entity.getLimsid() + ".xml");
         assertTrue("Have not recorded " + className + " " + entity.getLimsid(), entityFile.exists());
+        return entityFile;
     }
 
-    private <L extends Locatable> void assertRecorded(L object)
+    private <L extends Locatable> File assertRecorded(L object)
     {
         String className = ClassUtils.getShortClassName(object.getClass());
 
@@ -251,12 +353,20 @@ public class GenologicsAPIRecordingAspectTest
 
         File entityFile = new File(messageDirectory, className + "-" + id + ".xml");
         assertTrue("Have not recorded " + className + " " + id, entityFile.exists());
+
+        return entityFile;
     }
 
-    private void assertSearchRecorded(SearchTerms terms)
+    private File assertSearchRecorded(Search<?> search)
+    {
+        return assertSearchRecorded(search.getSearchTerms());
+    }
+
+    private File assertSearchRecorded(SearchTerms<?> terms)
     {
         File searchFile = new File(messageDirectory, Search.getSearchFileName(terms));
         assertTrue("Have not recorded search.", searchFile.exists());
+        return searchFile;
     }
 
     private void realServerDown(ResourceAccessException rae) throws ResourceAccessException

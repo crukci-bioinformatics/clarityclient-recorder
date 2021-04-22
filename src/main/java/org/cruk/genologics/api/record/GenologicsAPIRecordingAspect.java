@@ -21,7 +21,10 @@ package org.cruk.genologics.api.record;
 import static java.nio.charset.StandardCharsets.US_ASCII;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.io.Writer;
 import java.lang.reflect.Constructor;
 import java.text.MessageFormat;
@@ -49,6 +52,7 @@ import com.genologics.ri.LimsEntity;
 import com.genologics.ri.LimsLink;
 import com.genologics.ri.Locatable;
 import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.XStreamException;
 
 /**
  * Aspect for recording server exchanges with a real Clarity server as XML files
@@ -70,7 +74,7 @@ public class GenologicsAPIRecordingAspect
     /**
      * Logger.
      */
-    private Logger logger = LoggerFactory.getLogger(GenologicsAPI.class);
+    Logger logger = LoggerFactory.getLogger(GenologicsAPI.class);
 
     /**
      * The directory to write the messages to.
@@ -234,12 +238,9 @@ public class GenologicsAPIRecordingAspect
 
             File searchFile = new File(messageDirectory, search.getSearchFileName());
 
-            try (Writer out = new FileWriterWithEncoding(searchFile, US_ASCII, true))
+            if (checkAndMergeWithExisting(search, searchFile))
             {
-                xstream.toXML(search, out);
-
-                // Doesn't write a final end of line.
-                out.write(EOL);
+                serialiseSearch(search, searchFile);
             }
         }
         catch (IOException e)
@@ -248,6 +249,89 @@ public class GenologicsAPIRecordingAspect
         }
 
         return results;
+    }
+
+    /**
+     * Write a search object to file with XStream.
+     *
+     * @param <E> The type of entity being searched for.
+     *
+     * @param search The current search object.
+     * @param searchFile The file the search will be serialized to.
+     *
+     * @throws IOException if there is an error writing the file.
+     */
+    <E extends Locatable> void serialiseSearch(Search<E> search, File searchFile) throws IOException
+    {
+        try (Writer out = new FileWriterWithEncoding(searchFile, US_ASCII, false))
+        {
+            xstream.toXML(search, out);
+
+            // Doesn't write a final end of line.
+            out.write(EOL);
+        }
+    }
+
+    /**
+     * Checks whether a search results file already exists and, if so, whether it contains the
+     * same search as that given. If the search terms are the same, merge the results found by
+     * this search and that already recorded. If they don't match, log a warning and replace
+     * the search with this one.
+     *
+     * @param <E> The type of entity being searched for.
+     *
+     * @param search The current search object.
+     * @param searchFile The file the search will be serialized to.
+     *
+     * @return true if the search result file needs to be rewritten, false if the previous
+     * search has resulted in the same links (so no need to rewrite the file).
+     */
+    <E extends Locatable> boolean checkAndMergeWithExisting(Search<E> search, File searchFile)
+    {
+        if (!searchFile.exists())
+        {
+            return true;
+        }
+
+        try
+        {
+            try (Reader reader = new InputStreamReader(new FileInputStream(searchFile), US_ASCII))
+            {
+                Search<?> previousSearch = (Search<?>)xstream.fromXML(reader);
+
+                if (!previousSearch.getSearchTerms().equals(search.getSearchTerms()))
+                {
+                    logger.error("Have two incompatible searches that reduce to the same hash:");
+                    logger.error(search.getSearchTerms().toString());
+                    logger.error(previousSearch.getSearchTerms().toString());
+                    return true;
+                }
+
+                // Merge search results. The search terms can only be equal if the
+                // class of entity searched for is the same in both searches, so the
+                // test above ensures they are for the same class.
+
+                @SuppressWarnings("unchecked")
+                Search<E> previousTypedSearch = (Search<E>)previousSearch;
+
+                return search.merge(previousTypedSearch);
+            }
+            catch (XStreamException xse)
+            {
+                Throwable t = xse;
+                while (t.getCause() != null)
+                {
+                    t = t.getCause();
+                }
+                logger.warn("Could not reload previous search: {}", t.getMessage());
+            }
+        }
+        catch (IOException e)
+        {
+            logger.warn("Could not reload previous search: {}", e.getMessage());
+        }
+
+        return true;
     }
 
     /**
