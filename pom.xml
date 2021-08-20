@@ -226,7 +226,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-site-plugin</artifactId>
-                    <version>3.9.0</version>
+                    <version>3.9.1</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -418,8 +418,8 @@
                     <serialwarn>false</serialwarn>
                     <show>protected</show>
                     <links>
-                        <link>https://docs.oracle.com/javase/6/docs/api</link>
-                        <link>https://www.slf4j.org/apidocs/</link>
+                        <link>https://docs.oracle.com/javase/8/docs/api</link>
+                        <link>http://www.slf4j.org/apidocs/</link>
                         <link>http://commons.apache.org/proper/commons-beanutils/javadocs/v1.9.4/apidocs</link>
                         <link>http://commons.apache.org/proper/commons-collections/javadocs/api-4.4</link>
                         <link>http://commons.apache.org/proper/commons-io/javadocs/api-release</link>
@@ -430,7 +430,7 @@
                         <link>https://hc.apache.org/httpcomponents-core-4.4.x/current/httpcore/apidocs</link>
                         <link>https://eclipse.org/aspectj/doc/released/runtime-api/</link>
                         <link>https://eclipse.org/aspectj/doc/released/aspectj5rt-api/</link>
-                        <link>http://ehcache.org/apidocs/2.6.9/</link>
+                        <link>https://www.ehcache.org/apidocs/2.10.4</link>
                         <link>https://x-stream.github.io/javadoc</link>
                         <link>https://crukci-bioinformatics.github.io/clarityclient/apidocs</link>
                     </links>
@@ -449,7 +449,7 @@
             <dependency>
                 <groupId>javax.xml.bind</groupId>
                 <artifactId>jaxb-api</artifactId>
-                <version>2.3.0</version>
+                <version>2.3.1</version>
             </dependency>
             <dependency>
                 <groupId>com.sun.xml.bind</groupId>
@@ -503,17 +503,6 @@
                 <artifactId>commons-lang3</artifactId>
                 <version>3.4</version>
             </dependency>
-            <dependency>
-                <groupId>org.apache.httpcomponents</groupId>
-                <artifactId>httpclient</artifactId>
-                <version>4.5.4</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>commons-logging</groupId>
-                        <artifactId>commons-logging</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
 
             <dependency>
                 <groupId>org.slf4j</groupId>
@@ -546,11 +535,6 @@
                 <artifactId>aspectjweaver</artifactId>
                 <version>1.8.13</version>
             </dependency>
-            <dependency>
-                <groupId>org.apache.xmlbeans</groupId>
-                <artifactId>xmlbeans</artifactId>
-                <version>2.6.0</version>
-            </dependency>
 
             <dependency>
                 <groupId>org.springframework</groupId>
@@ -578,6 +562,18 @@
                     <exclusion>
                         <groupId>com.jcraft</groupId>
                         <artifactId>jsch</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.httpcomponents</groupId>
+                <artifactId>httpclient</artifactId>
+                <version>4.5.13</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>commons-logging</groupId>
+                        <artifactId>commons-logging</artifactId>
                     </exclusion>
                 </exclusions>
             </dependency>
