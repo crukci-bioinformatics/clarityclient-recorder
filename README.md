@@ -17,7 +17,7 @@ Having got this check out of the code, run:
     mvn install
 
 This will build and install the project into your local Maven cache.
-You'll need Maven 2.2 or newer.
+You'll need Maven 3.5 or newer.
 
 Alternatively, you can add our Maven repository to your POM and let
 Maven do the work. Add a <repositories> section containing:
@@ -58,3 +58,9 @@ to your POM (I'm assuming you're using Maven now):
 
 For details of using the API, please refer to the documentation at
 <http://crukci-bioinformatics.github.io/clarityclient-recorder>
+
+## Java Version
+
+From version 2.24.16 of the client and the recorder, the build has been changed
+to build using Java 8 source and bytecode. It's no longer realistic to keep the
+code stuck on Java 6.

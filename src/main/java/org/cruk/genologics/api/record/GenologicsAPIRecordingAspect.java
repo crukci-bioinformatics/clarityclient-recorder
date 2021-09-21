@@ -18,6 +18,8 @@
 
 package org.cruk.genologics.api.record;
 
+import static java.nio.charset.StandardCharsets.US_ASCII;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -25,7 +27,6 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.Writer;
 import java.lang.reflect.Constructor;
-import java.nio.charset.Charset;
 import java.text.MessageFormat;
 import java.util.Collection;
 import java.util.List;
@@ -33,7 +34,6 @@ import java.util.Map;
 
 import javax.xml.transform.stream.StreamResult;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.output.FileWriterWithEncoding;
 import org.apache.commons.lang3.ClassUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -65,11 +65,6 @@ public class GenologicsAPIRecordingAspect
      * Template for the file name pattern.
      */
     public static final String FILENAME_PATTERN = "{0}-{1}.xml";
-
-    /**
-     * ASCII character set.
-     */
-    private static final Charset US_ASCII = Charset.forName("US-ASCII");
 
     /**
      * End of line in byte form.
@@ -268,17 +263,12 @@ public class GenologicsAPIRecordingAspect
      */
     <E extends Locatable> void serialiseSearch(Search<E> search, File searchFile) throws IOException
     {
-        Writer out = new FileWriterWithEncoding(searchFile, US_ASCII, false);
-        try
+        try (Writer out = new FileWriterWithEncoding(searchFile, US_ASCII, false))
         {
             xstream.toXML(search, out);
 
             // Doesn't write a final end of line.
             out.write(EOL);
-        }
-        finally
-        {
-            IOUtils.closeQuietly(out);
         }
     }
 
@@ -305,8 +295,7 @@ public class GenologicsAPIRecordingAspect
 
         try
         {
-            Reader reader = new InputStreamReader(new FileInputStream(searchFile), US_ASCII);
-            try
+            try (Reader reader = new InputStreamReader(new FileInputStream(searchFile), US_ASCII))
             {
                 Search<?> previousSearch = (Search<?>)xstream.fromXML(reader);
 
@@ -335,10 +324,6 @@ public class GenologicsAPIRecordingAspect
                     t = t.getCause();
                 }
                 logger.warn("Could not reload previous search: {}", t.getMessage());
-            }
-            finally
-            {
-                IOUtils.closeQuietly(reader);
             }
         }
         catch (IOException e)

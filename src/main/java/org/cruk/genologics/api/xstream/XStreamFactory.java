@@ -32,7 +32,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.io.IOUtils;
 import org.cruk.genologics.api.search.Search;
 import org.cruk.genologics.api.search.SearchTerms;
 import org.slf4j.Logger;
@@ -73,14 +72,13 @@ public class XStreamFactory implements FactoryBean<XStream>
         final String packagesList = "/com/genologics/ri/packagelist.txt";
 
         List<String> packages = new ArrayList<String>();
-        InputStream in = XStreamFactory.class.getResourceAsStream(packagesList);
-        if (in == null)
+        try (InputStream in = XStreamFactory.class.getResourceAsStream(packagesList))
         {
-            logger.error("There is no packages list on the classpath ({}).", packagesList);
-        }
-        else
-        {
-            try
+            if (in == null)
+            {
+                logger.error("There is no packages list on the classpath ({}).", packagesList);
+            }
+            else
             {
                 BufferedReader reader = new BufferedReader(new InputStreamReader(in, "US-ASCII"));
                 String line;
@@ -92,14 +90,10 @@ public class XStreamFactory implements FactoryBean<XStream>
                     }
                 }
             }
-            catch (IOException e)
-            {
-                logger.error("Could not load API package names from packages list.");
-            }
-            finally
-            {
-                IOUtils.closeQuietly(in);
-            }
+        }
+        catch (IOException e)
+        {
+            logger.error("Could not load API package names from packages list.");
         }
 
         packageWildcards = Collections.unmodifiableList(packages);
