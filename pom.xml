@@ -26,7 +26,7 @@
     <groupId>org.cruk.genologics</groupId>
     <artifactId>clarity-client-recorder</artifactId>
     <packaging>jar</packaging>
-    <version>2.27-SNAPSHOT</version>
+    <version>2.31-SNAPSHOT</version>
 
     <name>CRUK-CI Genologics API Recorder</name>
     <description>
@@ -34,7 +34,7 @@
         the basis of unit tests when replayed.
     </description>
 
-    <url>http://crukci-bioinformatics.github.io/clarityclientrecorder</url>
+    <url>https://crukci-bioinformatics.github.io/clarityclientrecorder</url>
 
     <inceptionYear>2013</inceptionYear>
 
@@ -117,6 +117,28 @@
 
     <repositories>
         <repository>
+            <id>repository.spring.release</id>
+            <name>Spring GA Repository</name>
+            <url>https://repo.spring.io/release</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>repository.spring.milestone</id>
+            <name>Spring Milestone Repository</name>
+            <url>https://repo.spring.io/milestone</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+        <repository>
             <id>mulesoft</id>
             <url>https://repository-master.mulesoft.org/nexus/content/groups/public</url>
             <releases>
@@ -128,7 +150,7 @@
         </repository>
         <repository>
             <id>crukci-bioinformatics</id>
-            <url>http://content.cruk.cam.ac.uk/bioinformatics/maven</url>
+            <url>https://content.cruk.cam.ac.uk/bioinformatics/maven</url>
             <releases>
                 <enabled>true</enabled>
             </releases>
@@ -138,7 +160,7 @@
         </repository>
         <repository>
             <id>bioinformatics</id>
-            <url>http://internal-bioinformatics.cruk.cam.ac.uk/maven</url>
+            <url>https://internal-bioinformatics.cruk.cam.ac.uk/maven</url>
             <releases>
                 <enabled>true</enabled>
             </releases>
@@ -177,13 +199,12 @@
                     <artifactId>maven-compiler-plugin</artifactId>
                     <version>3.8.1</version>
                     <configuration>
-                        <source>1.8</source>
-                        <target>1.8</target>
+                        <source>17</source>
+                        <target>17</target>
                         <encoding>UTF-8</encoding>
                         <compilerArgs>
                             <compilerArg>-Xlint:all</compilerArg>
                         </compilerArgs>
-                        <fork>true</fork>
                     </configuration>
                 </plugin>
                 <plugin>
@@ -237,6 +258,10 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
                     <version>3.0.0-M5</version>
+                    <configuration>
+                        <!-- See https://stackoverflow.com/a/53176428 -->
+                        <forkCount>0</forkCount>
+                    </configuration>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -249,10 +274,10 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>3.3.0</version>
+                    <version>3.3.1</version>
                     <configuration>
-                        <source>1.8</source>
-                        <target>1.8</target>
+                        <source>17</source>
+                        <target>17</target>
                         <encoding>UTF-8</encoding>
                     </configuration>
                 </plugin>
@@ -354,7 +379,7 @@
                 <configuration>
                     <toolchains>
                         <jdk>
-                            <version>1.8</version>
+                            <version>17</version>
                         </jdk>
                     </toolchains>
                 </configuration>
@@ -412,8 +437,8 @@
                     <serialwarn>false</serialwarn>
                     <show>protected</show>
                     <links>
-                        <link>https://docs.oracle.com/javase/8/docs/api</link>
-                        <link>https://jakarta.ee/specifications/platform/8/apidocs</link>
+                        <link>https://docs.oracle.com/en/java/javase/17/docs/api</link>
+                        <link>https://jakarta.ee/specifications/platform/9.1/apidocs</link>
                         <link>http://www.slf4j.org/apidocs/</link>
                         <link>http://commons.apache.org/proper/commons-beanutils/javadocs/v1.9.4/apidocs</link>
                         <link>http://commons.apache.org/proper/commons-collections/javadocs/api-4.4</link>
@@ -426,8 +451,6 @@
                         <link>https://hc.apache.org/httpcomponents-core-4.4.x/current/httpcore/apidocs</link>
                         <link>https://eclipse.org/aspectj/doc/released/runtime-api/</link>
                         <link>https://eclipse.org/aspectj/doc/released/aspectj5rt-api/</link>
-                        <link>https://x-stream.github.io/javadoc</link>
-                        <link>https://crukci-bioinformatics.github.io/clarityclient/apidocs</link>
                     </links>
                 </configuration>
             </plugin>
@@ -437,24 +460,21 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
+                <groupId>jakarta.platform</groupId>
+                <artifactId>jakarta.jakartaee-bom</artifactId>
+                <version>9.1.0</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
                 <groupId>com.sun.activation</groupId>
                 <artifactId>jakarta.activation</artifactId>
-                <version>1.2.2</version>
+                <version>2.0.1</version>
             </dependency>
             <dependency>
-                <groupId>jakarta.annotation</groupId>
-                <artifactId>jakarta.annotation-api</artifactId>
-                <version>1.3.5</version>
-            </dependency>
-            <dependency>
-                <groupId>jakarta.xml.bind</groupId>
-                <artifactId>jakarta.xml.bind-api</artifactId>
-                <version>2.3.3</version>
-            </dependency>
-            <dependency>
-                <groupId>com.sun.xml.bind</groupId>
-                <artifactId>jaxb-impl</artifactId>
-                <version>2.3.3</version>
+                <groupId>org.glassfish.jaxb</groupId>
+                <artifactId>jaxb-runtime</artifactId>
+                <version>3.0.2</version>
             </dependency>
 
             <dependency>
@@ -495,7 +515,7 @@
             <dependency>
                 <groupId>commons-net</groupId>
                 <artifactId>commons-net</artifactId>
-                <version>3.6</version>
+                <version>3.8.0</version>
             </dependency>
 
             <dependency>
@@ -507,17 +527,14 @@
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-api</artifactId>
-                <version>1.7.32</version>
+                <version>1.7.36</version>
             </dependency>
             <dependency>
-                <groupId>org.slf4j</groupId>
-                <artifactId>slf4j-log4j12</artifactId>
-                <version>1.7.32</version>
-            </dependency>
-            <dependency>
-                <groupId>org.slf4j</groupId>
-                <artifactId>jcl-over-slf4j</artifactId>
-                <version>1.7.32</version>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-bom</artifactId>
+                <version>2.17.2</version>
+                <type>pom</type>
+                <scope>import</scope>
             </dependency>
 
             <dependency>
@@ -534,14 +551,14 @@
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-framework-bom</artifactId>
-                <version>5.3.9</version>
+                <version>6.0.0-M3</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
             <dependency>
                 <groupId>org.springframework.integration</groupId>
                 <artifactId>spring-integration-bom</artifactId>
-                <version>5.5.3</version>
+                <version>6.0.0-M2</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -560,12 +577,12 @@
             <dependency>
                 <groupId>org.aspectj</groupId>
                 <artifactId>aspectjrt</artifactId>
-                <version>1.9.7</version>
+                <version>1.9.8</version>
             </dependency>
             <dependency>
                 <groupId>org.aspectj</groupId>
                 <artifactId>aspectjweaver</artifactId>
-                <version>1.9.7</version>
+                <version>1.9.8</version>
             </dependency>
 
             <dependency>
@@ -587,14 +604,16 @@
             </dependency>
 
             <dependency>
-                <groupId>junit</groupId>
-                <artifactId>junit</artifactId>
-                <version>4.13.1</version>
+                <groupId>org.junit</groupId>
+                <artifactId>junit-bom</artifactId>
+                <version>5.8.2</version>
+                <type>pom</type>
+                <scope>import</scope>
             </dependency>
             <dependency>
                 <groupId>org.easymock</groupId>
                 <artifactId>easymock</artifactId>
-                <version>4.2</version>
+                <version>4.3</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -603,7 +622,7 @@
         <dependency>
             <groupId>org.cruk.genologics</groupId>
             <artifactId>clarity-client</artifactId>
-            <version>2.27-SNAPSHOT</version>
+            <version>2.31-SNAPSHOT</version>
         </dependency>
 
         <dependency>
@@ -612,18 +631,18 @@
         </dependency>
 
         <dependency>
-            <groupId>com.sun.xml.bind</groupId>
-            <artifactId>jaxb-impl</artifactId>
+            <groupId>org.glassfish.jaxb</groupId>
+            <artifactId>jaxb-runtime</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-slf4j-impl</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>

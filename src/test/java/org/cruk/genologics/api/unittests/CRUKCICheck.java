@@ -18,16 +18,16 @@
 
 package org.cruk.genologics.api.unittests;
 
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
+
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-
-import org.junit.Assume;
 
 public final class CRUKCICheck
 {
     public static void assumeInCrukCI()
     {
-        Assume.assumeTrue("Can only run the recording tests as written in CRUK-CI.", CRUKCICheck.inCrukCI());
+        assumeTrue(inCrukCI(), "Can only run the recording tests as written in CRUK-CI.");
     }
 
     public static boolean inCrukCI()

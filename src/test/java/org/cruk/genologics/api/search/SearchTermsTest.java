@@ -18,14 +18,13 @@
 
 package org.cruk.genologics.api.search;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.genologics.ri.artifact.Artifact;
 import com.genologics.ri.sample.Sample;
@@ -54,8 +53,8 @@ public class SearchTermsTest
 
         SearchTerms<Artifact> st2 = new SearchTerms<Artifact>(terms2, Artifact.class);
 
-        assertEquals("Search terms do not match", st1, st2);
-        assertEquals("Search terms hashes do not match", st1.hashCode(), st2.hashCode());
+        assertEquals(st1, st2, "Search terms do not match");
+        assertEquals(st1.hashCode(), st2.hashCode(), "Search terms hashes do not match");
     }
 
     @Test
@@ -71,8 +70,8 @@ public class SearchTermsTest
 
         SearchTerms<Artifact> st2 = new SearchTerms<Artifact>(terms2, Artifact.class);
 
-        assertEquals("Search terms do not match", st1, st2);
-        assertEquals("Search terms hashes do not match", st1.hashCode(), st2.hashCode());
+        assertEquals(st1, st2, "Search terms do not match");
+        assertEquals(st1.hashCode(), st2.hashCode(), "Search terms hashes do not match");
     }
 
     @Test
@@ -88,8 +87,8 @@ public class SearchTermsTest
 
         SearchTerms<Sample> st2 = new SearchTerms<Sample>(terms2, Sample.class);
 
-        assertNotEquals("Search terms match", st1, st2);
-        assertNotEquals("Search terms hashes match", st1.hashCode(), st2.hashCode());
+        assertNotEquals(st1, st2, "Search terms match");
+        assertNotEquals(st1.hashCode(), st2.hashCode(), "Search terms hashes match");
     }
 
     @Test
@@ -105,8 +104,8 @@ public class SearchTermsTest
 
         SearchTerms<Artifact> st2 = new SearchTerms<Artifact>(terms2, Artifact.class);
 
-        assertNotEquals("Search terms match", st1, st2);
-        assertNotEquals("Search terms hashes match", st1.hashCode(), st2.hashCode());
+        assertNotEquals(st1, st2, "Search terms match");
+        assertNotEquals(st1.hashCode(), st2.hashCode(), "Search terms hashes match");
     }
 
     @Test
@@ -122,8 +121,8 @@ public class SearchTermsTest
 
         SearchTerms<Artifact> st2 = new SearchTerms<Artifact>(terms2, Artifact.class);
 
-        assertNotEquals("Search terms match", st1, st2);
-        assertNotEquals("Search terms hashes match", st1.hashCode(), st2.hashCode());
+        assertNotEquals(st1, st2, "Search terms match");
+        assertNotEquals(st1.hashCode(), st2.hashCode(), "Search terms hashes match");
     }
 
     @Test
@@ -143,8 +142,8 @@ public class SearchTermsTest
 
         SearchTerms<Artifact> st2 = new SearchTerms<Artifact>(terms2, Artifact.class);
 
-        assertNotEquals("Search terms match", st1, st2);
-        assertNotEquals("Search terms hashes match", st1.hashCode(), st2.hashCode());
+        assertNotEquals(st1, st2, "Search terms match");
+        assertNotEquals(st1.hashCode(), st2.hashCode(), "Search terms hashes match");
     }
 
 }
