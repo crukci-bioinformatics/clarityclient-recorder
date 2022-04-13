@@ -139,16 +139,6 @@
             </snapshots>
         </repository>
         <repository>
-            <id>mulesoft</id>
-            <url>https://repository-master.mulesoft.org/nexus/content/groups/public</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-        <repository>
             <id>crukci-bioinformatics</id>
             <url>https://content.cruk.cam.ac.uk/bioinformatics/maven</url>
             <releases>
