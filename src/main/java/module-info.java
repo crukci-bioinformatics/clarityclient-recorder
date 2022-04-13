@@ -13,4 +13,6 @@ module org.cruk.genologics.api.recorder
     exports org.cruk.genologics.api.playback;
     exports org.cruk.genologics.api.record;
     exports org.cruk.genologics.api.search;
+
+    opens org.cruk.genologics.api.search to xtream;
 }
