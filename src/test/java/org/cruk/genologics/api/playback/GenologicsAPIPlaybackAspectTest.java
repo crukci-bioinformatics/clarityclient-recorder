@@ -18,11 +18,7 @@
 
 package org.cruk.genologics.api.playback;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -45,14 +41,12 @@ import org.apache.commons.io.FileUtils;
 import org.apache.http.conn.HttpHostConnectException;
 import org.cruk.genologics.api.GenologicsAPI;
 import org.cruk.genologics.api.unittests.ClarityClientRecorderPlaybackTestConfiguration;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.web.client.ResourceAccessException;
 
 import com.genologics.ri.LimsLink;
@@ -70,8 +64,7 @@ import com.genologics.ri.role.Role;
 import com.genologics.ri.sample.Sample;
 import com.genologics.ri.sample.SampleLink;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = ClarityClientRecorderPlaybackTestConfiguration.class)
+@SpringJUnitConfig(classes = ClarityClientRecorderPlaybackTestConfiguration.class)
 public class GenologicsAPIPlaybackAspectTest
 {
     @Autowired
@@ -100,14 +93,14 @@ public class GenologicsAPIPlaybackAspectTest
         aspect.setUpdatesDirectory(updateDirectory);
     }
 
-    @Before
+    @BeforeEach
     public void setup() throws IOException
     {
         FileUtils.deleteQuietly(updateDirectory);
         FileUtils.forceMkdir(updateDirectory);
     }
 
-    @After
+    @AfterEach
     public void cleanup()
     {
         FileUtils.deleteQuietly(updateDirectory);
@@ -119,34 +112,34 @@ public class GenologicsAPIPlaybackAspectTest
         try
         {
             Container c = api.load("27-340091", Container.class);
-            assertEquals("Container name wrong", "HFTC7BBXX", c.getName());
+            assertEquals("HFTC7BBXX", c.getName(), "Container name wrong");
 
             ContainerType ct = api.load(c.getContainerType());
-            assertEquals("Container type name wrong", "Illumina HiSeq 4000 Flow Cell", ct.getName());
+            assertEquals("Illumina HiSeq 4000 Flow Cell", ct.getName(), "Container type name wrong");
 
             Artifact a = api.load("2-5898189", Artifact.class);
-            assertEquals("Artifact name wrong", "SLX-12321_NORM-1", a.getName());
+            assertEquals("SLX-12321_NORM-1", a.getName(), "Artifact name wrong");
 
             Sample s = api.load("GAO9862A146", Sample.class);
-            assertEquals("Sample name wrong", "34_a", s.getName());
+            assertEquals("34_a", s.getName(), "Sample name wrong");
 
             Project p = api.load(s.getProject());
-            assertEquals("Project name wrong", "Poseidon-NGTAS-201611", p.getName());
+            assertEquals("Poseidon-NGTAS-201611", p.getName(), "Project name wrong");
 
             Researcher r = api.load(p.getResearcher());
-            assertEquals("Researcher name wrong", "Meiling", r.getFirstName());
+            assertEquals("Meiling", r.getFirstName(), "Researcher name wrong");
 
             Lab l = api.load(r.getLab());
-            assertEquals("Lab name wrong", "CRUKCI", l.getName());
+            assertEquals("CRUKCI", l.getName(), "Lab name wrong");
 
             ReagentType rt = api.load("374", ReagentType.class);
-            assertEquals("Reagent category wrong", "Fluidigm", rt.getReagentCategory());
+            assertEquals("Fluidigm", rt.getReagentCategory(), "Reagent category wrong");
 
             Role role = api.load("3", Role.class);
-            assertEquals("Role name wrong", "Collaborator", role.getName());
+            assertEquals("Collaborator", role.getName(), "Role name wrong");
 
             Permission perm = api.load("5", Permission.class);
-            assertEquals("Permission name wrong", "Project", perm.getName());
+            assertEquals("Project", perm.getName(), "Permission name wrong");
         }
         catch (ResourceAccessException e)
         {
@@ -183,7 +176,7 @@ public class GenologicsAPIPlaybackAspectTest
         try
         {
             Sample s = api.load("0000", Sample.class);
-            assertNull("Got something back from sample when expecting null.", s);
+            assertNull(s, "Got something back from sample when expecting null.");
         }
         catch (ResourceAccessException e)
         {
@@ -199,8 +192,8 @@ public class GenologicsAPIPlaybackAspectTest
             Map<String, Object> terms = new HashMap<String, Object>();
             terms.put("inputartifactlimsid", "2-1108999");
             List<LimsLink<GenologicsProcess>> processes = api.find(terms, GenologicsProcess.class);
-            assertNotNull("Nothing returned from search.", processes);
-            assertEquals("Wrong number of processes returned from search.", 4, processes.size());
+            assertNotNull(processes, "Nothing returned from search.");
+            assertEquals(4, processes.size(), "Wrong number of processes returned from search.");
         }
         catch (ResourceAccessException e)
         {
@@ -214,8 +207,8 @@ public class GenologicsAPIPlaybackAspectTest
         Map<String, Object> terms = new HashMap<String, Object>();
         terms.put("projectlimsid", new HashSet<String>(Arrays.asList("COH605", "SER1015")));
         List<LimsLink<Sample>> samples = api.find(terms, Sample.class);
-        assertNotNull("Nothing returned from search.", samples);
-        assertEquals("Wrong number of samples returned from search.", 8, samples.size());
+        assertNotNull(samples, "Nothing returned from search.");
+        assertEquals(8, samples.size(), "Wrong number of samples returned from search.");
     }
 
     @Test
@@ -261,19 +254,19 @@ public class GenologicsAPIPlaybackAspectTest
             api.update(s);
 
             File update1File = new File(updateDirectory, "Sample-GAO9862A146.000.xml");
-            assertTrue("Updated sample not written to " + update1File.getName(), update1File.exists());
+            assertTrue(update1File.exists(), "Updated sample not written to " + update1File.getName());
 
             s.setName("Second name change");
             api.update(s);
 
             File update2File = new File(updateDirectory, "Sample-GAO9862A146.001.xml");
-            assertTrue("Updated sample not written to " + update2File.getName(), update2File.exists());
+            assertTrue(update2File.exists(), "Updated sample not written to " + update2File.getName());
 
             Sample sv1 = (Sample)marshaller.unmarshal(new StreamSource(update1File));
-            assertEquals("Version zero name wrong", "Name change one", sv1.getName());
+            assertEquals("Name change one", sv1.getName(), "Version zero name wrong");
 
             Sample sv2 = (Sample)marshaller.unmarshal(new StreamSource(update2File));
-            assertEquals("Version zero name wrong", "Second name change", sv2.getName());
+            assertEquals("Second name change", sv2.getName(), "Version zero name wrong");
         }
         catch (ResourceAccessException e)
         {
@@ -287,10 +280,10 @@ public class GenologicsAPIPlaybackAspectTest
         try
         {
             List<LimsLink<ContainerType>> containerTypes = api.listAll(ContainerType.class);
-            assertEquals("Wrong number of container types returned.", 23, containerTypes.size());
+            assertEquals(23, containerTypes.size(), "Wrong number of container types returned.");
 
             List<LimsLink<ReagentType>> reagentTypes = api.listSome(ReagentType.class, 20, 50);
-            assertEquals("Wrong number of reagent types returned.", 120, reagentTypes.size());
+            assertEquals(120, reagentTypes.size(), "Wrong number of reagent types returned.");
         }
         catch (ResourceAccessException e)
         {

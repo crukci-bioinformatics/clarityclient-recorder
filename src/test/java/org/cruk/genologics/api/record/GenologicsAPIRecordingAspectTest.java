@@ -18,8 +18,9 @@
 
 package org.cruk.genologics.api.record;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 import java.io.File;
 import java.io.IOException;
@@ -43,17 +44,14 @@ import org.cruk.genologics.api.search.SearchTerms;
 import org.cruk.genologics.api.unittests.CRUKCICheck;
 import org.cruk.genologics.api.unittests.ClarityClientRecorderRecordTestConfiguration;
 import org.easymock.EasyMock;
-import org.junit.After;
-import org.junit.Assume;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.web.client.ResourceAccessException;
 
 import com.genologics.ri.Batch;
@@ -73,8 +71,7 @@ import com.genologics.ri.researcher.Researcher;
 import com.genologics.ri.role.Role;
 import com.genologics.ri.sample.Sample;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = ClarityClientRecorderRecordTestConfiguration.class)
+@SpringJUnitConfig(classes = ClarityClientRecorderRecordTestConfiguration.class)
 public class GenologicsAPIRecordingAspectTest
 {
     @Autowired
@@ -102,14 +99,14 @@ public class GenologicsAPIRecordingAspectTest
         aspect.setMessageDirectory(messageDirectory);
     }
 
-    @Before
+    @BeforeEach
     public void setup() throws IOException
     {
         FileUtils.deleteQuietly(messageDirectory);
         FileUtils.forceMkdir(messageDirectory);
     }
 
-    @After
+    @AfterEach
     public void cleanup()
     {
         FileUtils.deleteQuietly(messageDirectory);
@@ -117,9 +114,9 @@ public class GenologicsAPIRecordingAspectTest
 
     private void checkCredentialsFileExists()
     {
-        Assume.assumeTrue("Could not set credentials for the API, which is needed for this test. " +
-                          "Put a \"testcredentials.properties\" file on the class path.",
-                          httpRequestFactory.getCredentials() != null);
+        assumeTrue(httpRequestFactory.getCredentials() != null,
+                   "Could not set credentials for the API, which is needed for this test. " +
+                   "Put a \"testcredentials.properties\" file on the class path.");
     }
 
     @Test
@@ -139,7 +136,7 @@ public class GenologicsAPIRecordingAspectTest
             Collections.sort(c.getPlacements());
 
             Artifact pool = api.load(c.getPlacements().get(4));
-            assertEquals("Mismatched ids", "2-5898189", pool.getLimsid());
+            assertEquals("2-5898189", pool.getLimsid(), "Mismatched ids");
             assertRecorded(pool);
 
             Sample s = api.load("GAO9862A146", Sample.class);
@@ -180,27 +177,27 @@ public class GenologicsAPIRecordingAspectTest
             List<LimsLink<ContainerType>> ctLinks = api.listAll(ContainerType.class);
 
             File containerTypesFile = new File(messageDirectory, "ContainerTypes.xml");
-            assertTrue("Container types not recorded.", containerTypesFile.exists());
+            assertTrue(containerTypesFile.exists(), "Container types not recorded.");
 
             @SuppressWarnings("unchecked")
             Batch<? extends LimsLink<ContainerType>> ctBatch =
                     (Batch<? extends LimsLink<ContainerType>>)marshaller.unmarshal(new StreamSource(containerTypesFile));
 
-            assertEquals("Serialised container type links don't match the original.", ctLinks.size(), ctBatch.getSize());
+            assertEquals(ctLinks.size(), ctBatch.getSize(), "Serialised container type links don't match the original.");
 
 
             List<LimsLink<ReagentType>> rtLinks = api.listSome(ReagentType.class, 0, 120);
 
-            assertEquals("Wrong number of ReagentType links returned.", 120, rtLinks.size());
+            assertEquals(120, rtLinks.size(), "Wrong number of ReagentType links returned.");
 
             File reagentTypesFile = new File(messageDirectory, "ReagentTypes.xml");
-            assertTrue("Reagent types not recorded.", reagentTypesFile.exists());
+            assertTrue(reagentTypesFile.exists(), "Reagent types not recorded.");
 
             @SuppressWarnings("unchecked")
             Batch<? extends LimsLink<ReagentType>> rtBatch =
                     (Batch<? extends LimsLink<ReagentType>>)marshaller.unmarshal(new StreamSource(reagentTypesFile));
 
-            assertEquals("Serialised reagent type links don't match the original.", rtLinks.size(), rtBatch.getSize());
+            assertEquals(rtLinks.size(), rtBatch.getSize(), "Serialised reagent type links don't match the original.");
         }
         catch (ResourceAccessException e)
         {
@@ -249,7 +246,7 @@ public class GenologicsAPIRecordingAspectTest
         aspect.serialiseSearch(s1, s1File);
 
         File s1Written = assertSearchRecorded(s1);
-        assertEquals("Written in wrong file", s1File, s1Written);
+        assertEquals(s1File, s1Written, "Written in wrong file");
 
         // We'll fix this to rename the file as if it is an incompatible search which a hash clash.
 
@@ -260,7 +257,7 @@ public class GenologicsAPIRecordingAspectTest
 
         File s2File = new File(messageDirectory, s2.getSearchFileName());
 
-        assertTrue("Could not change file name for test.", s1File.renameTo(s2File));
+        assertTrue(s1File.renameTo(s2File), "Could not change file name for test.");
 
         Logger realLogger = aspect.logger;
         try
@@ -276,7 +273,7 @@ public class GenologicsAPIRecordingAspectTest
 
             boolean mergeResult = aspect.checkAndMergeWithExisting(s2, s2File);
 
-            assertTrue("Incompatible merging says not to do anything", mergeResult);
+            assertTrue(mergeResult, "Incompatible merging says not to do anything");
 
             EasyMock.verify(mockLogger);
         }
@@ -299,7 +296,7 @@ public class GenologicsAPIRecordingAspectTest
         aspect.serialiseSearch(s1, s1File);
 
         File s1Written = assertSearchRecorded(s1);
-        assertEquals("Written in wrong file", s1File, s1Written);
+        assertEquals(s1File, s1Written, "Written in wrong file");
 
         // We'll fix this to rename the file as if it is an incompatible search which a hash clash.
 
@@ -309,7 +306,7 @@ public class GenologicsAPIRecordingAspectTest
 
         File s2File = new File(messageDirectory, s2.getSearchFileName());
 
-        assertTrue("Could not change file name for test.", s1File.renameTo(s2File));
+        assertTrue(s1File.renameTo(s2File), "Could not change file name for test.");
 
         Logger realLogger = aspect.logger;
         try
@@ -325,7 +322,7 @@ public class GenologicsAPIRecordingAspectTest
 
             boolean mergeResult = aspect.checkAndMergeWithExisting(s2, s2File);
 
-            assertTrue("Incompatible merging says not to do anything", mergeResult);
+            assertTrue(mergeResult, "Incompatible merging says not to do anything");
 
             EasyMock.verify(mockLogger);
         }
@@ -339,7 +336,7 @@ public class GenologicsAPIRecordingAspectTest
     {
         String className = ClassUtils.getShortClassName(entity.getClass());
         File entityFile = new File(messageDirectory, className + "-" + entity.getLimsid() + ".xml");
-        assertTrue("Have not recorded " + className + " " + entity.getLimsid(), entityFile.exists());
+        assertTrue(entityFile.exists(), "Have not recorded " + className + " " + entity.getLimsid());
         return entityFile;
     }
 
@@ -352,7 +349,7 @@ public class GenologicsAPIRecordingAspectTest
         id = id.substring(lastSlash + 1);
 
         File entityFile = new File(messageDirectory, className + "-" + id + ".xml");
-        assertTrue("Have not recorded " + className + " " + id, entityFile.exists());
+        assertTrue(entityFile.exists(), "Have not recorded " + className + " " + id);
 
         return entityFile;
     }
@@ -365,7 +362,7 @@ public class GenologicsAPIRecordingAspectTest
     private File assertSearchRecorded(SearchTerms<?> terms)
     {
         File searchFile = new File(messageDirectory, Search.getSearchFileName(terms));
-        assertTrue("Have not recorded search.", searchFile.exists());
+        assertTrue(searchFile.exists(), "Have not recorded search.");
         return searchFile;
     }
 
@@ -377,7 +374,7 @@ public class GenologicsAPIRecordingAspectTest
         }
         catch (HttpHostConnectException hhce)
         {
-            Assume.assumeNoException("The server " + hhce.getHost() + " is not available. Test cannot run.", hhce);
+            assumeTrue(false, "The server " + hhce.getHost() + " is not available. Test cannot run.");
         }
         catch (Throwable e)
         {
