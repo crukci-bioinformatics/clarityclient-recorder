@@ -1,9 +1,9 @@
 /**
  * The Clarity Java client recorder for Clarity 6+.
  */
-module org.cruk.genologics.api.recorder
+module org.cruk.clarity.api.recorder
 {
-    requires transitive org.cruk.genologics.api;
+    requires transitive org.cruk.clarity.api;
 
     requires transitive org.aspectj.runtime;
     requires org.slf4j;
