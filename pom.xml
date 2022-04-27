@@ -592,7 +592,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.cruk.genologics</groupId>
+            <groupId>org.cruk.clarity</groupId>
             <artifactId>clarity-client</artifactId>
             <version>${project.version}</version>
         </dependency>
