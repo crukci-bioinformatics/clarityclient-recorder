@@ -1,4 +1,4 @@
-# CRUK-CI Genologics API Java Client Recorder
+# CRUK-CI Clarity API Java Client Recorder
 
 The Cancer Research UK Cambridge Institute (CRUK-CI) Clarity Java Client
 provides the Java or Groovy developer a means to work with
@@ -60,4 +60,20 @@ _Fill in the <version> tag with the version of the API._
 _For this branch, and code using EE8, the version should start "2.31.ee8"._
 
 For details of using the API, please refer to the documentation at
-<http://crukci-bioinformatics.github.io/clarityclient-recorder>
+https://crukci-bioinformatics.github.io/clarityclient-recorder
+
+You will also need a JAXB implementation in _runtime_ or _test_ scope.
+This should be one of the EE8 implementations, namely a Glassfish
+implementation version 2.x.x:
+
+```XML
+<dependency>
+    <groupId>org.glassfish.jaxb</groupId>
+    <artifactId>jaxb-runtime</artifactId>
+    <version>2.3.6</version>
+    <scope>runtime</scope>
+</dependency>
+```
+
+The `com.sun.xml.bind:jaxb-impl` artifacts available in Maven won't
+work well with newer JREs.

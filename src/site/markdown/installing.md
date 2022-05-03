@@ -45,6 +45,22 @@ of the Clarity client JAR, but you will almost certainly want to include
 that JAR with _compile_ scope. This wrapper is designed for tests, hence
 including both JARs in the example above with different scopes.
 
+You will also need to provide a JAXB implementation for your tests.
+This should be one of the EE8 implementations, namely a Glassfish
+implementation version 2.x.x:
+
+```XML
+<dependency>
+    <groupId>org.glassfish.jaxb</groupId>
+    <artifactId>jaxb-runtime</artifactId>
+    <version>2.3.6</version>
+    <scope>test</scope>
+</dependency>
+```
+
+The `com.sun.xml.bind:jaxb-impl` artifacts available in Maven won't
+work well with newer JREs.
+
 ### Without Maven
 
 If you are not using Maven, you should also fetch this project's
