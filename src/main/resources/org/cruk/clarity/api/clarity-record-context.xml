@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+    CRUK-CI Clarity REST API Java Client.
+    Copyright (C) 2013 Cancer Research UK Cambridge Institute.
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/context
+                           http://www.springframework.org/schema/context/spring-context.xsd
+                           http://www.springframework.org/schema/util
+                           http://www.springframework.org/schema/util/spring-util.xsd
+                           http://www.springframework.org/schema/aop
+                           http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <context:annotation-config />
+
+    <bean id="searchXStream" class="org.cruk.clarity.api.xstream.XStreamFactory" />
+
+    <bean name="clarityRecordingAspectBase" abstract="true" class="org.cruk.clarity.api.record.ClarityAPIRecordingAspect">
+        <property name="jaxbMarshaller" ref="clarityJaxbMarshaller"/>
+        <property name="internalClarityAPI" ref="clarityAPI"/>
+    </bean>
+
+    <bean name="clarityRecordingAspect" parent="clarityRecordingAspectBase" />
+
+    <aop:config>
+        <aop:aspect ref="clarityRecordingAspect">
+            <aop:around
+                pointcut="execution(public * retrieve(..)) and bean(clarityAPI)"
+                method="doLoad"/>
+            <aop:around
+                pointcut="execution(public * load(..)) and bean(clarityAPI)"
+                method="doLoad"/>
+            <aop:around
+                pointcut="execution(public * loadAll(..)) and bean(clarityAPI)"
+                method="doLoadAll"/>
+            <aop:around
+                pointcut="execution(public * find(..)) and bean(clarityAPI)"
+                method="doFind"/>
+            <aop:around
+                pointcut="execution(public * list*(..)) and bean(clarityAPI)"
+                method="doList"/>
+        </aop:aspect>
+    </aop:config>
+
+</beans>
