@@ -43,30 +43,17 @@ Add the JAR file file of the main Clarity client and the JAR of this project
 to your POM (I'm assuming you're using Maven now):
 
 ```XML
-    <dependency>
-        <groupId>org.cruk.clarity</groupId>
-        <artifactId>clarity-client</artifactId>
-        <version>...</version>
-    </dependency>
-    <dependency>
-        <groupId>org.cruk.clarity</groupId>
-        <artifactId>clarity-client-recorder</artifactId>
-        <version>...</version>
-        <scope>test</scope>
-    </dependency>
-```
-
-_Fill in the <version> tag with the version of the API._
-_For this branch, and code using EE8, the version should start "2.31.ee8"._
-
-For details of using the API, please refer to the documentation at
-https://crukci-bioinformatics.github.io/clarityclient-recorder
-
-You will also need a JAXB implementation in _runtime_ or _test_ scope.
-This should be one of the EE8 implementations, namely a Glassfish
-implementation version 2.x.x:
-
-```XML
+<dependency>
+    <groupId>org.cruk.clarity</groupId>
+    <artifactId>clarity-client</artifactId>
+    <version>...</version>
+</dependency>
+<dependency>
+    <groupId>org.cruk.clarity</groupId>
+    <artifactId>clarity-client-recorder</artifactId>
+    <version>...</version>
+    <scope>test</scope>
+</dependency>
 <dependency>
     <groupId>org.glassfish.jaxb</groupId>
     <artifactId>jaxb-runtime</artifactId>
@@ -75,5 +62,14 @@ implementation version 2.x.x:
 </dependency>
 ```
 
-The `com.sun.xml.bind:jaxb-impl` artifacts available in Maven won't
-work well with newer JREs.
+_Fill in the <version> tag with the version of the API._
+_For this branch, and code using EE8, the version should start "2.31.ee8"._
+
+For details of using the API, please refer to the documentation at
+https://crukci-bioinformatics.github.io/clarityclient-recorder
+
+You will also need a JAXB implementation in _runtime_ or _test_ scope,
+as shown in the excerpt above.
+This should be one of the EE8 implementations, namely a Glassfish
+implementation version 2.x.x: The `com.sun.xml.bind:jaxb-impl`
+artifacts available in Maven won't work well with newer JREs.
