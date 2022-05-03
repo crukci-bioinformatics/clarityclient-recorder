@@ -1,55 +1,54 @@
-# Setting up the Record and Playback Wrappers
+## Setting up the Record and Playback Wrappers
 
 The documentation for the core Clarity Java Client can be found at
 https://crukci-bioinformatics.github.io/clarityclient
 
-## Spring Configuration
+### Spring Configuration
 
 The main Spring configuration file for the Clarity client is:
 
 ```
-/org/cruk/genologics/api/genologics-client-context.xml
+/org/cruk/clarity/api/clarity-client-context.xml
 ```
 
 You will need to add one of the wrappers to your application context path
 to activate the wrapper. For recording messages from a server, also include:
 
 ```
-/org/cruk/genologics/api/genologics-record-context.xml
+/org/cruk/clarity/api/clarity-record-context.xml
 ```
 
 To use prerecorded messages, include:
 
 ```
-/org/cruk/genologics/api/genologics-playback-context.xml
+/org/cruk/clarity/api/clarity-playback-context.xml
 ```
 
 Add the appropriate file to your Spring application context path. If you
 wish to use the caching feature too, you'll also need to add:
 
 ```
-/org/cruk/genologics/api/genologics-cache-context.xml
+/org/cruk/clarity/api/clarity-cache-context.xml
 ```
 
-`genologics-client-context.xml` and `genologics-cache-context.xml`
+`clarity-client-context.xml` and `clarity-cache-context.xml`
 are provided in the main client's JAR file.
-`genologics-record-context.xml` and `genologics-playback-context.xml` are
+`clarity-record-context.xml` and `clarity-playback-context.xml` are
 provides in the recorder's JAR file.
 
 It is recommended to use the Spring Test module (`spring-test`). Our tests
-are written for JUnit 4, and for these there are some convenience Spring
+are written for JUnit 5, and for these there are some convenience Spring
 configuration classes provided to help with this. A test class needs to be annotated
 to use the Spring test system and initialised with a recording or playback configuration:
 
 ```Java
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {
-    "classpath:/org/cruk/genologics/api/genologics-client-context.xml",
-    "classpath:/org/cruk/genologics/api/genologics-playback-context.xml"
+@SpringJUnitConfig(locations = {
+    "classpath:/org/cruk/clarity/api/clarity-client-context.xml",
+    "classpath:/org/cruk/clarity/api/clarity-playback-context.xml"
 })
 ```
 
-Replace `genologics-playback-context.xml` with `genologics-record-context.xml`
+Replace `clarity-playback-context.xml` with `clarity-record-context.xml`
 for recording. Typically one may use the recording class to get the actual results from
 a real Clarity server, then switch to the playback configuration to run the tests
 from the recorded files. Don't forget to check the recorded files into source control.
@@ -59,10 +58,10 @@ have dependencies injected. For example:
 
 ```Java
 @Autowired
-GenologicsAPI api;
+ClarityAPI api;
 ```
 
-## Setting the Message Directory
+### Setting the Message Directory
 
 The record and playback wrappers around the Clarity client need no additional
 configuration beyond what is supplied in the Spring files. The one property that
@@ -75,31 +74,33 @@ configured by setting the `messageDirectory` property in Spring configuration,
 or injecting the aspect into the unit test class code and setting the property:
 
 ```Java
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {
-    "classpath:/org/cruk/genologics/api/genologics-client-context.xml",
-    "classpath:/org/cruk/genologics/api/genologics-playback-context.xml"
+@SpringJUnitConfig(locations = {
+    "classpath:/org/cruk/clarity/api/clarity-client-context.xml",
+    "classpath:/org/cruk/clarity/api/clarity-playback-context.xml"
 })
 public class MyUnitTest
 {
-    @Autowired
-    GenologicsAPIPlaybackAspect playbackAspect;
+    @Autowired(required = false)
+    ClarityAPIPlaybackAspect playbackAspect;
 
     File recordedMessageDirectory = new File("src/test/servermessages");
 
     @PostConstruct
     public void setPlaybackDirectory()
     {
-        playbackAspect.setMessageDirectory(recordedMessageDirectory);
+        if (playbackAspect != null)
+        {
+            playbackAspect.setMessageDirectory(recordedMessageDirectory);
+        }
     }
 }
 ```
 
-This mechanism works for recording too. Just inject `GenologicsAPIRecordingAspect`
-instead of `GenologicsAPIPlaybackAspect`. This directory is not automatically created,
+This mechanism works for recording too. Just inject `ClarityAPIRecordingAspect`
+instead of `ClarityAPIPlaybackAspect`. This directory is not automatically created,
 so when recording make sure that it exists before communicating with the server.
 
-## Setting the Updates Directory during Playback
+### Setting the Updates Directory during Playback
 
 The playback wrapper returns results from previously recorded calls to
 the API's load, retrieve, load, find and list methods, finding the matching
@@ -125,7 +126,10 @@ would be done thus:
 @PostConstruct
 public void setPlaybackDirectory()
 {
-    playbackAspect.setMessageDirectory(recordedMessageDirectory);
-    playbackAspect.setUpdatesDirectory(new File("target/updates"));
+    if (playbackAspect != null)
+    {
+        playbackAspect.setMessageDirectory(recordedMessageDirectory);
+        playbackAspect.setUpdatesDirectory(new File("target/updates"));
+    }
 }
 ```
