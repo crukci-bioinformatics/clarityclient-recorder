@@ -58,7 +58,7 @@ to your POM (I'm assuming you're using Maven now):
     <groupId>org.glassfish.jaxb</groupId>
     <artifactId>jaxb-runtime</artifactId>
     <version>2.3.6</version>
-    <scope>runtime</scope>
+    <scope>test</scope>
 </dependency>
 ```
 
