@@ -222,20 +222,9 @@ public class ClarityAPIPlaybackAspectTest
             api.find(terms, Artifact.class);
             fail("Got a result when a search was not recorded.");
         }
-        catch (UndeclaredThrowableException e1)
+        catch (NoRecordingException e)
         {
-            try
-            {
-                throw e1.getUndeclaredThrowable();
-            }
-            catch (FileNotFoundException e2)
-            {
-                // Expected.
-            }
-            catch (Throwable e2)
-            {
-                throw e2;
-            }
+            // Expected.
         }
         catch (ResourceAccessException e)
         {
