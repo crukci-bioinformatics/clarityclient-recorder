@@ -238,7 +238,7 @@ public class ClarityAPIPlaybackAspect
      * @param pjp The join point.
      * @return The unmarshalled entity from the file found.
      *
-     * @throws FileNotFoundException if there is no file recorded for the object.
+     * @throws NoRecordingException if there is no file recorded for the object.
      *
      * @throws Throwable if there is anything else that fails.
      */
@@ -251,7 +251,7 @@ public class ClarityAPIPlaybackAspect
 
         if (!file.exists())
         {
-            throw new FileNotFoundException("There is no file " + file.getName() + " recorded.");
+            throw new NoRecordingException("There is no file " + file.getName() + " recorded.");
         }
 
         Object thing = jaxbMarshaller.unmarshal(new StreamSource(file));
@@ -281,7 +281,7 @@ public class ClarityAPIPlaybackAspect
 
             response = new ResponseEntity<Object>(thing, HttpStatus.OK);
         }
-        catch (FileNotFoundException e)
+        catch (NoRecordingException e)
         {
             response = new ResponseEntity<Object>(HttpStatus.NOT_FOUND);
         }
@@ -306,7 +306,7 @@ public class ClarityAPIPlaybackAspect
      *
      * @return A list of the entities loaded from the links.
      *
-     * @throws FileNotFoundException if there is no entity file recorded for any of the links.
+     * @throws NoRecordingException if there is no entity file recorded for any of the links.
      *
      * @throws Throwable if there is anything else that fails.
      */
@@ -336,7 +336,7 @@ public class ClarityAPIPlaybackAspect
      *
      * @return The result of the search (a list of links).
      *
-     * @throws FileNotFoundException if there is no search recorded for the parameters
+     * @throws NoRecordingException if there is no search recorded for the parameters
      * given.
      *
      * @throws Throwable if there is anything else that fails.
@@ -356,7 +356,7 @@ public class ClarityAPIPlaybackAspect
 
         if (search == null)
         {
-            throw new FileNotFoundException("There is no recorded search with the parameters given:\n" + searchTerms);
+            throw new NoRecordingException("There is no recorded search with the parameters given:\n" + searchTerms);
         }
 
         return search.getResults();
@@ -379,7 +379,7 @@ public class ClarityAPIPlaybackAspect
      * @return The result of the search (a list of links). If there was no file recorded
      * for a list of these entities, an empty list is returned.
      *
-     * @throws FileNotFoundException if there is no list recorded for this type of entity.
+     * @throws NoRecordingException if there is no list recorded for this type of entity.
      *
      * @throws Throwable if there is an error invoking the underlying method.
      */
@@ -410,7 +410,7 @@ public class ClarityAPIPlaybackAspect
             }
             else
             {
-                throw new FileNotFoundException("There is no list file " + listFile.getName() + " recorded.");
+                throw new NoRecordingException("There is no list file " + listFile.getName() + " recorded.");
             }
         }
 
