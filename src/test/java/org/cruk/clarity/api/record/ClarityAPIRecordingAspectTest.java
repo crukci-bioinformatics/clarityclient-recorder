@@ -21,6 +21,9 @@ package org.cruk.clarity.api.record;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 import java.io.File;
 import java.io.IOException;
@@ -43,7 +46,6 @@ import org.cruk.clarity.api.search.Search;
 import org.cruk.clarity.api.search.SearchTerms;
 import org.cruk.clarity.api.unittests.CRUKCICheck;
 import org.cruk.clarity.api.unittests.ClarityClientRecorderRecordTestConfiguration;
-import org.easymock.EasyMock;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -262,20 +264,17 @@ public class ClarityAPIRecordingAspectTest
         Logger realLogger = aspect.logger;
         try
         {
-            Logger mockLogger = EasyMock.createMock(Logger.class);
-            mockLogger.error("Have two incompatible searches that reduce to the same hash:");
-            mockLogger.error(s2.getSearchTerms().toString());
-            mockLogger.error(s1.getSearchTerms().toString());
+            Logger mockLogger = mock(Logger.class);
 
             aspect.logger = mockLogger;
-
-            EasyMock.replay(mockLogger);
 
             boolean mergeResult = aspect.checkAndMergeWithExisting(s2, s2File);
 
             assertTrue(mergeResult, "Incompatible merging says not to do anything");
 
-            EasyMock.verify(mockLogger);
+            verify(mockLogger, times(1)).error("Have two incompatible searches that reduce to the same hash:");
+            verify(mockLogger, times(1)).error(s2.getSearchTerms().toString());
+            verify(mockLogger, times(1)).error(s1.getSearchTerms().toString());
         }
         finally
         {
@@ -311,20 +310,17 @@ public class ClarityAPIRecordingAspectTest
         Logger realLogger = aspect.logger;
         try
         {
-            Logger mockLogger = EasyMock.createMock(Logger.class);
-            mockLogger.error("Have two incompatible searches that reduce to the same hash:");
-            mockLogger.error(s2.getSearchTerms().toString());
-            mockLogger.error(s1.getSearchTerms().toString());
+            Logger mockLogger = mock(Logger.class);
 
             aspect.logger = mockLogger;
-
-            EasyMock.replay(mockLogger);
 
             boolean mergeResult = aspect.checkAndMergeWithExisting(s2, s2File);
 
             assertTrue(mergeResult, "Incompatible merging says not to do anything");
 
-            EasyMock.verify(mockLogger);
+            verify(mockLogger, times(1)).error("Have two incompatible searches that reduce to the same hash:");
+            verify(mockLogger, times(1)).error(s2.getSearchTerms().toString());
+            verify(mockLogger, times(1)).error(s1.getSearchTerms().toString());
         }
         finally
         {
