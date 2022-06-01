@@ -33,7 +33,7 @@
 
     <context:annotation-config />
 
-    <bean id="searchXStream" class="org.cruk.clarity.api.xstream.XStreamFactory" />
+    <bean id="claritySearchXStream" class="org.cruk.clarity.api.xstream.XStreamFactory" />
 
     <bean name="clarityPlaybackAspectBase" abstract="true" class="org.cruk.clarity.api.playback.ClarityAPIPlaybackAspect">
         <property name="jaxbMarshaller" ref="clarityJaxbMarshaller"/>

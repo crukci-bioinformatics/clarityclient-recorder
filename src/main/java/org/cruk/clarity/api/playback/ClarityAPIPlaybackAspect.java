@@ -119,7 +119,7 @@ public class ClarityAPIPlaybackAspect
      * XStream XML serialiser.
      */
     @Autowired
-    @Qualifier("searchXStream")
+    @Qualifier("claritySearchXStream")
     private XStream xstream;
 
 
