@@ -34,4 +34,4 @@ com.genologics.ri.userdefined
 com.genologics.ri.version
 com.genologics.ri.workflowconfiguration
 com.genologics.ri.automation
-org.cruk.genologics.api.search
+org.cruk.clarity.api.search
