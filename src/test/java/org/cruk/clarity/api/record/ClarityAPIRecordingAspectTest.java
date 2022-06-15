@@ -18,6 +18,7 @@
 
 package org.cruk.clarity.api.record;
 
+import static org.cruk.clarity.api.record.ClarityAPIRecordingAspect.limsIdFromUri;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
@@ -27,6 +28,7 @@ import static org.mockito.Mockito.verify;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -62,6 +64,7 @@ import com.genologics.ri.LimsEntityLinkable;
 import com.genologics.ri.LimsLink;
 import com.genologics.ri.Locatable;
 import com.genologics.ri.artifact.Artifact;
+import com.genologics.ri.artifact.Demux;
 import com.genologics.ri.container.Container;
 import com.genologics.ri.containertype.ContainerType;
 import com.genologics.ri.lab.Lab;
@@ -72,6 +75,8 @@ import com.genologics.ri.reagenttype.ReagentType;
 import com.genologics.ri.researcher.Researcher;
 import com.genologics.ri.role.Role;
 import com.genologics.ri.sample.Sample;
+import com.genologics.ri.step.ProcessStep;
+import com.genologics.ri.step.StepDetails;
 
 @SpringJUnitConfig(classes = ClarityClientRecorderRecordTestConfiguration.class)
 public class ClarityAPIRecordingAspectTest
@@ -122,6 +127,29 @@ public class ClarityAPIRecordingAspectTest
     }
 
     @Test
+    public void testLimsIdFromUri() throws URISyntaxException
+    {
+        String id = "2-41";
+
+        String uri = api.limsIdToUri(id, Artifact.class).toString();
+
+        assertEquals(id, limsIdFromUri(Artifact.class, uri), "Artifact id from URI wrong.");
+
+        uri = api.limsIdToUri(id, Demux.class).toString();
+
+        assertEquals(id, limsIdFromUri(Demux.class, uri), "Demux id from URI wrong.");
+
+        uri = api.limsIdToUri(id, ProcessStep.class).toString();
+
+        assertEquals(id, limsIdFromUri(ProcessStep.class, uri), "ProcessStep id from URI wrong.");
+
+        uri = api.limsIdToUri(id, StepDetails.class).toString();
+
+        assertEquals(id, limsIdFromUri(StepDetails.class, uri), "StepDetails id from URI wrong.");
+    }
+
+
+    @Test
     public void testRecording()
     {
         CRUKCICheck.assumeInCrukCI();
@@ -140,6 +168,9 @@ public class ClarityAPIRecordingAspectTest
             Artifact pool = api.load(c.getPlacements().get(4));
             assertEquals("2-5898189", pool.getLimsid(), "Mismatched ids");
             assertRecorded(pool);
+
+            Demux demux = api.load(pool.getLimsid(), Demux.class);
+            assertRecorded(demux);
 
             Sample s = api.load("GAO9862A146", Sample.class);
             assertRecorded(s);
@@ -340,9 +371,7 @@ public class ClarityAPIRecordingAspectTest
     {
         String className = ClassUtils.getShortClassName(object.getClass());
 
-        String id = object.getUri().toString();
-        int lastSlash = id.lastIndexOf('/');
-        id = id.substring(lastSlash + 1);
+        String id = limsIdFromUri(object.getClass(), object.getUri().getPath());
 
         File entityFile = new File(messageDirectory, className + "-" + id + ".xml");
         assertTrue(entityFile.exists(), "Have not recorded " + className + " " + id);

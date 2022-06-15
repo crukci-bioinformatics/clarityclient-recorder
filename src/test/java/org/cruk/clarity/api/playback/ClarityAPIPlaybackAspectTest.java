@@ -18,7 +18,11 @@
 
 package org.cruk.clarity.api.playback;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.File;
 import java.io.IOException;
@@ -50,6 +54,7 @@ import org.springframework.web.client.ResourceAccessException;
 import com.genologics.ri.LimsLink;
 import com.genologics.ri.artifact.Artifact;
 import com.genologics.ri.artifact.ArtifactLink;
+import com.genologics.ri.artifact.Demux;
 import com.genologics.ri.container.Container;
 import com.genologics.ri.containertype.ContainerType;
 import com.genologics.ri.lab.Lab;
@@ -117,6 +122,9 @@ public class ClarityAPIPlaybackAspectTest
 
             Artifact a = api.load("2-5898189", Artifact.class);
             assertEquals("SLX-12321_NORM-1", a.getName(), "Artifact name wrong");
+
+            Demux demux = api.load("2-5898189", Demux.class);
+            assertEquals("Accept SLX", demux.getDemuxDetails().getPoolStep().getName(), "Demux process type wrong.");
 
             Sample s = api.load("GAO9862A146", Sample.class);
             assertEquals("34_a", s.getName(), "Sample name wrong");

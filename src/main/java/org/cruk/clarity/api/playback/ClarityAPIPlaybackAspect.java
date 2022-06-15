@@ -19,7 +19,7 @@
 package org.cruk.clarity.api.playback;
 
 import static java.nio.charset.StandardCharsets.US_ASCII;
-import static org.cruk.clarity.api.record.ClarityAPIRecordingAspect.FILENAME_PATTERN;
+import static org.cruk.clarity.api.record.ClarityAPIRecordingAspect.*;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -57,7 +57,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 
 import com.genologics.ri.Batch;
-import com.genologics.ri.LimsEntity;
+import com.genologics.ri.LimsEntityLinkable;
 import com.genologics.ri.LimsLink;
 import com.genologics.ri.Locatable;
 import com.thoughtworks.xstream.XStream;
@@ -550,9 +550,7 @@ public class ClarityAPIPlaybackAspect
             uri = new URI(uriObj.toString());
         }
 
-        String path = uri.getPath();
-
-        String limsid = path.substring(path.lastIndexOf('/') + 1);
+        String limsid = limsIdFromUri(type, uri.getPath());
 
         String name = MessageFormat.format(FILENAME_PATTERN, ClassUtils.getShortClassName(type), limsid);
 
@@ -602,19 +600,7 @@ public class ClarityAPIPlaybackAspect
      */
     private File getFileForEntity(Object thing) throws IOException
     {
-        assert thing != null : "Cannot get a name for null";
-
-        String id;
-        if (thing instanceof LimsEntity<?>)
-        {
-            id = ((LimsEntity<?>)thing).getLimsid();
-        }
-        else
-        {
-            id = ((Locatable)thing).getUri().toString();
-            int lastSlash = id.lastIndexOf('/');
-            id = id.substring(lastSlash + 1);
-        }
+        String id = limsIdFromObject(thing);
 
         // Want to save each version that is updated.
 
