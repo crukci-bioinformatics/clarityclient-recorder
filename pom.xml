@@ -414,7 +414,7 @@
 
     <dependencyManagement>
         <dependencies>
-	    <!-- This BOM includes most of the Jakarta EE dependencies, but has errors. -->
+            <!-- This BOM includes most of the Jakarta EE dependencies, but has errors. -->
             <dependency>
                 <groupId>jakarta.platform</groupId>
                 <artifactId>jakarta.jakartaee-bom</artifactId>
