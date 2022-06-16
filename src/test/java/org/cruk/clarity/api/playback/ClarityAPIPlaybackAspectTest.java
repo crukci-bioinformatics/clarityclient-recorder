@@ -42,6 +42,7 @@ import javax.xml.transform.stream.StreamSource;
 import org.apache.commons.io.FileUtils;
 import org.apache.http.conn.HttpHostConnectException;
 import org.cruk.clarity.api.ClarityAPI;
+import org.cruk.clarity.api.ClarityException;
 import org.cruk.clarity.api.unittests.ClarityClientRecorderPlaybackTestConfiguration;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -182,7 +183,11 @@ public class ClarityAPIPlaybackAspectTest
         try
         {
             Sample s = api.load("0000", Sample.class);
-            assertNull(s, "Got something back from sample when expecting null.");
+            assertNull(s, "Got something back from sample when expecting a ClarityException.");
+        }
+        catch (ClarityException e)
+        {
+            e.throwUnlessNotFound();
         }
         catch (ResourceAccessException e)
         {

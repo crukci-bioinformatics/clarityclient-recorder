@@ -19,7 +19,9 @@
 package org.cruk.clarity.api.playback;
 
 import static java.nio.charset.StandardCharsets.US_ASCII;
-import static org.cruk.clarity.api.record.ClarityAPIRecordingAspect.*;
+import static org.cruk.clarity.api.record.ClarityAPIRecordingAspect.FILENAME_PATTERN;
+import static org.cruk.clarity.api.record.ClarityAPIRecordingAspect.limsIdFromObject;
+import static org.cruk.clarity.api.record.ClarityAPIRecordingAspect.limsIdFromUri;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -45,6 +47,7 @@ import org.apache.commons.lang3.ClassUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.cruk.clarity.api.ClarityAPI;
+import org.cruk.clarity.api.ClarityException;
 import org.cruk.clarity.api.impl.ClarityAPIInternal;
 import org.cruk.clarity.api.search.Search;
 import org.cruk.clarity.api.search.SearchTerms;
@@ -57,7 +60,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 
 import com.genologics.ri.Batch;
-import com.genologics.ri.LimsEntityLinkable;
 import com.genologics.ri.LimsLink;
 import com.genologics.ri.Locatable;
 import com.thoughtworks.xstream.XStream;
@@ -261,14 +263,18 @@ public class ClarityAPIPlaybackAspect
 
     /**
      * Join point around the Spring REST client's {@code getForEntity()} methods.
-     * Works as {@link #doGet(ProceedingJoinPoint)}, except rather than throwing an
-     * error when the file does not exist, {@code null} is returned.
+     * Works as {@link #doGet(ProceedingJoinPoint)}, except rather than throwing a
+     * {@code NoRecordingException}, it throws a {@code ClarityException} with a
+     * not found status. This is what would happen if the call was made to a real
+     * API.
      *
      * @param pjp The join point.
      *
      * @return A ResponseEntity object containing the unmarshalled entity and an "OK"
-     * code if the file exists, or one with no body and a "not found" status if it
-     * does not.
+     * code if the file exists.
+     *
+     * @throws ClarityException with a "not found" status if there is no recorded
+     * file for the entity.
      *
      * @throws Throwable if there is anything that fails.
      */
@@ -283,7 +289,10 @@ public class ClarityAPIPlaybackAspect
         }
         catch (NoRecordingException e)
         {
-            response = new ResponseEntity<Object>(HttpStatus.NOT_FOUND);
+            com.genologics.ri.exception.Exception ce = new com.genologics.ri.exception.Exception();
+            ce.setCode(HttpStatus.NOT_FOUND.name());
+            ce.setMessage(e.getMessage());
+            throw new ClarityException(ce, HttpStatus.NOT_FOUND);
         }
 
         return response;
