@@ -58,6 +58,7 @@ import org.springframework.web.client.ResourceAccessException;
 import com.genologics.ri.LimsLink;
 import com.genologics.ri.artifact.Artifact;
 import com.genologics.ri.artifact.ArtifactLink;
+import com.genologics.ri.artifact.Demux;
 import com.genologics.ri.container.Container;
 import com.genologics.ri.containertype.ContainerType;
 import com.genologics.ri.lab.Lab;
@@ -126,6 +127,9 @@ public class GenologicsAPIPlaybackAspectTest
 
             Artifact a = api.load("2-5898189", Artifact.class);
             assertEquals("Artifact name wrong", "SLX-12321_NORM-1", a.getName());
+
+            Demux demux = api.load("2-5898189", Demux.class);
+            assertEquals("Demux process type wrong.", "Accept SLX", demux.getDemuxDetails().getPoolStep().getName());
 
             Sample s = api.load("GAO9862A146", Sample.class);
             assertEquals("Sample name wrong", "34_a", s.getName());

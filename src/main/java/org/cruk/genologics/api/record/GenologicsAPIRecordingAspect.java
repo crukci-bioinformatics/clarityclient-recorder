@@ -19,6 +19,7 @@
 package org.cruk.genologics.api.record;
 
 import static java.nio.charset.StandardCharsets.US_ASCII;
+import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -48,7 +49,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 
 import com.genologics.ri.Batch;
-import com.genologics.ri.LimsEntity;
+import com.genologics.ri.GenologicsEntity;
+import com.genologics.ri.LimsEntityLinkable;
 import com.genologics.ri.LimsLink;
 import com.genologics.ri.Locatable;
 import com.thoughtworks.xstream.XStream;
@@ -413,6 +415,48 @@ public class GenologicsAPIRecordingAspect
     }
 
     /**
+     * Shared method to get the LIMS id out of a URI, public to let the playback aspect
+     * use it. Removes trailing sections on the URI from classes like Demux and StepDetails.
+     *
+     * @param uri The URI in string form.
+     *
+     * @return The (single) LIMS id from the URI.
+     */
+    public static String limsIdFromUri(Class<?> clazz, String uri)
+    {
+        GenologicsEntity anno = clazz.getAnnotation(GenologicsEntity.class);
+
+        int fromIndex = uri.length();
+        if (anno != null && isNotEmpty(anno.uriSubsection()))
+        {
+            fromIndex -= anno.uriSubsection().length() + 1;
+        }
+
+        int lastSlash = uri.lastIndexOf('/', fromIndex - 1);
+        return uri.substring(lastSlash + 1, fromIndex);
+    }
+
+    /**
+     * Shared method to get the LIMS id from an object, which must at least implement
+     * {@code Locatable}.
+     *
+     * @param thing The entity to get an id for.
+     *
+     * @return The LIMS id for the object.
+     */
+    public static String limsIdFromObject(Object thing)
+    {
+        assert thing != null : "Cannot get a name for null";
+
+        if (thing instanceof LimsEntityLinkable<?>)
+        {
+            return ((LimsEntityLinkable<?>)thing).getLimsid();
+        }
+
+        return limsIdFromUri(thing.getClass(), ((Locatable)thing).getUri().getPath());
+    }
+
+    /**
      * Convenience method to get the file the given entity would be written to.
      *
      * @param thing The entity to store.
@@ -421,19 +465,7 @@ public class GenologicsAPIRecordingAspect
      */
     private File getFileForEntity(Object thing)
     {
-        assert thing != null : "Cannot get a name for null";
-
-        String id;
-        if (thing instanceof LimsEntity<?>)
-        {
-            id = ((LimsEntity<?>)thing).getLimsid();
-        }
-        else
-        {
-            id = ((Locatable)thing).getUri().toString();
-            int lastSlash = id.lastIndexOf('/');
-            id = id.substring(lastSlash + 1);
-        }
+        String id = limsIdFromObject(thing);
 
         String name = MessageFormat.format(FILENAME_PATTERN, ClassUtils.getShortClassName(thing.getClass()), id);
 

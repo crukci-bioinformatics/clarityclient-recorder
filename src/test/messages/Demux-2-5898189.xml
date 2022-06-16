@@ -1,0 +1,1545 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<art:demux xmlns:art="http://genologics.com/ri/artifact" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/2-5898189/demux">
+    <artifact name="SLX-12321_NORM-1" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/2-5898189"/>
+    <demux>
+        <pool-step name="Accept SLX" uri="https://limsdev.cruk.cam.ac.uk/api/v2/steps/122-714093"/>
+        <artifacts>
+            <artifact name="25_a" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A121PA1">
+                <samples>
+                    <sample limsid="GAO9862A121" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A121"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0313"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="26_a" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A122PA1">
+                <samples>
+                    <sample limsid="GAO9862A122" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A122"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0314"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="23_c" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A119PA1">
+                <samples>
+                    <sample limsid="GAO9862A119" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A119"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0311"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="24_c" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A120PA1">
+                <samples>
+                    <sample limsid="GAO9862A120" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A120"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0312"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="29_a" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A125PA1">
+                <samples>
+                    <sample limsid="GAO9862A125" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A125"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0317"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="30_a" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A126PA1">
+                <samples>
+                    <sample limsid="GAO9862A126" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A126"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0318"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="27_a" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A123PA1">
+                <samples>
+                    <sample limsid="GAO9862A123" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A123"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0315"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="28_a" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A124PA1">
+                <samples>
+                    <sample limsid="GAO9862A124" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A124"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0316"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="25_b" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A129PA1">
+                <samples>
+                    <sample limsid="GAO9862A129" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A129"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0321"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="26_b" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A130PA1">
+                <samples>
+                    <sample limsid="GAO9862A130" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A130"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0322"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="31_a" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A127PA1">
+                <samples>
+                    <sample limsid="GAO9862A127" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A127"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0319"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="32_a" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A128PA1">
+                <samples>
+                    <sample limsid="GAO9862A128" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A128"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0320"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="29_b" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A133PA1">
+                <samples>
+                    <sample limsid="GAO9862A133" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A133"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0325"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="30_b" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A134PA1">
+                <samples>
+                    <sample limsid="GAO9862A134" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A134"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0326"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="27_b" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A131PA1">
+                <samples>
+                    <sample limsid="GAO9862A131" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A131"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0323"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="28_b" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A132PA1">
+                <samples>
+                    <sample limsid="GAO9862A132" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A132"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0324"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="24_b" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A112PA1">
+                <samples>
+                    <sample limsid="GAO9862A112" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A112"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0304"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="23_b" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A111PA1">
+                <samples>
+                    <sample limsid="GAO9862A111" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A111"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0303"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="18_c" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A114PA1">
+                <samples>
+                    <sample limsid="GAO9862A114" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A114"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0306"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="17_c" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A113PA1">
+                <samples>
+                    <sample limsid="GAO9862A113" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A113"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0305"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="20_c" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A116PA1">
+                <samples>
+                    <sample limsid="GAO9862A116" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A116"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0308"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="19_c" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A115PA1">
+                <samples>
+                    <sample limsid="GAO9862A115" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A115"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0307"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="22_c" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A118PA1">
+                <samples>
+                    <sample limsid="GAO9862A118" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A118"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0310"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="21_c" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A117PA1">
+                <samples>
+                    <sample limsid="GAO9862A117" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A117"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0309"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="23_a" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A103PA1">
+                <samples>
+                    <sample limsid="GAO9862A103" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A103"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0295"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="24_a" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A104PA1">
+                <samples>
+                    <sample limsid="GAO9862A104" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A104"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0296"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="17_b" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A105PA1">
+                <samples>
+                    <sample limsid="GAO9862A105" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A105"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0297"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="18_b" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A106PA1">
+                <samples>
+                    <sample limsid="GAO9862A106" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A106"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0298"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="19_b" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A107PA1">
+                <samples>
+                    <sample limsid="GAO9862A107" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A107"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0299"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="20_b" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A108PA1">
+                <samples>
+                    <sample limsid="GAO9862A108" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A108"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0300"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="21_b" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A109PA1">
+                <samples>
+                    <sample limsid="GAO9862A109" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A109"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0301"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="22_b" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A110PA1">
+                <samples>
+                    <sample limsid="GAO9862A110" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A110"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0302"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="c7_lib_c" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A95PA1">
+                <samples>
+                    <sample limsid="GAO9862A95" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A95"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0287"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="c8_lib_c" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A96PA1">
+                <samples>
+                    <sample limsid="GAO9862A96" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A96"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0288"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="17_a" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A97PA1">
+                <samples>
+                    <sample limsid="GAO9862A97" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A97"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0289"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="18_a" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A98PA1">
+                <samples>
+                    <sample limsid="GAO9862A98" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A98"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0290"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="19_a" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A99PA1">
+                <samples>
+                    <sample limsid="GAO9862A99" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A99"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0291"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="20_a" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A100PA1">
+                <samples>
+                    <sample limsid="GAO9862A100" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A100"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0292"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="21_a" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A101PA1">
+                <samples>
+                    <sample limsid="GAO9862A101" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A101"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0293"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="22_a" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A102PA1">
+                <samples>
+                    <sample limsid="GAO9862A102" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A102"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0294"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="c10_100_c" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A90PA1">
+                <samples>
+                    <sample limsid="GAO9862A90" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A90"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0282"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="c9_100_c" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A89PA1">
+                <samples>
+                    <sample limsid="GAO9862A89" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A89"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0281"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="c8_lib_b" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A88PA1">
+                <samples>
+                    <sample limsid="GAO9862A88" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A88"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0280"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="c7_lib_b" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A87PA1">
+                <samples>
+                    <sample limsid="GAO9862A87" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A87"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0279"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="c6_lib_c" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A94PA1">
+                <samples>
+                    <sample limsid="GAO9862A94" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A94"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0286"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="c5_lib_c" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A93PA1">
+                <samples>
+                    <sample limsid="GAO9862A93" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A93"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0285"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="c12_100_c" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A92PA1">
+                <samples>
+                    <sample limsid="GAO9862A92" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A92"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0284"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="c11_100_c" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A91PA1">
+                <samples>
+                    <sample limsid="GAO9862A91" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A91"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0283"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="c10_100_b" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A82PA1">
+                <samples>
+                    <sample limsid="GAO9862A82" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A82"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0274"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="c9_100_b" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A81PA1">
+                <samples>
+                    <sample limsid="GAO9862A81" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A81"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0273"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="c8_lib_a" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A80PA1">
+                <samples>
+                    <sample limsid="GAO9862A80" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A80"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0272"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="c7_lib_a" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A79PA1">
+                <samples>
+                    <sample limsid="GAO9862A79" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A79"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0271"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="c6_lib_b" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A86PA1">
+                <samples>
+                    <sample limsid="GAO9862A86" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A86"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0278"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="c5_lib_b" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A85PA1">
+                <samples>
+                    <sample limsid="GAO9862A85" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A85"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0277"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="c12_100_b" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A84PA1">
+                <samples>
+                    <sample limsid="GAO9862A84" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A84"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0276"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="c11_100_b" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A83PA1">
+                <samples>
+                    <sample limsid="GAO9862A83" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A83"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0275"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="c9_100_a" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A73PA1">
+                <samples>
+                    <sample limsid="GAO9862A73" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A73"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0265"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="c10_100_a" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A74PA1">
+                <samples>
+                    <sample limsid="GAO9862A74" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A74"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0266"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="c7_100_c" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A71PA1">
+                <samples>
+                    <sample limsid="GAO9862A71" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A71"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0263"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="c8_100_c" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A72PA1">
+                <samples>
+                    <sample limsid="GAO9862A72" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A72"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0264"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="c5_lib_a" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A77PA1">
+                <samples>
+                    <sample limsid="GAO9862A77" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A77"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0269"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="c6_lib_a" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A78PA1">
+                <samples>
+                    <sample limsid="GAO9862A78" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A78"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0270"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="c11_100_a" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A75PA1">
+                <samples>
+                    <sample limsid="GAO9862A75" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A75"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0267"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="c12_100_a" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A76PA1">
+                <samples>
+                    <sample limsid="GAO9862A76" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A76"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0268"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="c1_100_c" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A65PA1">
+                <samples>
+                    <sample limsid="GAO9862A65" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A65"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0257"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="c2_100_c" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A66PA1">
+                <samples>
+                    <sample limsid="GAO9862A66" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A66"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0258"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="c7_100_b" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A63PA1">
+                <samples>
+                    <sample limsid="GAO9862A63" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A63"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0255"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="c8_100_b" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A64PA1">
+                <samples>
+                    <sample limsid="GAO9862A64" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A64"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0256"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="c5_100_c" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A69PA1">
+                <samples>
+                    <sample limsid="GAO9862A69" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A69"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0261"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="c6_100_c" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A70PA1">
+                <samples>
+                    <sample limsid="GAO9862A70" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A70"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0262"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="c3_100_c" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A67PA1">
+                <samples>
+                    <sample limsid="GAO9862A67" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A67"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0259"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="c4_100_c" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A68PA1">
+                <samples>
+                    <sample limsid="GAO9862A68" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A68"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0260"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="c4_100_b" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A60PA1">
+                <samples>
+                    <sample limsid="GAO9862A60" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A60"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0252"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="c3_100_b" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A59PA1">
+                <samples>
+                    <sample limsid="GAO9862A59" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A59"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0251"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="c6_100_b" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A62PA1">
+                <samples>
+                    <sample limsid="GAO9862A62" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A62"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0254"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="c5_100_b" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A61PA1">
+                <samples>
+                    <sample limsid="GAO9862A61" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A61"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0253"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="c8_100_a" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A56PA1">
+                <samples>
+                    <sample limsid="GAO9862A56" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A56"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0248"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="c7_100_a" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A55PA1">
+                <samples>
+                    <sample limsid="GAO9862A55" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A55"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0247"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="c2_100_b" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A58PA1">
+                <samples>
+                    <sample limsid="GAO9862A58" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A58"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0250"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="c1_100_b" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A57PA1">
+                <samples>
+                    <sample limsid="GAO9862A57" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A57"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0249"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="c4_100_a" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A52PA1">
+                <samples>
+                    <sample limsid="GAO9862A52" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A52"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0244"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="c3_100_a" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A51PA1">
+                <samples>
+                    <sample limsid="GAO9862A51" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A51"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0243"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="c6_100_a" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A54PA1">
+                <samples>
+                    <sample limsid="GAO9862A54" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A54"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0246"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="c5_100_a" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A53PA1">
+                <samples>
+                    <sample limsid="GAO9862A53" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A53"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0245"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="c4_lib_c" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A48PA1">
+                <samples>
+                    <sample limsid="GAO9862A48" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A48"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0240"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="c3_lib_c" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A47PA1">
+                <samples>
+                    <sample limsid="GAO9862A47" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A47"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0239"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="c2_100_a" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A50PA1">
+                <samples>
+                    <sample limsid="GAO9862A50" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A50"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0242"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="c1_100_a" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A49PA1">
+                <samples>
+                    <sample limsid="GAO9862A49" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A49"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0241"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="c11_50_c" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A43PA1">
+                <samples>
+                    <sample limsid="GAO9862A43" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A43"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0235"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="c12_50_c" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A44PA1">
+                <samples>
+                    <sample limsid="GAO9862A44" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A44"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0236"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="c1_lib_c" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A45PA1">
+                <samples>
+                    <sample limsid="GAO9862A45" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A45"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0237"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="c2_lib_c" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A46PA1">
+                <samples>
+                    <sample limsid="GAO9862A46" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A46"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0238"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="c3_lib_b" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A39PA1">
+                <samples>
+                    <sample limsid="GAO9862A39" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A39"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0231"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="c4_lib_b" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A40PA1">
+                <samples>
+                    <sample limsid="GAO9862A40" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A40"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0232"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="c9_50_c" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A41PA1">
+                <samples>
+                    <sample limsid="GAO9862A41" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A41"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0233"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="c10_50_c" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A42PA1">
+                <samples>
+                    <sample limsid="GAO9862A42" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A42"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0234"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="c11_50_b" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A35PA1">
+                <samples>
+                    <sample limsid="GAO9862A35" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A35"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0227"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="c12_50_b" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A36PA1">
+                <samples>
+                    <sample limsid="GAO9862A36" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A36"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0228"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="c1_lib_b" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A37PA1">
+                <samples>
+                    <sample limsid="GAO9862A37" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A37"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0229"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="c2_lib_b" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A38PA1">
+                <samples>
+                    <sample limsid="GAO9862A38" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A38"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0230"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="c3_lib_a" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A31PA1">
+                <samples>
+                    <sample limsid="GAO9862A31" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A31"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0223"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="c4_lib_a" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A32PA1">
+                <samples>
+                    <sample limsid="GAO9862A32" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A32"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0224"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="c9_50_b" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A33PA1">
+                <samples>
+                    <sample limsid="GAO9862A33" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A33"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0225"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="c10_50_b" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A34PA1">
+                <samples>
+                    <sample limsid="GAO9862A34" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A34"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0226"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="c2_lib_a" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A30PA1">
+                <samples>
+                    <sample limsid="GAO9862A30" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A30"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0222"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="c1_lib_a" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A29PA1">
+                <samples>
+                    <sample limsid="GAO9862A29" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A29"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0221"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="c12_50_a" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A28PA1">
+                <samples>
+                    <sample limsid="GAO9862A28" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A28"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0220"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="c11_50_a" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A27PA1">
+                <samples>
+                    <sample limsid="GAO9862A27" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A27"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0219"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="c10_50_a" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A26PA1">
+                <samples>
+                    <sample limsid="GAO9862A26" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A26"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0218"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="c9_50_a" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A25PA1">
+                <samples>
+                    <sample limsid="GAO9862A25" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A25"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0217"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="c8_50_c" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A24PA1">
+                <samples>
+                    <sample limsid="GAO9862A24" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A24"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0216"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="c7_50_c" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A23PA1">
+                <samples>
+                    <sample limsid="GAO9862A23" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A23"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0215"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="c6_50_c" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A22PA1">
+                <samples>
+                    <sample limsid="GAO9862A22" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A22"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0214"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="c5_50_c" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A21PA1">
+                <samples>
+                    <sample limsid="GAO9862A21" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A21"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0213"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="c4_50_c" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A20PA1">
+                <samples>
+                    <sample limsid="GAO9862A20" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A20"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0212"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="c3_50_c" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A19PA1">
+                <samples>
+                    <sample limsid="GAO9862A19" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A19"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0211"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="c2_50_c" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A18PA1">
+                <samples>
+                    <sample limsid="GAO9862A18" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A18"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0210"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="c1_50_c" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A17PA1">
+                <samples>
+                    <sample limsid="GAO9862A17" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A17"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0209"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="c8_50_b" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A16PA1">
+                <samples>
+                    <sample limsid="GAO9862A16" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A16"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0208"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="c7_50_b" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A15PA1">
+                <samples>
+                    <sample limsid="GAO9862A15" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A15"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0207"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="c5_50_b" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A13PA1">
+                <samples>
+                    <sample limsid="GAO9862A13" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A13"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0205"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="c6_50_b" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A14PA1">
+                <samples>
+                    <sample limsid="GAO9862A14" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A14"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0206"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="c3_50_b" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A11PA1">
+                <samples>
+                    <sample limsid="GAO9862A11" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A11"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0203"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="c4_50_b" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A12PA1">
+                <samples>
+                    <sample limsid="GAO9862A12" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A12"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0204"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="c1_50_b" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A9PA1">
+                <samples>
+                    <sample limsid="GAO9862A9" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A9"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0201"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="c2_50_b" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A10PA1">
+                <samples>
+                    <sample limsid="GAO9862A10" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A10"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0202"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="c7_50_a" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A7PA1">
+                <samples>
+                    <sample limsid="GAO9862A7" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A7"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0199"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="c8_50_a" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A8PA1">
+                <samples>
+                    <sample limsid="GAO9862A8" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A8"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0200"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="c5_50_a" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A5PA1">
+                <samples>
+                    <sample limsid="GAO9862A5" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A5"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0197"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="c6_50_a" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A6PA1">
+                <samples>
+                    <sample limsid="GAO9862A6" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A6"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0198"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="c3_50_a" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A3PA1">
+                <samples>
+                    <sample limsid="GAO9862A3" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A3"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0195"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="c4_50_a" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A4PA1">
+                <samples>
+                    <sample limsid="GAO9862A4" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A4"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0196"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="c1_50_a" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A1PA1">
+                <samples>
+                    <sample limsid="GAO9862A1" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A1"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0193"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="c2_50_a" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A2PA1">
+                <samples>
+                    <sample limsid="GAO9862A2" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A2"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0194"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="33_a" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A145PA1">
+                <samples>
+                    <sample limsid="GAO9862A145" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A145"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0337"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="34_a" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A146PA1">
+                <samples>
+                    <sample limsid="GAO9862A146" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A146"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0338"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="31_c" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A143PA1">
+                <samples>
+                    <sample limsid="GAO9862A143" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A143"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0335"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="32_c" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A144PA1">
+                <samples>
+                    <sample limsid="GAO9862A144" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A144"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0336"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="37_a" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A149PA1">
+                <samples>
+                    <sample limsid="GAO9862A149" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A149"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0341"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="38_a" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A150PA1">
+                <samples>
+                    <sample limsid="GAO9862A150" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A150"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0342"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="35_a" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A147PA1">
+                <samples>
+                    <sample limsid="GAO9862A147" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A147"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0339"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="36_a" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A148PA1">
+                <samples>
+                    <sample limsid="GAO9862A148" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A148"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0340"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="25_c" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A137PA1">
+                <samples>
+                    <sample limsid="GAO9862A137" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A137"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0329"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="26_c" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A138PA1">
+                <samples>
+                    <sample limsid="GAO9862A138" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A138"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0330"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="31_b" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A135PA1">
+                <samples>
+                    <sample limsid="GAO9862A135" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A135"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0327"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="32_b" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A136PA1">
+                <samples>
+                    <sample limsid="GAO9862A136" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A136"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0328"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="29_c" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A141PA1">
+                <samples>
+                    <sample limsid="GAO9862A141" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A141"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0333"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="30_c" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A142PA1">
+                <samples>
+                    <sample limsid="GAO9862A142" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A142"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0334"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="27_c" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A139PA1">
+                <samples>
+                    <sample limsid="GAO9862A139" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A139"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0331"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="28_c" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A140PA1">
+                <samples>
+                    <sample limsid="GAO9862A140" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A140"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0332"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="34_c" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A162PA1">
+                <samples>
+                    <sample limsid="GAO9862A162" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A162"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0354"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="33_c" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A161PA1">
+                <samples>
+                    <sample limsid="GAO9862A161" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A161"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0353"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="40_b" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A160PA1">
+                <samples>
+                    <sample limsid="GAO9862A160" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A160"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0352"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="39_b" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A159PA1">
+                <samples>
+                    <sample limsid="GAO9862A159" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A159"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0351"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="38_c" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A166PA1">
+                <samples>
+                    <sample limsid="GAO9862A166" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A166"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0358"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="37_c" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A165PA1">
+                <samples>
+                    <sample limsid="GAO9862A165" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A165"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0357"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="36_c" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A164PA1">
+                <samples>
+                    <sample limsid="GAO9862A164" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A164"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0356"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="35_c" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A163PA1">
+                <samples>
+                    <sample limsid="GAO9862A163" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A163"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0355"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="34_b" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A154PA1">
+                <samples>
+                    <sample limsid="GAO9862A154" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A154"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0346"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="33_b" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A153PA1">
+                <samples>
+                    <sample limsid="GAO9862A153" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A153"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0345"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="40_a" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A152PA1">
+                <samples>
+                    <sample limsid="GAO9862A152" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A152"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0344"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="39_a" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A151PA1">
+                <samples>
+                    <sample limsid="GAO9862A151" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A151"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0343"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="38_b" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A158PA1">
+                <samples>
+                    <sample limsid="GAO9862A158" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A158"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0350"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="37_b" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A157PA1">
+                <samples>
+                    <sample limsid="GAO9862A157" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A157"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0349"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="36_b" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A156PA1">
+                <samples>
+                    <sample limsid="GAO9862A156" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A156"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0348"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="35_b" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A155PA1">
+                <samples>
+                    <sample limsid="GAO9862A155" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A155"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0347"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="c10_lib_a" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A175PA1">
+                <samples>
+                    <sample limsid="GAO9862A175" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A175"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0367"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="c11_lib_a" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A176PA1">
+                <samples>
+                    <sample limsid="GAO9862A176" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A176"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0368"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="41_b" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A177PA1">
+                <samples>
+                    <sample limsid="GAO9862A177" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A177"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0369"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="27_Bc_b" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A178PA1">
+                <samples>
+                    <sample limsid="GAO9862A178" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A178"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0370"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="28_BC_b" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A179PA1">
+                <samples>
+                    <sample limsid="GAO9862A179" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A179"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0371"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="9_C12D1_b" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A180PA1">
+                <samples>
+                    <sample limsid="GAO9862A180" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A180"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0372"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="9_SCR_FF_b" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A181PA1">
+                <samples>
+                    <sample limsid="GAO9862A181" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A181"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0373"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="c9_lib_b" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A182PA1">
+                <samples>
+                    <sample limsid="GAO9862A182" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A182"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0374"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="39_c" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A167PA1">
+                <samples>
+                    <sample limsid="GAO9862A167" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A167"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0359"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="40_c" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A168PA1">
+                <samples>
+                    <sample limsid="GAO9862A168" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A168"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0360"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="41_a" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A169PA1">
+                <samples>
+                    <sample limsid="GAO9862A169" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A169"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0361"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="27_Bc_a" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A170PA1">
+                <samples>
+                    <sample limsid="GAO9862A170" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A170"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0362"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="28_BC_a" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A171PA1">
+                <samples>
+                    <sample limsid="GAO9862A171" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A171"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0363"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="9_C12D1_a" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A172PA1">
+                <samples>
+                    <sample limsid="GAO9862A172" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A172"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0364"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="9_SCR_FF_a" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A173PA1">
+                <samples>
+                    <sample limsid="GAO9862A173" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A173"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0365"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="c9_lib_a" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A174PA1">
+                <samples>
+                    <sample limsid="GAO9862A174" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A174"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0366"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="c11_lib_c" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A192PA1">
+                <samples>
+                    <sample limsid="GAO9862A192" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A192"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0384"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="c10_lib_c" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A191PA1">
+                <samples>
+                    <sample limsid="GAO9862A191" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A191"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0383"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="c11_lib_b" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A184PA1">
+                <samples>
+                    <sample limsid="GAO9862A184" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A184"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0376"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="c10_lib_b" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A183PA1">
+                <samples>
+                    <sample limsid="GAO9862A183" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A183"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0375"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="27_Bc_c" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A186PA1">
+                <samples>
+                    <sample limsid="GAO9862A186" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A186"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0378"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="41_c" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A185PA1">
+                <samples>
+                    <sample limsid="GAO9862A185" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A185"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0377"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="9_C12D1_c" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A188PA1">
+                <samples>
+                    <sample limsid="GAO9862A188" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A188"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0380"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="28_BC_c" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A187PA1">
+                <samples>
+                    <sample limsid="GAO9862A187" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A187"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0379"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="c9_lib_c" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A190PA1">
+                <samples>
+                    <sample limsid="GAO9862A190" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A190"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0382"/>
+                </reagent-labels>
+            </artifact>
+            <artifact name="9_SCR_FF_c" uri="https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/GAO9862A189PA1">
+                <samples>
+                    <sample limsid="GAO9862A189" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A189"/>
+                </samples>
+                <reagent-labels>
+                    <reagent-label name="FLD0381"/>
+                </reagent-labels>
+            </artifact>
+        </artifacts>
+    </demux>
+</art:demux>
