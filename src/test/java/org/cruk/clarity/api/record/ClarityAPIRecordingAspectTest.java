@@ -71,12 +71,16 @@ import com.genologics.ri.lab.Lab;
 import com.genologics.ri.permission.Permission;
 import com.genologics.ri.process.ClarityProcess;
 import com.genologics.ri.project.Project;
+import com.genologics.ri.protocolconfiguration.Protocol;
 import com.genologics.ri.reagenttype.ReagentType;
 import com.genologics.ri.researcher.Researcher;
 import com.genologics.ri.role.Role;
 import com.genologics.ri.sample.Sample;
+import com.genologics.ri.stage.Stage;
 import com.genologics.ri.step.ProcessStep;
 import com.genologics.ri.step.StepDetails;
+import com.genologics.ri.stepconfiguration.ProtocolStep;
+import com.genologics.ri.workflowconfiguration.Workflow;
 
 @SpringJUnitConfig(classes = ClarityClientRecorderRecordTestConfiguration.class)
 public class ClarityAPIRecordingAspectTest
@@ -192,6 +196,32 @@ public class ClarityAPIRecordingAspectTest
 
             Permission perm = api.load("5", Permission.class);
             assertRecorded(perm);
+
+            Protocol protocol = api.load("1", Protocol.class);
+            assertRecorded(protocol);
+
+            Workflow workflow = api.load("1601", Workflow.class);
+            assertRecorded(workflow);
+        }
+        catch (ResourceAccessException e)
+        {
+            realServerDown(e);
+        }
+    }
+
+    @Test
+    public void testRecordDoubleId()
+    {
+        CRUKCICheck.assumeInCrukCI();
+        checkCredentialsFileExists();
+
+        try
+        {
+            ProtocolStep step = api.load("1", "1", ProtocolStep.class);
+            assertRecorded(step);
+
+            Stage stage = api.load("1601", "2902", Stage.class);
+            assertRecorded(stage);
         }
         catch (ResourceAccessException e)
         {

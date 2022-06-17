@@ -62,11 +62,15 @@ import com.genologics.ri.lab.Lab;
 import com.genologics.ri.permission.Permission;
 import com.genologics.ri.process.ClarityProcess;
 import com.genologics.ri.project.Project;
+import com.genologics.ri.protocolconfiguration.Protocol;
 import com.genologics.ri.reagenttype.ReagentType;
 import com.genologics.ri.researcher.Researcher;
 import com.genologics.ri.role.Role;
 import com.genologics.ri.sample.Sample;
 import com.genologics.ri.sample.SampleLink;
+import com.genologics.ri.stage.Stage;
+import com.genologics.ri.stepconfiguration.ProtocolStep;
+import com.genologics.ri.workflowconfiguration.Workflow;
 
 @SpringJUnitConfig(classes = ClarityClientRecorderPlaybackTestConfiguration.class)
 public class ClarityAPIPlaybackAspectTest
@@ -147,6 +151,29 @@ public class ClarityAPIPlaybackAspectTest
 
             Permission perm = api.load("5", Permission.class);
             assertEquals("Project", perm.getName(), "Permission name wrong");
+
+            Protocol protocol = api.load("1", Protocol.class);
+            assertEquals("LPS: Accept LPS", protocol.getName(), "Protocol name wrong.");
+
+            Workflow workflow = api.load("1601", Workflow.class);
+            assertEquals("LPS: 10X Single Cell ATAC v1", workflow.getName(), "Workflow name wrong.");
+        }
+        catch (ResourceAccessException e)
+        {
+            realServerAccess(e);
+        }
+    }
+
+    @Test
+    public void testReplayDoubleId()
+    {
+        try
+        {
+            ProtocolStep step = api.load("1", "1", ProtocolStep.class);
+            assertEquals("LPS Reagents In", step.getName(), "Protocol step name wrong.");
+
+            Stage stage = api.load("1601", "2902", Stage.class);
+            assertEquals("Transposition (10X)", stage.getName(), "Workflow stage name wrong.");
         }
         catch (ResourceAccessException e)
         {

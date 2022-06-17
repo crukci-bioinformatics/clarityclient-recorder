@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<protcnf:protocol xmlns:prx="http://genologics.com/ri/processexecution" xmlns:que="http://genologics.com/ri/queue" xmlns:art="http://genologics.com/ri/artifact" xmlns:prop="http://genologics.com/ri/property" xmlns:role="http://genologics.com/ri/role" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:kit="http://genologics.com/ri/reagentkit" xmlns:smp="http://genologics.com/ri/sample" xmlns:lot="http://genologics.com/ri/reagentlot" xmlns:perm="http://genologics.com/ri/permission" xmlns:con="http://genologics.com/ri/container" xmlns:ri="http://genologics.com/ri" xmlns:wkfcnf="http://genologics.com/ri/workflowconfiguration" xmlns:rt="http://genologics.com/ri/routing" xmlns:ctp="http://genologics.com/ri/containertype" xmlns:inst="http://genologics.com/ri/instrument" xmlns:stp="http://genologics.com/ri/step" xmlns:lab="http://genologics.com/ri/lab" xmlns:artgr="http://genologics.com/ri/artifactgroup" xmlns:exc="http://genologics.com/ri/exception" xmlns:ctrltp="http://genologics.com/ri/controltype" xmlns:itp="http://genologics.com/ri/instrumenttype" xmlns:cnf="http://genologics.com/ri/configuration" xmlns:prc="http://genologics.com/ri/process" xmlns:stg="http://genologics.com/ri/stage" xmlns:ver="http://genologics.com/ri/version" xmlns:aut="http://genologics.com/ri/automation" xmlns:file="http://genologics.com/ri/file" xmlns:prj="http://genologics.com/ri/project" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:rtp="http://genologics.com/ri/reagenttype" xmlns:xmime="http://www.w3.org/2005/05/xmlmime" xmlns:res="http://genologics.com/ri/researcher" xmlns:ptm="http://genologics.com/ri/processtemplate" xmlns:protcnf="http://genologics.com/ri/protocolconfiguration" xmlns:ptp="http://genologics.com/ri/processtype" xmlns:protstepcnf="http://genologics.com/ri/stepconfiguration" xmlns:udf="http://genologics.com/ri/userdefined" xmlns:ns40="SAMPLE_NAMESPACE" name="LPS: Accept LPS" index="0" uri="https://limsdev.cruk.cam.ac.uk/api/v2/configuration/protocols/1">
+    <steps>
+        <step name="LPS Reagents In" uri="https://limsdev.cruk.cam.ac.uk/api/v2/configuration/protocols/1/steps/1" protocol-uri="https://limsdev.cruk.cam.ac.uk/api/v2/configuration/protocols/1">
+            <protocol-step-index>1</protocol-step-index>
+            <process-type uri="https://limsdev.cruk.cam.ac.uk/api/v2/processtypes/45">LPS Reagents In</process-type>
+            <permitted-containers/>
+            <permitted-reagent-categories/>
+            <required-reagent-kits/>
+            <permitted-control-types/>
+            <permitted-instrument-types/>
+            <transitions/>
+            <queue-fields>
+                <queue-field detail="false" name="Sample Name" attach-to="Analyte" style="BUILT_IN" locked="false"/>
+                <queue-field detail="false" name="Container Name" attach-to="Container" style="BUILT_IN" locked="false"/>
+                <queue-field detail="false" name="Workflow" attach-to="Analyte" style="BUILT_IN" locked="false"/>
+                <queue-field detail="false" name="LIMS ID (Project)" attach-to="Project" style="BUILT_IN" locked="false"/>
+                <queue-field detail="false" name="Project Client" attach-to="Project" style="BUILT_IN" locked="false"/>
+                <queue-field detail="false" name="Well" attach-to="Container" style="BUILT_IN" locked="false"/>
+                <queue-field detail="false" name="Waiting" attach-to="Analyte" style="BUILT_IN" locked="false"/>
+                <queue-field detail="true" name="Project Name" attach-to="Project" style="BUILT_IN" locked="false"/>
+                <queue-field detail="true" name="LIMS ID (Container)" attach-to="Container" style="BUILT_IN" locked="false"/>
+            </queue-fields>
+            <ice-bucket-fields>
+                <ice-bucket-field detail="false" name="Sample Name" attach-to="Analyte" style="BUILT_IN" locked="false"/>
+                <ice-bucket-field detail="false" name="Container Name" attach-to="Container" style="BUILT_IN" locked="false"/>
+                <ice-bucket-field detail="false" name="Workflow" attach-to="Analyte" style="BUILT_IN" locked="false"/>
+                <ice-bucket-field detail="false" name="LIMS ID (Project)" attach-to="Project" style="BUILT_IN" locked="false"/>
+                <ice-bucket-field detail="false" name="Project Client" attach-to="Project" style="BUILT_IN" locked="false"/>
+                <ice-bucket-field detail="false" name="Well" attach-to="Container" style="BUILT_IN" locked="false"/>
+                <ice-bucket-field detail="false" name="Waiting" attach-to="Analyte" style="BUILT_IN" locked="false"/>
+                <ice-bucket-field detail="true" name="Project Name" attach-to="Project" style="BUILT_IN" locked="false"/>
+                <ice-bucket-field detail="true" name="LIMS ID (Container)" attach-to="Container" style="BUILT_IN" locked="false"/>
+            </ice-bucket-fields>
+            <step-fields>
+                <step-field name="Reagents In" attach-to="ConfiguredProcess" style="USER_DEFINED" locked="false"/>
+                <step-field name="LPS Reagents Comments" attach-to="ConfiguredProcess" style="USER_DEFINED" locked="false"/>
+            </step-fields>
+            <sample-fields>
+                <sample-field name="Sample Name" attach-to="Analyte" style="BUILT_IN" locked="false"/>
+                <sample-field name="Container Name" attach-to="Container" style="BUILT_IN" locked="false"/>
+                <sample-field name="LIMS ID (Project)" attach-to="Project" style="BUILT_IN" locked="false"/>
+                <sample-field name="Project Client" attach-to="Project" style="BUILT_IN" locked="false"/>
+                <sample-field name="Well" attach-to="Container" style="BUILT_IN" locked="false"/>
+                <sample-field name="Project Name" attach-to="Project" style="BUILT_IN" locked="false"/>
+            </sample-fields>
+            <step-properties>
+                <step-property name="filter" value="([type=LPS Reagents In|attachTo=ResultFile|field=QC] != &quot;1&quot;)" locked="false"/>
+                <step-property name="qcProtocolStep" value="true" locked="true"/>
+                <step-property name="qcWithPlacement" value="false" locked="false"/>
+                <step-property name="attemptAutoPlacement" value="false" locked="false"/>
+                <step-property name="eSignatureRequired" value="false" locked="false"/>
+                <step-property name="measurementWithFile" value="false" locked="false"/>
+                <step-property name="eppLocksNextSteps" value="false" locked="false"/>
+                <step-property name="autoStartNextStep" value="false" locked="false"/>
+                <step-property name="autoAttachFiles" value="0/{SubmittedSampleName}/isAutoAttached=false/locked=false"/>
+                <step-property name="stepDetailsHeading" value="" locked="false"/>
+                <step-property name="sampleDetailsHeading" value="" locked="false"/>
+                <step-property name="expandContainerGroupsCheckBox" value="true" locked="false"/>
+                <step-property name="recordDetailsMultiwellSortOrder" value="row" locked="false"/>
+                <step-property name="queueDefaultGrouping" value="containerGroup" locked="false"/>
+                <step-property name="queueMultiwellSortOrder" value="row" locked="false"/>
+                <step-property name="placementDefaultPattern" value="row" locked="true"/>
+                <step-property name="placementMultiwellSortOrder" value="row" locked="false"/>
+                <step-property name="poolingMultiwellSortOrder" value="row" locked="false"/>
+                <step-property name="iceBucketMultiwellSortOrder" value="row" locked="false"/>
+            </step-properties>
+            <epp-triggers>
+                <epp-trigger name="Assign QC flags" type="UNUSED" locked="false"/>
+            </epp-triggers>
+        </step>
+        <step name="LPS Samples In" uri="https://limsdev.cruk.cam.ac.uk/api/v2/configuration/protocols/1/steps/2" protocol-uri="https://limsdev.cruk.cam.ac.uk/api/v2/configuration/protocols/1">
+            <protocol-step-index>2</protocol-step-index>
+            <process-type uri="https://limsdev.cruk.cam.ac.uk/api/v2/processtypes/46">LPS Samples In</process-type>
+            <permitted-containers/>
+            <permitted-reagent-categories/>
+            <required-reagent-kits/>
+            <permitted-control-types/>
+            <permitted-instrument-types/>
+            <transitions/>
+            <queue-fields>
+                <queue-field detail="false" name="Sample Name" attach-to="Analyte" style="BUILT_IN" locked="false"/>
+                <queue-field detail="false" name="Submission Comments" attach-to="Sample" style="USER_DEFINED" locked="false"/>
+                <queue-field detail="false" name="Volume" attach-to="Sample" style="USER_DEFINED" locked="false"/>
+                <queue-field detail="false" name="Project Client" attach-to="Project" style="BUILT_IN" locked="false"/>
+                <queue-field detail="false" name="Well" attach-to="Container" style="BUILT_IN" locked="false"/>
+                <queue-field detail="false" name="Billing Information" attach-to="Analyte" style="USER_DEFINED" locked="false"/>
+                <queue-field detail="false" name="Waiting" attach-to="Analyte" style="BUILT_IN" locked="false"/>
+                <queue-field detail="true" name="Project Name" attach-to="Project" style="BUILT_IN" locked="false"/>
+                <queue-field detail="true" name="Billing Information" attach-to="Sample" style="USER_DEFINED" locked="false"/>
+            </queue-fields>
+            <ice-bucket-fields>
+                <ice-bucket-field detail="false" name="Sample Name" attach-to="Analyte" style="BUILT_IN" locked="false"/>
+                <ice-bucket-field detail="false" name="Submission Comments" attach-to="Sample" style="USER_DEFINED" locked="false"/>
+                <ice-bucket-field detail="false" name="Volume" attach-to="Sample" style="USER_DEFINED" locked="false"/>
+                <ice-bucket-field detail="false" name="Project Client" attach-to="Project" style="BUILT_IN" locked="false"/>
+                <ice-bucket-field detail="false" name="Well" attach-to="Container" style="BUILT_IN" locked="false"/>
+                <ice-bucket-field detail="false" name="Billing Information" attach-to="Analyte" style="USER_DEFINED" locked="false"/>
+                <ice-bucket-field detail="false" name="Waiting" attach-to="Analyte" style="BUILT_IN" locked="false"/>
+                <ice-bucket-field detail="true" name="Project Name" attach-to="Project" style="BUILT_IN" locked="false"/>
+                <ice-bucket-field detail="true" name="Billing Information" attach-to="Sample" style="USER_DEFINED" locked="false"/>
+            </ice-bucket-fields>
+            <step-fields>
+                <step-field name="Have you checked the submission form?" attach-to="ConfiguredProcess" style="USER_DEFINED" locked="false"/>
+                <step-field name="LPS Samples Comments" attach-to="ConfiguredProcess" style="USER_DEFINED" locked="false"/>
+            </step-fields>
+            <sample-fields>
+                <sample-field name="Sample Name" attach-to="Analyte" style="BUILT_IN" locked="false"/>
+                <sample-field name="Container Name" attach-to="Container" style="BUILT_IN" locked="false"/>
+                <sample-field name="Sequencer" attach-to="Analyte" style="USER_DEFINED" locked="false"/>
+                <sample-field name="Concentration" attach-to="Sample" style="USER_DEFINED" locked="false"/>
+                <sample-field name="Volume" attach-to="Sample" style="USER_DEFINED" locked="false"/>
+                <sample-field name="Submission Comments" attach-to="Sample" style="USER_DEFINED" locked="false"/>
+                <sample-field name="Project Client" attach-to="Project" style="BUILT_IN" locked="false"/>
+                <sample-field name="Well" attach-to="Container" style="BUILT_IN" locked="false"/>
+                <sample-field name="Project Name" attach-to="Project" style="BUILT_IN" locked="false"/>
+                <sample-field name="Billing Information" attach-to="Sample" style="USER_DEFINED" locked="false"/>
+            </sample-fields>
+            <step-properties>
+                <step-property name="filter" value="([type=LPS Samples In|attachTo=ResultFile|field=QC] != &quot;1&quot;)" locked="false"/>
+                <step-property name="qcProtocolStep" value="true" locked="true"/>
+                <step-property name="qcWithPlacement" value="false" locked="false"/>
+                <step-property name="attemptAutoPlacement" value="false" locked="false"/>
+                <step-property name="eSignatureRequired" value="false" locked="false"/>
+                <step-property name="measurementWithFile" value="false" locked="false"/>
+                <step-property name="eppLocksNextSteps" value="false" locked="false"/>
+                <step-property name="autoStartNextStep" value="false" locked="false"/>
+                <step-property name="autoAttachFiles" value="0/{InputItemName}/isAutoAttached=false/locked=false|0/User's QC data/isAutoAttached=false/locked=false"/>
+                <step-property name="stepDetailsHeading" value="" locked="false"/>
+                <step-property name="sampleDetailsHeading" value="" locked="false"/>
+                <step-property name="expandContainerGroupsCheckBox" value="true" locked="false"/>
+                <step-property name="arrangeFieldsHorizontally" value="false" locked="false"/>
+                <step-property name="recordDetailsMultiwellSortOrder" value="row" locked="false"/>
+                <step-property name="queueDefaultGrouping" value="containerGroup" locked="false"/>
+                <step-property name="queueMultiwellSortOrder" value="row" locked="false"/>
+                <step-property name="placementDefaultPattern" value="row" locked="true"/>
+                <step-property name="placementMultiwellSortOrder" value="row" locked="false"/>
+                <step-property name="poolingMultiwellSortOrder" value="row" locked="false"/>
+                <step-property name="iceBucketMultiwellSortOrder" value="row" locked="false"/>
+            </step-properties>
+            <epp-triggers>
+                <epp-trigger name="Assign QC flags" type="UNUSED" locked="false"/>
+                <epp-trigger name="Update Sample Progress Status" type="AUTOMATIC" point="BEFORE" status="COMPLETE" locked="false"/>
+            </epp-triggers>
+        </step>
+        <step name="LPS QC Checked" uri="https://limsdev.cruk.cam.ac.uk/api/v2/configuration/protocols/1/steps/3" protocol-uri="https://limsdev.cruk.cam.ac.uk/api/v2/configuration/protocols/1">
+            <protocol-step-index>3</protocol-step-index>
+            <process-type uri="https://limsdev.cruk.cam.ac.uk/api/v2/processtypes/44">LPS QC Checked</process-type>
+            <permitted-containers>
+                <container-type locked="false">Tube</container-type>
+            </permitted-containers>
+            <permitted-reagent-categories/>
+            <required-reagent-kits/>
+            <permitted-control-types/>
+            <permitted-instrument-types/>
+            <transitions/>
+            <queue-fields>
+                <queue-field detail="false" name="Sample Name" attach-to="Analyte" style="BUILT_IN" locked="false"/>
+                <queue-field detail="false" name="RIN" attach-to="Sample" style="USER_DEFINED" locked="false"/>
+                <queue-field detail="false" name="Container Name" attach-to="Container" style="BUILT_IN" locked="false"/>
+                <queue-field detail="false" name="LIMS ID (Project)" attach-to="Project" style="BUILT_IN" locked="false"/>
+                <queue-field detail="false" name="Project Client" attach-to="Project" style="BUILT_IN" locked="false"/>
+                <queue-field detail="false" name="Well" attach-to="Container" style="BUILT_IN" locked="false"/>
+                <queue-field detail="false" name="Waiting" attach-to="Analyte" style="BUILT_IN" locked="false"/>
+                <queue-field detail="true" name="Project Name" attach-to="Project" style="BUILT_IN" locked="false"/>
+                <queue-field detail="true" name="Submission Comments" attach-to="Sample" style="USER_DEFINED" locked="false"/>
+                <queue-field detail="true" name="LIMS ID (Container)" attach-to="Container" style="BUILT_IN" locked="false"/>
+            </queue-fields>
+            <ice-bucket-fields>
+                <ice-bucket-field detail="false" name="Sample Name" attach-to="Analyte" style="BUILT_IN" locked="false"/>
+                <ice-bucket-field detail="false" name="RIN" attach-to="Sample" style="USER_DEFINED" locked="false"/>
+                <ice-bucket-field detail="false" name="Container Name" attach-to="Container" style="BUILT_IN" locked="false"/>
+                <ice-bucket-field detail="false" name="LIMS ID (Project)" attach-to="Project" style="BUILT_IN" locked="false"/>
+                <ice-bucket-field detail="false" name="Project Client" attach-to="Project" style="BUILT_IN" locked="false"/>
+                <ice-bucket-field detail="false" name="Well" attach-to="Container" style="BUILT_IN" locked="false"/>
+                <ice-bucket-field detail="false" name="Waiting" attach-to="Analyte" style="BUILT_IN" locked="false"/>
+                <ice-bucket-field detail="true" name="Project Name" attach-to="Project" style="BUILT_IN" locked="false"/>
+                <ice-bucket-field detail="true" name="Submission Comments" attach-to="Sample" style="USER_DEFINED" locked="false"/>
+                <ice-bucket-field detail="true" name="LIMS ID (Container)" attach-to="Container" style="BUILT_IN" locked="false"/>
+            </ice-bucket-fields>
+            <step-fields>
+                <step-field name="LPS QC Checked" attach-to="ConfiguredProcess" style="USER_DEFINED" locked="false"/>
+                <step-field name="Comments on LPS QC" attach-to="ConfiguredProcess" style="USER_DEFINED" locked="false"/>
+            </step-fields>
+            <sample-fields>
+                <sample-field name="Sample Name" attach-to="Analyte" style="BUILT_IN" locked="false"/>
+                <sample-field name="Submission Comments" attach-to="Sample" style="USER_DEFINED" locked="false"/>
+                <sample-field name="Project Name" attach-to="Project" style="BUILT_IN" locked="false"/>
+                <sample-field name="LIMS ID (Project)" attach-to="Project" style="BUILT_IN" locked="false"/>
+                <sample-field name="RIN" attach-to="Sample" style="USER_DEFINED" locked="false"/>
+                <sample-field name="Project Client" attach-to="Project" style="BUILT_IN" locked="false"/>
+                <sample-field name="Container Name" attach-to="Container" style="BUILT_IN" locked="false"/>
+                <sample-field name="Well" attach-to="Container" style="BUILT_IN" locked="false"/>
+            </sample-fields>
+            <step-properties>
+                <step-property name="filter" value="([type=LPS QC Checked|attachTo=ResultFile|field=QC] != &quot;1&quot;)" locked="false"/>
+                <step-property name="qcProtocolStep" value="true" locked="false"/>
+                <step-property name="attemptAutoPlacement" value="true" locked="false"/>
+                <step-property name="eSignatureRequired" value="false" locked="false"/>
+                <step-property name="measurementWithFile" value="false" locked="false"/>
+                <step-property name="eppLocksNextSteps" value="false" locked="false"/>
+                <step-property name="autoStartNextStep" value="false" locked="false"/>
+                <step-property name="autoAttachFiles" value="0/{LIST:Tapestation,Qubit,qPCR}/isAutoAttached=false/locked=false|1/{LIST:Tapestation,Qubit,qPCR}/isAutoAttached=false/locked=false|2/{LIST:Tapestation,Qubit,qPCR}/isAutoAttached=false/locked=false"/>
+                <step-property name="stepDetailsHeading" value="" locked="false"/>
+                <step-property name="sampleDetailsHeading" value="" locked="false"/>
+                <step-property name="expandContainerGroupsCheckBox" value="true" locked="false"/>
+                <step-property name="arrangeFieldsHorizontally" value="false" locked="false"/>
+                <step-property name="recordDetailsMultiwellSortOrder" value="row" locked="false"/>
+                <step-property name="queueDefaultGrouping" value="containerGroup" locked="false"/>
+                <step-property name="queueMultiwellSortOrder" value="row" locked="false"/>
+                <step-property name="placementDefaultPattern" value="row" locked="true"/>
+                <step-property name="placementMultiwellSortOrder" value="row" locked="false"/>
+                <step-property name="poolingMultiwellSortOrder" value="row" locked="false"/>
+                <step-property name="iceBucketMultiwellSortOrder" value="row" locked="false"/>
+            </step-properties>
+            <epp-triggers>
+                <epp-trigger name="Assign QC flags" type="UNUSED" locked="false"/>
+            </epp-triggers>
+        </step>
+        <step name="Aggregate QC (Library Validation)" uri="https://limsdev.cruk.cam.ac.uk/api/v2/configuration/protocols/1/steps/4" protocol-uri="https://limsdev.cruk.cam.ac.uk/api/v2/configuration/protocols/1">
+            <protocol-step-index>4</protocol-step-index>
+            <process-type uri="https://limsdev.cruk.cam.ac.uk/api/v2/processtypes/14">Aggregate QC (Library Validation)</process-type>
+            <permitted-containers/>
+            <permitted-reagent-categories/>
+            <required-reagent-kits/>
+            <permitted-control-types/>
+            <permitted-instrument-types/>
+            <transitions/>
+            <queue-fields>
+                <queue-field detail="false" name="Sample Name" attach-to="Analyte" style="BUILT_IN" locked="false"/>
+                <queue-field detail="false" name="Container Name" attach-to="Container" style="BUILT_IN" locked="false"/>
+                <queue-field detail="false" name="LIMS ID (Project)" attach-to="Project" style="BUILT_IN" locked="false"/>
+                <queue-field detail="false" name="Project Client" attach-to="Project" style="BUILT_IN" locked="false"/>
+                <queue-field detail="false" name="Well" attach-to="Container" style="BUILT_IN" locked="false"/>
+                <queue-field detail="false" name="Waiting" attach-to="Analyte" style="BUILT_IN" locked="false"/>
+                <queue-field detail="true" name="Project Name" attach-to="Project" style="BUILT_IN" locked="false"/>
+                <queue-field detail="true" name="Submission Comments" attach-to="Sample" style="USER_DEFINED" locked="false"/>
+            </queue-fields>
+            <ice-bucket-fields>
+                <ice-bucket-field detail="false" name="Sample Name" attach-to="Analyte" style="BUILT_IN" locked="false"/>
+                <ice-bucket-field detail="false" name="Container Name" attach-to="Container" style="BUILT_IN" locked="false"/>
+                <ice-bucket-field detail="false" name="LIMS ID (Project)" attach-to="Project" style="BUILT_IN" locked="false"/>
+                <ice-bucket-field detail="false" name="Project Client" attach-to="Project" style="BUILT_IN" locked="false"/>
+                <ice-bucket-field detail="false" name="Well" attach-to="Container" style="BUILT_IN" locked="false"/>
+                <ice-bucket-field detail="false" name="Waiting" attach-to="Analyte" style="BUILT_IN" locked="false"/>
+                <ice-bucket-field detail="true" name="Project Name" attach-to="Project" style="BUILT_IN" locked="false"/>
+                <ice-bucket-field detail="true" name="Submission Comments" attach-to="Sample" style="USER_DEFINED" locked="false"/>
+            </ice-bucket-fields>
+            <step-fields/>
+            <sample-fields>
+                <sample-field name="Sample Name" attach-to="Analyte" style="BUILT_IN" locked="false"/>
+                <sample-field name="Container Name" attach-to="Container" style="BUILT_IN" locked="false"/>
+                <sample-field name="LIMS ID (Project)" attach-to="Project" style="BUILT_IN" locked="false"/>
+                <sample-field name="Project Client" attach-to="Project" style="BUILT_IN" locked="false"/>
+                <sample-field name="Well" attach-to="Container" style="BUILT_IN" locked="false"/>
+                <sample-field name="LIMS ID (Container)" attach-to="Container" style="BUILT_IN" locked="false"/>
+                <sample-field name="Project Name" attach-to="Project" style="BUILT_IN" locked="false"/>
+                <sample-field name="Submission Comments" attach-to="Sample" style="USER_DEFINED" locked="false"/>
+            </sample-fields>
+            <step-properties>
+                <step-property name="filter" value="([type=LPS Reagents In|attachTo=ResultFile|field=QC] == &quot;1&quot; AND [type=LPS Samples In|attachTo=ResultFile|field=QC] == &quot;1&quot; AND [type=LPS QC Checked|attachTo=ResultFile|field=QC] == &quot;1&quot;)" locked="false"/>
+                <step-property name="qcProtocolStep" value="true" locked="false"/>
+                <step-property name="attemptAutoPlacement" value="false" locked="false"/>
+                <step-property name="eSignatureRequired" value="false" locked="false"/>
+                <step-property name="measurementWithFile" value="false" locked="false"/>
+                <step-property name="eppLocksNextSteps" value="false" locked="false"/>
+                <step-property name="autoStartNextStep" value="false" locked="false"/>
+                <step-property name="autoAttachFiles" value="0/{LIST:Aggregation Script Log,QC Flag Aggregation Log,QC UDF Copy Log}/isAutoAttached=true/locked=false|1/{LIST:Aggregation Script Log,QC Flag Aggregation Log,QC UDF Copy Log}/isAutoAttached=true/locked=false|2/{LIST:Aggregation Script Log,QC Flag Aggregation Log,QC UDF Copy Log}/isAutoAttached=true/locked=false"/>
+                <step-property name="stepDetailsHeading" value="" locked="false"/>
+                <step-property name="sampleDetailsHeading" value="" locked="false"/>
+                <step-property name="expandContainerGroupsCheckBox" value="true" locked="false"/>
+                <step-property name="arrangeFieldsHorizontally" value="false" locked="false"/>
+                <step-property name="recordDetailsMultiwellSortOrder" value="column" locked="false"/>
+                <step-property name="queueDefaultGrouping" value="containerGroup" locked="false"/>
+                <step-property name="queueMultiwellSortOrder" value="column" locked="false"/>
+                <step-property name="placementDefaultPattern" value="row" locked="true"/>
+                <step-property name="placementMultiwellSortOrder" value="column" locked="false"/>
+                <step-property name="poolingMultiwellSortOrder" value="column" locked="false"/>
+                <step-property name="iceBucketMultiwellSortOrder" value="column" locked="false"/>
+            </step-properties>
+            <epp-triggers>
+                <epp-trigger name="Aggregate QC Flags and Copy Fields" type="UNUSED" locked="false"/>
+            </epp-triggers>
+        </step>
+    </steps>
+    <protocol-properties>
+        <protocol-property name="hidden" value="false"/>
+        <protocol-property name="capacity" value="0"/>
+        <protocol-property name="type" value="qc"/>
+    </protocol-properties>
+</protcnf:protocol>
