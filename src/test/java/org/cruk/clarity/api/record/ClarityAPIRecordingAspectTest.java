@@ -247,42 +247,36 @@ public class ClarityAPIRecordingAspectTest
         testRecording("1601", "2902", Stage.class);
     }
 
-    private <L extends Locatable> L testRecording(String id, Class<L> type)
+    private <L extends Locatable> void testRecording(String id, Class<L> type)
     {
         CRUKCICheck.assumeInCrukCI();
         checkCredentialsFileExists();
 
-        L thing = null;
         try
         {
-            thing = api.load(id, type);
+            L thing = api.load(id, type);
             assertRecorded(thing);
         }
         catch (ResourceAccessException e)
         {
             realServerDown(e);
         }
-
-        return thing;
     }
 
-    private <L extends Locatable> L testRecording(String id1, String id2, Class<L> type)
+    private <L extends Locatable> void testRecording(String id1, String id2, Class<L> type)
     {
         CRUKCICheck.assumeInCrukCI();
         checkCredentialsFileExists();
 
-        L thing = null;
         try
         {
-            thing = api.load(id1, id2, type);
+            L thing = api.load(id1, id2, type);
             assertRecorded(thing);
         }
         catch (ResourceAccessException e)
         {
             realServerDown(e);
         }
-
-        return thing;
     }
 
     @Test
@@ -449,15 +443,7 @@ public class ClarityAPIRecordingAspectTest
     {
         String className = ClassUtils.getShortClassName(object.getClass());
 
-        String id;
-        try
-        {
-            id = ((LimsEntityLinkable<?>)object).getLimsid();
-        }
-        catch (ClassCastException e)
-        {
-            id = limsIdFromUri(object.getClass(), object.getUri().getPath());
-        }
+        String id = ClarityAPIRecordingAspect.limsIdFromObject(object);
 
         File entityFile = new File(messageDirectory, className + "-" + id + ".xml");
         assertTrue(entityFile.exists(), "Have not recorded " + className + " " + id);

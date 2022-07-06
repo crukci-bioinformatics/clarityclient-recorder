@@ -116,11 +116,28 @@ public class ClarityAPIPlaybackAspectTest
         FileUtils.deleteQuietly(updateDirectory);
     }
 
+    /**
+     * Additional test for instrument to cover mismatch between lims id and URI.
+     *
+     * @see <a href="https://redmine-bioinformatics.cruk.cam.ac.uk/issues/7273">Redmine 7273</a>
+     */
     @Test
-    public void testReplayInstrument()
+    public void testReplayInstrumentShort()
     {
         Instrument i = testReplay("5", Instrument.class);
-        assertEquals("Luke-Leia", i.getName(), "Instrument name wrong");
+        assertEquals("Luke-Leia [HWI-ST230]", i.getName(), "Instrument name wrong");
+    }
+
+    /**
+     * Additional test for instrument to cover mismatch between lims id and URI.
+     *
+     * @see <a href="https://redmine-bioinformatics.cruk.cam.ac.uk/issues/7273">Redmine 7273</a>
+     */
+    @Test
+    public void testReplayInstrumentLimsId()
+    {
+        Instrument i = testReplay("55-5", Instrument.class);
+        assertEquals("Luke-Leia [HWI-ST230]", i.getName(), "Instrument name wrong");
     }
 
     @Test

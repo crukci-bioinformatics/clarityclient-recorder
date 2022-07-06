@@ -50,9 +50,12 @@ import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 
 import com.genologics.ri.Batch;
 import com.genologics.ri.ClarityEntity;
+import com.genologics.ri.LimsEntity;
+import com.genologics.ri.LimsEntityLink;
 import com.genologics.ri.LimsEntityLinkable;
 import com.genologics.ri.LimsLink;
 import com.genologics.ri.Locatable;
+import com.genologics.ri.instrument.Instrument;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.XStreamException;
 
@@ -448,12 +451,32 @@ public class ClarityAPIRecordingAspect
     {
         assert thing != null : "Cannot get a name for null";
 
-        if (thing instanceof LimsEntityLinkable<?>)
+        // This has got a lot more difficult thanks to Instrument not being consistent
+        // between the URI path and the lims id attribute, requiring a special case.
+        // See Redmine 7273.
+
+        String id = null;
+        Class<?> entityType = thing.getClass();
+
+        if (thing instanceof LimsEntity<?>)
         {
-            return ((LimsEntityLinkable<?>)thing).getLimsid();
+            LimsEntity<?> entity = (LimsEntity<?>)thing;
+            id = entity.getLimsid();
+        }
+        else if (thing instanceof LimsEntityLink<?>)
+        {
+            LimsEntityLink<?> link = (LimsEntityLink<?>)thing;
+            id = link.getLimsid();
+            entityType = link.getEntityClass();
         }
 
-        return limsIdFromUri(thing.getClass(), ((Locatable)thing).getUri().getPath());
+        if (id == null || Instrument.class.equals(entityType))
+        {
+            Locatable item = (Locatable)thing;
+            id = limsIdFromUri(entityType, item.getUri().getPath());
+        }
+
+        return id;
     }
 
     /**
