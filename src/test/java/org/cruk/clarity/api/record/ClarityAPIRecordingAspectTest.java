@@ -30,7 +30,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -59,7 +58,6 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.web.client.ResourceAccessException;
 
 import com.genologics.ri.Batch;
-import com.genologics.ri.LimsEntity;
 import com.genologics.ri.LimsEntityLinkable;
 import com.genologics.ri.LimsLink;
 import com.genologics.ri.Locatable;
@@ -67,6 +65,7 @@ import com.genologics.ri.artifact.Artifact;
 import com.genologics.ri.artifact.Demux;
 import com.genologics.ri.container.Container;
 import com.genologics.ri.containertype.ContainerType;
+import com.genologics.ri.instrument.Instrument;
 import com.genologics.ri.lab.Lab;
 import com.genologics.ri.permission.Permission;
 import com.genologics.ri.process.ClarityProcess;
@@ -152,81 +151,138 @@ public class ClarityAPIRecordingAspectTest
         assertEquals(id, limsIdFromUri(StepDetails.class, uri), "StepDetails id from URI wrong.");
     }
 
-
     @Test
-    public void testRecording()
+    public void testRecordInstrument()
     {
-        CRUKCICheck.assumeInCrukCI();
-        checkCredentialsFileExists();
-
-        try
-        {
-            Container c = api.load("27-340091", Container.class);
-            assertRecorded(c);
-
-            ContainerType ct = api.load(c.getContainerType());
-            assertRecorded(ct);
-
-            Collections.sort(c.getPlacements());
-
-            Artifact pool = api.load(c.getPlacements().get(4));
-            assertEquals("2-5898189", pool.getLimsid(), "Mismatched ids");
-            assertRecorded(pool);
-
-            Demux demux = api.load(pool.getLimsid(), Demux.class);
-            assertRecorded(demux);
-
-            Sample s = api.load("GAO9862A146", Sample.class);
-            assertRecorded(s);
-
-            Project p = api.load(s.getProject());
-            assertRecorded(p);
-
-            Researcher r = api.load(p.getResearcher());
-            assertRecorded(r);
-
-            Lab l = api.load(r.getLab());
-            assertRecorded(l);
-
-            ReagentType rg = api.load("374", ReagentType.class);
-            assertRecorded(rg);
-
-            Role role = api.load(r.getCredentials().getRoles().get(0));
-            assertRecorded(role);
-
-            Permission perm = api.load("5", Permission.class);
-            assertRecorded(perm);
-
-            Protocol protocol = api.load("1", Protocol.class);
-            assertRecorded(protocol);
-
-            Workflow workflow = api.load("1601", Workflow.class);
-            assertRecorded(workflow);
-        }
-        catch (ResourceAccessException e)
-        {
-            realServerDown(e);
-        }
+        testRecording("5", Instrument.class);
     }
 
     @Test
-    public void testRecordDoubleId()
+    public void testRecordContainer()
+    {
+        testRecording("27-340091", Container.class);
+    }
+
+    @Test
+    public void testRecordContainerType()
+    {
+        testRecording("204", ContainerType.class);
+    }
+
+    @Test
+    public void testRecordArtifact()
+    {
+        testRecording("2-5898189", Artifact.class);
+    }
+
+    @Test
+    public void testRecordDemux()
+    {
+        testRecording("2-5898189", Demux.class);
+    }
+
+    @Test
+    public void testRecordSample()
+    {
+        testRecording("GAO9862A146", Sample.class);
+    }
+
+    @Test
+    public void testRecordProject()
+    {
+        testRecording("GAO9862", Project.class);
+    }
+
+    @Test
+    public void testRecordResearcher()
+    {
+        testRecording("5356", Researcher.class);
+    }
+
+    @Test
+    public void testRecordLab()
+    {
+        testRecording("18", Lab.class);
+    }
+
+    @Test
+    public void testRecordReagentType()
+    {
+        testRecording("374", ReagentType.class);
+    }
+
+    @Test
+    public void testRecordRole()
+    {
+        testRecording("3", Role.class);
+    }
+
+    @Test
+    public void testRecordPermission()
+    {
+        testRecording("5", Permission.class);
+    }
+
+    @Test
+    public void testRecordProtocol()
+    {
+        testRecording("1", Protocol.class);
+    }
+
+    @Test
+    public void testRecordProtocolStep()
+    {
+        testRecording("1", "1", ProtocolStep.class);
+    }
+
+    @Test
+    public void testRecordWorkflow()
+    {
+        testRecording("1601", Workflow.class);
+    }
+
+    @Test
+    public void testRecordStage()
+    {
+        testRecording("1601", "2902", Stage.class);
+    }
+
+    private <L extends Locatable> L testRecording(String id, Class<L> type)
     {
         CRUKCICheck.assumeInCrukCI();
         checkCredentialsFileExists();
 
+        L thing = null;
         try
         {
-            ProtocolStep step = api.load("1", "1", ProtocolStep.class);
-            assertRecorded(step);
-
-            Stage stage = api.load("1601", "2902", Stage.class);
-            assertRecorded(stage);
+            thing = api.load(id, type);
+            assertRecorded(thing);
         }
         catch (ResourceAccessException e)
         {
             realServerDown(e);
         }
+
+        return thing;
+    }
+
+    private <L extends Locatable> L testRecording(String id1, String id2, Class<L> type)
+    {
+        CRUKCICheck.assumeInCrukCI();
+        checkCredentialsFileExists();
+
+        L thing = null;
+        try
+        {
+            thing = api.load(id1, id2, type);
+            assertRecorded(thing);
+        }
+        catch (ResourceAccessException e)
+        {
+            realServerDown(e);
+        }
+
+        return thing;
     }
 
     @Test
@@ -389,19 +445,19 @@ public class ClarityAPIRecordingAspectTest
         }
     }
 
-    private <E extends LimsEntity<E>, L extends LimsEntityLinkable<E>> File assertRecorded(L entity)
-    {
-        String className = ClassUtils.getShortClassName(entity.getClass());
-        File entityFile = new File(messageDirectory, className + "-" + entity.getLimsid() + ".xml");
-        assertTrue(entityFile.exists(), "Have not recorded " + className + " " + entity.getLimsid());
-        return entityFile;
-    }
-
     private <L extends Locatable> File assertRecorded(L object)
     {
         String className = ClassUtils.getShortClassName(object.getClass());
 
-        String id = limsIdFromUri(object.getClass(), object.getUri().getPath());
+        String id;
+        try
+        {
+            id = ((LimsEntityLinkable<?>)object).getLimsid();
+        }
+        catch (ClassCastException e)
+        {
+            id = limsIdFromUri(object.getClass(), object.getUri().getPath());
+        }
 
         File entityFile = new File(messageDirectory, className + "-" + id + ".xml");
         assertTrue(entityFile.exists(), "Have not recorded " + className + " " + id);
