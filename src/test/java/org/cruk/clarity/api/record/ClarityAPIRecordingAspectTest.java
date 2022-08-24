@@ -18,6 +18,7 @@
 
 package org.cruk.clarity.api.record;
 
+import static org.cruk.clarity.api.record.ClarityAPIRecordingAspect.limsIdFromUri;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
@@ -27,8 +28,8 @@ import static org.mockito.Mockito.verify;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -57,21 +58,28 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.web.client.ResourceAccessException;
 
 import com.genologics.ri.Batch;
-import com.genologics.ri.LimsEntity;
 import com.genologics.ri.LimsEntityLinkable;
 import com.genologics.ri.LimsLink;
 import com.genologics.ri.Locatable;
 import com.genologics.ri.artifact.Artifact;
+import com.genologics.ri.artifact.Demux;
 import com.genologics.ri.container.Container;
 import com.genologics.ri.containertype.ContainerType;
+import com.genologics.ri.instrument.Instrument;
 import com.genologics.ri.lab.Lab;
 import com.genologics.ri.permission.Permission;
 import com.genologics.ri.process.ClarityProcess;
 import com.genologics.ri.project.Project;
+import com.genologics.ri.protocolconfiguration.Protocol;
 import com.genologics.ri.reagenttype.ReagentType;
 import com.genologics.ri.researcher.Researcher;
 import com.genologics.ri.role.Role;
 import com.genologics.ri.sample.Sample;
+import com.genologics.ri.stage.Stage;
+import com.genologics.ri.step.ProcessStep;
+import com.genologics.ri.step.StepDetails;
+import com.genologics.ri.stepconfiguration.ProtocolStep;
+import com.genologics.ri.workflowconfiguration.Workflow;
 
 @SpringJUnitConfig(classes = ClarityClientRecorderRecordTestConfiguration.class)
 public class ClarityAPIRecordingAspectTest
@@ -122,45 +130,148 @@ public class ClarityAPIRecordingAspectTest
     }
 
     @Test
-    public void testRecording()
+    public void testLimsIdFromUri() throws URISyntaxException
+    {
+        String id = "2-41";
+
+        String uri = api.limsIdToUri(id, Artifact.class).toString();
+
+        assertEquals(id, limsIdFromUri(Artifact.class, uri), "Artifact id from URI wrong.");
+
+        uri = api.limsIdToUri(id, Demux.class).toString();
+
+        assertEquals(id, limsIdFromUri(Demux.class, uri), "Demux id from URI wrong.");
+
+        uri = api.limsIdToUri(id, ProcessStep.class).toString();
+
+        assertEquals(id, limsIdFromUri(ProcessStep.class, uri), "ProcessStep id from URI wrong.");
+
+        uri = api.limsIdToUri(id, StepDetails.class).toString();
+
+        assertEquals(id, limsIdFromUri(StepDetails.class, uri), "StepDetails id from URI wrong.");
+    }
+
+    @Test
+    public void testRecordInstrument()
+    {
+        testRecording("5", Instrument.class);
+    }
+
+    @Test
+    public void testRecordContainer()
+    {
+        testRecording("27-340091", Container.class);
+    }
+
+    @Test
+    public void testRecordContainerType()
+    {
+        testRecording("204", ContainerType.class);
+    }
+
+    @Test
+    public void testRecordArtifact()
+    {
+        testRecording("2-5898189", Artifact.class);
+    }
+
+    @Test
+    public void testRecordDemux()
+    {
+        testRecording("2-5898189", Demux.class);
+    }
+
+    @Test
+    public void testRecordSample()
+    {
+        testRecording("GAO9862A146", Sample.class);
+    }
+
+    @Test
+    public void testRecordProject()
+    {
+        testRecording("GAO9862", Project.class);
+    }
+
+    @Test
+    public void testRecordResearcher()
+    {
+        testRecording("5356", Researcher.class);
+    }
+
+    @Test
+    public void testRecordLab()
+    {
+        testRecording("18", Lab.class);
+    }
+
+    @Test
+    public void testRecordReagentType()
+    {
+        testRecording("374", ReagentType.class);
+    }
+
+    @Test
+    public void testRecordRole()
+    {
+        testRecording("3", Role.class);
+    }
+
+    @Test
+    public void testRecordPermission()
+    {
+        testRecording("5", Permission.class);
+    }
+
+    @Test
+    public void testRecordProtocol()
+    {
+        testRecording("1", Protocol.class);
+    }
+
+    @Test
+    public void testRecordProtocolStep()
+    {
+        testRecording("1", "1", ProtocolStep.class);
+    }
+
+    @Test
+    public void testRecordWorkflow()
+    {
+        testRecording("1601", Workflow.class);
+    }
+
+    @Test
+    public void testRecordStage()
+    {
+        testRecording("1601", "2902", Stage.class);
+    }
+
+    private <L extends Locatable> void testRecording(String id, Class<L> type)
     {
         CRUKCICheck.assumeInCrukCI();
         checkCredentialsFileExists();
 
         try
         {
-            Container c = api.load("27-340091", Container.class);
-            assertRecorded(c);
+            L thing = api.load(id, type);
+            assertRecorded(thing);
+        }
+        catch (ResourceAccessException e)
+        {
+            realServerDown(e);
+        }
+    }
 
-            ContainerType ct = api.load(c.getContainerType());
-            assertRecorded(ct);
+    private <L extends Locatable> void testRecording(String id1, String id2, Class<L> type)
+    {
+        CRUKCICheck.assumeInCrukCI();
+        checkCredentialsFileExists();
 
-            Collections.sort(c.getPlacements());
-
-            Artifact pool = api.load(c.getPlacements().get(4));
-            assertEquals("2-5898189", pool.getLimsid(), "Mismatched ids");
-            assertRecorded(pool);
-
-            Sample s = api.load("GAO9862A146", Sample.class);
-            assertRecorded(s);
-
-            Project p = api.load(s.getProject());
-            assertRecorded(p);
-
-            Researcher r = api.load(p.getResearcher());
-            assertRecorded(r);
-
-            Lab l = api.load(r.getLab());
-            assertRecorded(l);
-
-            ReagentType rg = api.load("374", ReagentType.class);
-            assertRecorded(rg);
-
-            Role role = api.load(r.getCredentials().getRoles().get(0));
-            assertRecorded(role);
-
-            Permission perm = api.load("5", Permission.class);
-            assertRecorded(perm);
+        try
+        {
+            L thing = api.load(id1, id2, type);
+            assertRecorded(thing);
         }
         catch (ResourceAccessException e)
         {
@@ -328,21 +439,11 @@ public class ClarityAPIRecordingAspectTest
         }
     }
 
-    private <E extends LimsEntity<E>, L extends LimsEntityLinkable<E>> File assertRecorded(L entity)
-    {
-        String className = ClassUtils.getShortClassName(entity.getClass());
-        File entityFile = new File(messageDirectory, className + "-" + entity.getLimsid() + ".xml");
-        assertTrue(entityFile.exists(), "Have not recorded " + className + " " + entity.getLimsid());
-        return entityFile;
-    }
-
     private <L extends Locatable> File assertRecorded(L object)
     {
         String className = ClassUtils.getShortClassName(object.getClass());
 
-        String id = object.getUri().toString();
-        int lastSlash = id.lastIndexOf('/');
-        id = id.substring(lastSlash + 1);
+        String id = ClarityAPIRecordingAspect.limsIdFromObject(object);
 
         File entityFile = new File(messageDirectory, className + "-" + id + ".xml");
         assertTrue(entityFile.exists(), "Have not recorded " + className + " " + id);

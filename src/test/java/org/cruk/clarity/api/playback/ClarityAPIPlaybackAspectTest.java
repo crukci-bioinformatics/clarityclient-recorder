@@ -18,7 +18,11 @@
 
 package org.cruk.clarity.api.playback;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.File;
 import java.io.IOException;
@@ -38,6 +42,7 @@ import javax.xml.transform.stream.StreamSource;
 import org.apache.commons.io.FileUtils;
 import org.apache.http.conn.HttpHostConnectException;
 import org.cruk.clarity.api.ClarityAPI;
+import org.cruk.clarity.api.ClarityException;
 import org.cruk.clarity.api.unittests.ClarityClientRecorderPlaybackTestConfiguration;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -48,19 +53,26 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.web.client.ResourceAccessException;
 
 import com.genologics.ri.LimsLink;
+import com.genologics.ri.Locatable;
 import com.genologics.ri.artifact.Artifact;
 import com.genologics.ri.artifact.ArtifactLink;
+import com.genologics.ri.artifact.Demux;
 import com.genologics.ri.container.Container;
 import com.genologics.ri.containertype.ContainerType;
+import com.genologics.ri.instrument.Instrument;
 import com.genologics.ri.lab.Lab;
 import com.genologics.ri.permission.Permission;
 import com.genologics.ri.process.ClarityProcess;
 import com.genologics.ri.project.Project;
+import com.genologics.ri.protocolconfiguration.Protocol;
 import com.genologics.ri.reagenttype.ReagentType;
 import com.genologics.ri.researcher.Researcher;
 import com.genologics.ri.role.Role;
 import com.genologics.ri.sample.Sample;
 import com.genologics.ri.sample.SampleLink;
+import com.genologics.ri.stage.Stage;
+import com.genologics.ri.stepconfiguration.ProtocolStep;
+import com.genologics.ri.workflowconfiguration.Workflow;
 
 @SpringJUnitConfig(classes = ClarityClientRecorderPlaybackTestConfiguration.class)
 public class ClarityAPIPlaybackAspectTest
@@ -104,45 +116,161 @@ public class ClarityAPIPlaybackAspectTest
         FileUtils.deleteQuietly(updateDirectory);
     }
 
+    /**
+     * Additional test for instrument to cover mismatch between lims id and URI.
+     *
+     * @see <a href="https://redmine-bioinformatics.cruk.cam.ac.uk/issues/7273">Redmine 7273</a>
+     */
     @Test
-    public void testReplay()
+    public void testReplayInstrumentShort()
     {
+        Instrument i = testReplay("5", Instrument.class);
+        assertEquals("Luke-Leia [HWI-ST230]", i.getName(), "Instrument name wrong");
+    }
+
+    /**
+     * Additional test for instrument to cover mismatch between lims id and URI.
+     *
+     * @see <a href="https://redmine-bioinformatics.cruk.cam.ac.uk/issues/7273">Redmine 7273</a>
+     */
+    @Test
+    public void testReplayInstrumentLimsId()
+    {
+        Instrument i = testReplay("55-5", Instrument.class);
+        assertEquals("Luke-Leia [HWI-ST230]", i.getName(), "Instrument name wrong");
+    }
+
+    @Test
+    public void testReplayContainer()
+    {
+        Container c = testReplay("27-340091", Container.class);
+        assertEquals("HFTC7BBXX", c.getName(), "Container name wrong");
+    }
+
+    @Test
+    public void testReplayContainerType()
+    {
+        ContainerType ct = testReplay("204", ContainerType.class);
+        assertEquals("Illumina HiSeq 4000 Flow Cell", ct.getName(), "Container type name wrong");
+    }
+
+    @Test
+    public void testReplayArtifact()
+    {
+        Artifact a = testReplay("2-5898189", Artifact.class);
+        assertEquals("SLX-12321_NORM-1", a.getName(), "Artifact name wrong");
+    }
+
+    @Test
+    public void testReplayDemux()
+    {
+        Demux demux = testReplay("2-5898189", Demux.class);
+        assertEquals("Accept SLX", demux.getDemuxDetails().getPoolStep().getName(), "Demux process type wrong.");
+    }
+
+    @Test
+    public void testReplaySample()
+    {
+        Sample s = testReplay("GAO9862A146", Sample.class);
+        assertEquals("34_a", s.getName(), "Sample name wrong");
+    }
+
+    @Test
+    public void testReplayProject()
+    {
+        Project p = testReplay("GAO9862", Project.class);
+        assertEquals("Poseidon-NGTAS-201611", p.getName(), "Project name wrong");
+    }
+
+    @Test
+    public void testReplayResearcher()
+    {
+        Researcher r = testReplay("5356", Researcher.class);
+        assertEquals("Meiling", r.getFirstName(), "Researcher name wrong");
+    }
+
+    @Test
+    public void testReplayLab()
+    {
+        Lab l = testReplay("18", Lab.class);
+        assertEquals("CRUKCI", l.getName(), "Lab name wrong");
+    }
+
+    @Test
+    public void testReplayReagentType()
+    {
+        ReagentType rt = testReplay("374", ReagentType.class);
+        assertEquals("Fluidigm", rt.getReagentCategory(), "Reagent category wrong");
+    }
+
+    @Test
+    public void testReplayRole()
+    {
+        Role role = testReplay("3", Role.class);
+        assertEquals("Collaborator", role.getName(), "Role name wrong");
+    }
+
+    @Test
+    public void testReplayPermission()
+    {
+        Permission perm = testReplay("5", Permission.class);
+        assertEquals("Project", perm.getName(), "Permission name wrong");
+    }
+
+    @Test
+    public void testReplayProtocol()
+    {
+        Protocol protocol = testReplay("1", Protocol.class);
+        assertEquals("LPS: Accept LPS", protocol.getName(), "Protocol name wrong.");
+    }
+
+    @Test
+    public void testReplayProtocolStep()
+    {
+        ProtocolStep step = testReplay("1", "1", ProtocolStep.class);
+        assertEquals("LPS Reagents In", step.getName(), "Protocol step name wrong.");
+    }
+
+    @Test
+    public void testReplayWorkflow()
+    {
+        Workflow workflow = testReplay("1601", Workflow.class);
+        assertEquals("LPS: 10X Single Cell ATAC v1", workflow.getName(), "Workflow name wrong.");
+    }
+
+    @Test
+    public void testReplayStage()
+    {
+        Stage stage = testReplay("1601", "2902", Stage.class);
+        assertEquals("Transposition (10X)", stage.getName(), "Workflow stage name wrong.");
+    }
+
+    private <L extends Locatable> L testReplay(String id, Class<L> type)
+    {
+        L thing = null;
         try
         {
-            Container c = api.load("27-340091", Container.class);
-            assertEquals("HFTC7BBXX", c.getName(), "Container name wrong");
-
-            ContainerType ct = api.load(c.getContainerType());
-            assertEquals("Illumina HiSeq 4000 Flow Cell", ct.getName(), "Container type name wrong");
-
-            Artifact a = api.load("2-5898189", Artifact.class);
-            assertEquals("SLX-12321_NORM-1", a.getName(), "Artifact name wrong");
-
-            Sample s = api.load("GAO9862A146", Sample.class);
-            assertEquals("34_a", s.getName(), "Sample name wrong");
-
-            Project p = api.load(s.getProject());
-            assertEquals("Poseidon-NGTAS-201611", p.getName(), "Project name wrong");
-
-            Researcher r = api.load(p.getResearcher());
-            assertEquals("Meiling", r.getFirstName(), "Researcher name wrong");
-
-            Lab l = api.load(r.getLab());
-            assertEquals("CRUKCI", l.getName(), "Lab name wrong");
-
-            ReagentType rt = api.load("374", ReagentType.class);
-            assertEquals("Fluidigm", rt.getReagentCategory(), "Reagent category wrong");
-
-            Role role = api.load("3", Role.class);
-            assertEquals("Collaborator", role.getName(), "Role name wrong");
-
-            Permission perm = api.load("5", Permission.class);
-            assertEquals("Project", perm.getName(), "Permission name wrong");
+            thing = api.load(id, type);
         }
         catch (ResourceAccessException e)
         {
             realServerAccess(e);
         }
+        return thing;
+    }
+
+    private <L extends Locatable> L testReplay(String id1, String id2, Class<L> type)
+    {
+        L thing = null;
+        try
+        {
+            thing = api.load(id1, id2, type);
+        }
+        catch (ResourceAccessException e)
+        {
+            realServerAccess(e);
+        }
+        return thing;
     }
 
     @Test
@@ -150,13 +278,13 @@ public class ClarityAPIPlaybackAspectTest
     {
         try
         {
-            List<LimsLink<Artifact>> alinks = new ArrayList<LimsLink<Artifact>>();
+            List<LimsLink<Artifact>> alinks = new ArrayList<>();
             alinks.add(new ArtifactLink(new URI("https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/2-5898189")));
             alinks.add(new ArtifactLink(new URI("https://limsdev.cruk.cam.ac.uk/api/v2/artifacts/2-6764648")));
 
             api.loadAll(alinks);
 
-            List<LimsLink<Sample>> slinks = new ArrayList<LimsLink<Sample>>();
+            List<LimsLink<Sample>> slinks = new ArrayList<>();
             slinks.add(new SampleLink(new URI("https://limsdev.cruk.cam.ac.uk/api/v2/samples/GAO9862A146")));
             slinks.add(new SampleLink(new URI("https://limsdev.cruk.cam.ac.uk/api/v2/samples/LEU10792A392")));
 
@@ -174,7 +302,11 @@ public class ClarityAPIPlaybackAspectTest
         try
         {
             Sample s = api.load("0000", Sample.class);
-            assertNull(s, "Got something back from sample when expecting null.");
+            assertNull(s, "Got something back from sample when expecting a ClarityException.");
+        }
+        catch (ClarityException e)
+        {
+            e.throwUnlessNotFound();
         }
         catch (ResourceAccessException e)
         {

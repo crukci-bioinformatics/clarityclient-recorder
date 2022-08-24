@@ -19,6 +19,7 @@
 package org.cruk.clarity.api.record;
 
 import static java.nio.charset.StandardCharsets.US_ASCII;
+import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -48,9 +49,13 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 
 import com.genologics.ri.Batch;
+import com.genologics.ri.ClarityEntity;
 import com.genologics.ri.LimsEntity;
+import com.genologics.ri.LimsEntityLink;
+import com.genologics.ri.LimsEntityLinkable;
 import com.genologics.ri.LimsLink;
 import com.genologics.ri.Locatable;
+import com.genologics.ri.instrument.Instrument;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.XStreamException;
 
@@ -413,6 +418,68 @@ public class ClarityAPIRecordingAspect
     }
 
     /**
+     * Shared method to get the LIMS id out of a URI, public to let the playback aspect
+     * use it. Removes trailing sections on the URI from classes like Demux and StepDetails.
+     *
+     * @param uri The URI in string form.
+     *
+     * @return The (single) LIMS id from the URI.
+     */
+    public static String limsIdFromUri(Class<?> clazz, String uri)
+    {
+        ClarityEntity anno = clazz.getAnnotation(ClarityEntity.class);
+
+        int fromIndex = uri.length();
+        if (anno != null && isNotEmpty(anno.uriSubsection()))
+        {
+            fromIndex -= anno.uriSubsection().length() + 1;
+        }
+
+        int lastSlash = uri.lastIndexOf('/', fromIndex - 1);
+        return uri.substring(lastSlash + 1, fromIndex);
+    }
+
+    /**
+     * Shared method to get the LIMS id from an object, which must at least implement
+     * {@code Locatable}.
+     *
+     * @param thing The entity to get an id for.
+     *
+     * @return The LIMS id for the object.
+     */
+    public static String limsIdFromObject(Object thing)
+    {
+        assert thing != null : "Cannot get a name for null";
+
+        // This has got a lot more difficult thanks to Instrument not being consistent
+        // between the URI path and the lims id attribute, requiring a special case.
+        // See Redmine 7273.
+
+        String id = null;
+        Class<?> entityType = thing.getClass();
+
+        if (thing instanceof LimsEntity<?>)
+        {
+            LimsEntity<?> entity = (LimsEntity<?>)thing;
+            id = entity.getLimsid();
+        }
+        else if (thing instanceof LimsEntityLink<?>)
+        {
+            LimsEntityLink<?> link = (LimsEntityLink<?>)thing;
+            id = link.getLimsid();
+            entityType = link.getEntityClass();
+        }
+
+        if (id == null || Instrument.class.equals(entityType))
+        {
+            Locatable item = (Locatable)thing;
+            id = limsIdFromUri(entityType, item.getUri().getPath());
+        }
+
+        return id;
+    }
+
+    /**
      * Convenience method to get the file the given entity would be written to.
      *
      * @param thing The entity to store.
@@ -421,19 +488,7 @@ public class ClarityAPIRecordingAspect
      */
     private File getFileForEntity(Object thing)
     {
-        assert thing != null : "Cannot get a name for null";
-
-        String id;
-        if (thing instanceof LimsEntity<?>)
-        {
-            id = ((LimsEntity<?>)thing).getLimsid();
-        }
-        else
-        {
-            id = ((Locatable)thing).getUri().toString();
-            int lastSlash = id.lastIndexOf('/');
-            id = id.substring(lastSlash + 1);
-        }
+        String id = limsIdFromObject(thing);
 
         String name = MessageFormat.format(FILENAME_PATTERN, ClassUtils.getShortClassName(thing.getClass()), id);
 
