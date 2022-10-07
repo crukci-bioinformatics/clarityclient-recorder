@@ -28,7 +28,6 @@ import static org.mockito.Mockito.verify;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -58,7 +57,6 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.web.client.ResourceAccessException;
 
 import com.genologics.ri.Batch;
-import com.genologics.ri.LimsEntityLinkable;
 import com.genologics.ri.LimsLink;
 import com.genologics.ri.Locatable;
 import com.genologics.ri.artifact.Artifact;
@@ -130,7 +128,7 @@ public class ClarityAPIRecordingAspectTest
     }
 
     @Test
-    public void testLimsIdFromUri() throws URISyntaxException
+    public void testLimsIdFromUri()
     {
         String id = "2-41";
 

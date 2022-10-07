@@ -48,6 +48,7 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.cruk.clarity.api.ClarityAPI;
 import org.cruk.clarity.api.ClarityException;
+import org.cruk.clarity.api.InvalidURIException;
 import org.cruk.clarity.api.impl.ClarityAPIInternal;
 import org.cruk.clarity.api.search.Search;
 import org.cruk.clarity.api.search.SearchTerms;
@@ -544,8 +545,11 @@ public class ClarityAPIPlaybackAspect
      * @param uriObj The untyped URI to the object.
      *
      * @return The file for the given entity.
+     *
+     * @throws InvalidURIException if the string value of {@code uriObj} cannot form
+     * a valid URI.
      */
-    private File getFileForEntity(Class<?> type, Object uriObj) throws URISyntaxException
+    private File getFileForEntity(Class<?> type, Object uriObj)
     {
         assert uriObj != null : "Cannot get a name for null";
 
@@ -556,7 +560,14 @@ public class ClarityAPIPlaybackAspect
         }
         catch (ClassCastException e)
         {
-            uri = new URI(uriObj.toString());
+            try
+            {
+                uri = new URI(uriObj.toString());
+            }
+            catch (URISyntaxException e2)
+            {
+                throw new InvalidURIException(e2);
+            }
         }
 
         String limsid = limsIdFromUri(type, uri.getPath());
