@@ -420,6 +420,7 @@ public class ClarityAPIRecordingAspect
      * Shared method to get the LIMS id out of a URI, public to let the playback aspect
      * use it. Removes trailing sections on the URI from classes like Demux and StepDetails.
      *
+     * @param clazz The type of entity to obtain the LIMS id for.
      * @param uri The URI in string form.
      *
      * @return The (single) LIMS id from the URI.
