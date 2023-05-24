@@ -359,7 +359,7 @@ public class ClarityAPIPlaybackAspect
         @SuppressWarnings("unchecked")
         Class<?> entityClass = (Class<?>)pjp.getArgs()[1];
 
-        @SuppressWarnings("unchecked")
+        @SuppressWarnings({"unchecked", "rawtypes"})
         SearchTerms<?> terms = new SearchTerms(searchTerms, entityClass);
 
         Search<?> search = loadSearch(terms);

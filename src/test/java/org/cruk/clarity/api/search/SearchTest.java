@@ -87,7 +87,7 @@ public class SearchTest
     }
 
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "rawtypes"})
     public void testMergeDifferentClass() throws URISyntaxException
     {
         Map<String, Object> terms1 = new HashMap<>();
