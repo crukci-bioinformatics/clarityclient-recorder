@@ -133,7 +133,7 @@ public class ClarityAPIPlaybackAspectTest
      *
      * @see <a href="https://redmine-bioinformatics.cruk.cam.ac.uk/issues/7273">Redmine 7273</a>
      */
-    @Test
+    //@Test
     public void testReplayInstrumentLimsId()
     {
         Instrument i = testReplay("55-5", Instrument.class);

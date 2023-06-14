@@ -470,7 +470,7 @@ public class ClarityAPIRecordingAspect
             entityType = link.getEntityClass();
         }
 
-        if (id == null || Instrument.class.equals(entityType))
+        if (id == null)
         {
             Locatable item = (Locatable)thing;
             id = limsIdFromUri(entityType, item.getUri().getPath());
