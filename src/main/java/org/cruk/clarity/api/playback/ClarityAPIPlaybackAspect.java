@@ -104,6 +104,12 @@ public class ClarityAPIPlaybackAspect
     private File updatesDirectory;
 
     /**
+     * Whether to fail if there is no result recorded for a search, or
+     * whether to simply return no results.
+     */
+    private boolean failOnMissingSearch = false;
+
+    /**
      * The JAXB marshaller used to directly unmarshal the XML files into objects.
      */
     private Jaxb2Marshaller jaxbMarshaller;
@@ -197,12 +203,39 @@ public class ClarityAPIPlaybackAspect
     }
 
     /**
+     * Whether to fail if there is no result recorded for a search, or
+     * whether to simply return no results. Saves having to save every search
+     * with no results, and helps when something changes to add another value
+     * to search for that will return nothing.
+     *
+     * @return true if a missing search recording will fail, false if
+     * it will return no results.
+     *
+     * @see #doFind(ProceedingJoinPoint)
+     */
+    public boolean isFailOnMissingSearch()
+    {
+        return failOnMissingSearch;
+    }
+
+    /**
+     * Get whether this aspect should fail if a search doesn't have a recording.
+     *
+     * @param failOnMissingSearch true if a missing search recording will fail,
+     * false if it will return no results.
+     */
+    public void setFailOnMissingSearch(boolean failOnMissingSearch)
+    {
+        this.failOnMissingSearch = failOnMissingSearch;
+    }
+
+    /**
      * Inject the JAXB marshaller. This is required.
      *
      * @param jaxbMarshaller The marshaller.
      */
     @Autowired
-    @Qualifier("genologicsJaxbMarshaller")
+    @Qualifier("clarityJaxbMarshaller")
     public void setJaxbMarshaller(Jaxb2Marshaller jaxbMarshaller)
     {
         this.jaxbMarshaller = jaxbMarshaller;
@@ -342,34 +375,42 @@ public class ClarityAPIPlaybackAspect
      * a prerecorded search in the search directory that matches the search parameters
      * of this call.
      *
+     * @param <E> The type of entity being searched for.
+     *
      * @param pjp The join point.
      *
      * @return The result of the search (a list of links).
      *
      * @throws NoRecordingException if there is no search recorded for the parameters
-     * given.
+     * given and the aspect is set to fail on no recorded search.
      *
      * @throws Throwable if there is anything else that fails.
      */
-    public List<?> doFind(ProceedingJoinPoint pjp) throws Throwable
+    public <E extends Locatable> List<LimsLink<E>> doFind(ProceedingJoinPoint pjp) throws Throwable
     {
         @SuppressWarnings("unchecked")
         Map<String, ?> searchTerms = (Map<String, ?>)pjp.getArgs()[0];
 
         @SuppressWarnings("unchecked")
-        Class<?> entityClass = (Class<?>)pjp.getArgs()[1];
+        Class<E> entityClass = (Class<E>)pjp.getArgs()[1];
 
-        @SuppressWarnings({"unchecked", "rawtypes"})
-        SearchTerms<?> terms = new SearchTerms(searchTerms, entityClass);
+        SearchTerms<E> terms = new SearchTerms<>(searchTerms, entityClass);
 
-        Search<?> search = loadSearch(terms);
+        Search<E> search = loadSearch(terms);
 
-        if (search == null)
+        if (search != null)
+        {
+            return search.getResults();
+        }
+
+        if (failOnMissingSearch)
         {
             throw new NoRecordingException("There is no recorded search with the parameters given:\n" + searchTerms);
         }
-
-        return search.getResults();
+        else
+        {
+            return Collections.emptyList();
+        }
     }
 
     /**
@@ -493,8 +534,16 @@ public class ClarityAPIPlaybackAspect
     /**
      * Load the prerecorded searches from the search directory. Finds files in there
      * that match the expected file name format and brings them all into memory.
+     *
+     * @param <E> The type of entity being searched for.
+     *
+     * @param terms The search terms.
+     *
+     * @return The search object loaded from the recorded file, or null if the
+     * search has not been recorded.
      */
-    private Search<?> loadSearch(SearchTerms<?> terms)
+    @SuppressWarnings("unchecked")
+    private <E extends Locatable> Search<E> loadSearch(SearchTerms<?> terms)
     {
         File searchFile = new File(messageDirectory, Search.getSearchFileName(terms));
 
@@ -502,7 +551,7 @@ public class ClarityAPIPlaybackAspect
         {
             try (Reader reader = new InputStreamReader(new FileInputStream(searchFile), US_ASCII))
             {
-                return (Search<?>)xstream.fromXML(reader);
+                return (Search<E>)xstream.fromXML(reader);
             }
             catch (XStreamException xse)
             {

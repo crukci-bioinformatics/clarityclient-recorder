@@ -20,6 +20,7 @@ package org.cruk.clarity.api.record;
 
 import static org.cruk.clarity.api.record.ClarityAPIRecordingAspect.limsIdFromUri;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 import static org.mockito.Mockito.mock;
@@ -29,6 +30,7 @@ import static org.mockito.Mockito.verify;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -78,6 +80,7 @@ import com.genologics.ri.step.ProcessStep;
 import com.genologics.ri.step.StepDetails;
 import com.genologics.ri.stepconfiguration.ProtocolStep;
 import com.genologics.ri.workflowconfiguration.Workflow;
+import com.thoughtworks.xstream.XStream;
 
 @SpringJUnitConfig(classes = ClarityClientRecorderRecordTestConfiguration.class)
 public class ClarityAPIRecordingAspectTest
@@ -94,6 +97,10 @@ public class ClarityAPIRecordingAspectTest
     @Autowired
     @Qualifier("clarityClientHttpRequestFactory")
     protected AuthenticatingClientHttpRequestFactory httpRequestFactory;
+
+    @Autowired
+    @Qualifier("claritySearchXStream")
+    private XStream xstream;
 
     private File messageDirectory = new File("target/messages");
 
@@ -435,6 +442,46 @@ public class ClarityAPIRecordingAspectTest
         {
             aspect.logger = realLogger;
         }
+    }
+
+    @Test
+    public void testSearchRecordNoResultsRecording()
+    {
+        CRUKCICheck.assumeInCrukCI();
+        checkCredentialsFileExists();
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("name", "HELLO_I_DONT_EXIST");
+
+        Search<Sample> search = new Search<>(params, Sample.class);
+        search.setResults(Collections.emptyList());
+
+        aspect.setRecordSearchesWithoutResults(true);
+
+        api.find(params, Sample.class);
+
+        File recorded = new File(aspect.getMessageDirectory(), search.getSearchFileName());
+        assertTrue(recorded.exists(), "Didn't record search " + search);
+    }
+
+    @Test
+    public void testSearchRecordNoResultsDoNotRecord()
+    {
+        CRUKCICheck.assumeInCrukCI();
+        checkCredentialsFileExists();
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("name", "HELLO_I_DONT_EXIST");
+
+        Search<Sample> search = new Search<>(params, Sample.class);
+        search.setResults(Collections.emptyList());
+
+        aspect.setRecordSearchesWithoutResults(false);
+
+        api.find(params, Sample.class);
+
+        File recorded = new File(aspect.getMessageDirectory(), search.getSearchFileName());
+        assertFalse(recorded.exists(), "Recorded search " + search);
     }
 
     private <L extends Locatable> File assertRecorded(L object)

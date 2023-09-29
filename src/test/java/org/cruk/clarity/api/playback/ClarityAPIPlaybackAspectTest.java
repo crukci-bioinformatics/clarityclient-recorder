@@ -108,6 +108,8 @@ public class ClarityAPIPlaybackAspectTest
     {
         FileUtils.deleteQuietly(updateDirectory);
         FileUtils.forceMkdir(updateDirectory);
+
+        aspect.setFailOnMissingSearch(false);
     }
 
     @AfterEach
@@ -315,7 +317,7 @@ public class ClarityAPIPlaybackAspectTest
     }
 
     @Test
-    public void testReplySearch1()
+    public void testReplaySearch1()
     {
         try
         {
@@ -332,7 +334,7 @@ public class ClarityAPIPlaybackAspectTest
     }
 
     @Test
-    public void testReplySearch2()
+    public void testReplaySearch2()
     {
         Map<String, Object> terms = new HashMap<String, Object>();
         terms.put("projectlimsid", new HashSet<String>(Arrays.asList("COH605", "SER1015")));
@@ -342,10 +344,12 @@ public class ClarityAPIPlaybackAspectTest
     }
 
     @Test
-    public void testReplySearch3() throws Throwable
+    public void testReplaySearchNotRecordedWithFail() throws Throwable
     {
         try
         {
+            aspect.setFailOnMissingSearch(true);
+
             Map<String, Object> terms = new HashMap<String, Object>();
             terms.put("name", "SLX-7230_NORM");
 
@@ -360,6 +364,36 @@ public class ClarityAPIPlaybackAspectTest
         {
             realServerAccess(e);
         }
+    }
+
+    @Test
+    public void testReplaySearchNotRecordedNoResults() throws Throwable
+    {
+        try
+        {
+            aspect.setFailOnMissingSearch(false);
+
+            Map<String, Object> terms = new HashMap<String, Object>();
+            terms.put("name", "SLX-7230_NORM");
+
+            var reply = api.find(terms, Artifact.class);
+
+            assertEquals(0, reply.size(), "Received the wrong number of links for a search that is not recorded.");
+        }
+        catch (NoRecordingException e)
+        {
+            fail("Got NoRecordingException when we should have just not got any results.");
+        }
+        catch (ResourceAccessException e)
+        {
+            realServerAccess(e);
+        }
+    }
+
+    @Test
+    public void testMissingSearchWithFail() throws Throwable
+    {
+
     }
 
     @Test
