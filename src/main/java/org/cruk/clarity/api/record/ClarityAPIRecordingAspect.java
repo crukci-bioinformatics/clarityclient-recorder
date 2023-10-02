@@ -87,6 +87,8 @@ public class ClarityAPIRecordingAspect
 
     /**
      * Whether to record a search that returns no results.
+     *
+     * @since 2.31.6
      */
     private boolean recordSearchesWithoutResults = true;
 
@@ -157,6 +159,8 @@ public class ClarityAPIRecordingAspect
      * @return Whether to record searches that brought back zero results or not.
      *
      * @see ClarityAPIPlaybackAspect#isFailOnMissingSearch()
+     *
+     * @since 2.31.6
      */
     public boolean isRecordSearchesWithoutResults()
     {
@@ -168,6 +172,8 @@ public class ClarityAPIRecordingAspect
      *
      * @param recordSearchesWithoutResults true to save a search regardless of
      * the results, false to not save when there are no results.
+     *
+     * @since 2.31.6
      */
     public void setRecordSearchesWithoutResults(boolean recordSearchesWithoutResults)
     {

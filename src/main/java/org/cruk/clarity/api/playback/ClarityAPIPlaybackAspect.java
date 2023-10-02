@@ -106,6 +106,8 @@ public class ClarityAPIPlaybackAspect
     /**
      * Whether to fail if there is no result recorded for a search, or
      * whether to simply return no results.
+     *
+     * @since 2.31.6
      */
     private boolean failOnMissingSearch = false;
 
@@ -212,6 +214,8 @@ public class ClarityAPIPlaybackAspect
      * it will return no results.
      *
      * @see #doFind(ProceedingJoinPoint)
+     *
+     * @since 2.31.6
      */
     public boolean isFailOnMissingSearch()
     {
@@ -223,6 +227,8 @@ public class ClarityAPIPlaybackAspect
      *
      * @param failOnMissingSearch true if a missing search recording will fail,
      * false if it will return no results.
+     *
+     * @since 2.31.6
      */
     public void setFailOnMissingSearch(boolean failOnMissingSearch)
     {

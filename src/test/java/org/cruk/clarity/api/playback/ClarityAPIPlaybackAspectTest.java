@@ -346,10 +346,10 @@ public class ClarityAPIPlaybackAspectTest
     @Test
     public void testReplaySearchNotRecordedWithFail() throws Throwable
     {
+        aspect.setFailOnMissingSearch(true);
+
         try
         {
-            aspect.setFailOnMissingSearch(true);
-
             Map<String, Object> terms = new HashMap<String, Object>();
             terms.put("name", "SLX-7230_NORM");
 
@@ -369,10 +369,10 @@ public class ClarityAPIPlaybackAspectTest
     @Test
     public void testReplaySearchNotRecordedNoResults() throws Throwable
     {
+        aspect.setFailOnMissingSearch(false);
+
         try
         {
-            aspect.setFailOnMissingSearch(false);
-
             Map<String, Object> terms = new HashMap<String, Object>();
             terms.put("name", "SLX-7230_NORM");
 
@@ -388,12 +388,6 @@ public class ClarityAPIPlaybackAspectTest
         {
             realServerAccess(e);
         }
-    }
-
-    @Test
-    public void testMissingSearchWithFail() throws Throwable
-    {
-
     }
 
     @Test
