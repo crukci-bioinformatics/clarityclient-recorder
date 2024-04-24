@@ -23,6 +23,7 @@ import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -35,12 +36,12 @@ import java.util.Map;
 
 import javax.xml.transform.stream.StreamResult;
 
-import org.apache.commons.io.output.FileWriterWithEncoding;
 import org.apache.commons.lang3.ClassUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.cruk.clarity.api.ClarityAPI;
 import org.cruk.clarity.api.impl.ClarityAPIInternal;
+import org.cruk.clarity.api.playback.ClarityAPIPlaybackAspect;
 import org.cruk.clarity.api.search.Search;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,10 +53,8 @@ import com.genologics.ri.Batch;
 import com.genologics.ri.ClarityEntity;
 import com.genologics.ri.LimsEntity;
 import com.genologics.ri.LimsEntityLink;
-import com.genologics.ri.LimsEntityLinkable;
 import com.genologics.ri.LimsLink;
 import com.genologics.ri.Locatable;
-import com.genologics.ri.instrument.Instrument;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.XStreamException;
 
@@ -85,6 +84,13 @@ public class ClarityAPIRecordingAspect
      * The directory to write the messages to.
      */
     private File messageDirectory;
+
+    /**
+     * Whether to record a search that returns no results.
+     *
+     * @since 2.31.6
+     */
+    private boolean recordSearchesWithoutResults = true;
 
     /**
      * The JAXB marshaller used to directly marshal the API entities into XML files.
@@ -144,12 +150,43 @@ public class ClarityAPIRecordingAspect
     }
 
     /**
+     * Whether to record a search that returns no results. The playback aspect
+     * can be set up to ignore missing search results and just return nothing
+     * from the call rather than requiring the search file is present. This is
+     * the other side of that: should we write a search file if the search
+     * has returned nothing.
+     *
+     * @return Whether to record searches that brought back zero results or not.
+     *
+     * @see ClarityAPIPlaybackAspect#isFailOnMissingSearch()
+     *
+     * @since 2.31.6
+     */
+    public boolean isRecordSearchesWithoutResults()
+    {
+        return recordSearchesWithoutResults;
+    }
+
+    /**
+     * Set whether to record a search with zero results or not.
+     *
+     * @param recordSearchesWithoutResults true to save a search regardless of
+     * the results, false to not save when there are no results.
+     *
+     * @since 2.31.6
+     */
+    public void setRecordSearchesWithoutResults(boolean recordSearchesWithoutResults)
+    {
+        this.recordSearchesWithoutResults = recordSearchesWithoutResults;
+    }
+
+    /**
      * Inject the JAXB marshaller. This is required.
      *
      * @param jaxbMarshaller The marshaller.
      */
     @Autowired
-    @Qualifier("genologicsJaxbMarshaller")
+    @Qualifier("clarityJaxbMarshaller")
     public void setJaxbMarshaller(Jaxb2Marshaller jaxbMarshaller)
     {
         this.jaxbMarshaller = jaxbMarshaller;
@@ -241,11 +278,14 @@ public class ClarityAPIRecordingAspect
             Search<E> search = new Search<E>(searchTerms, entityClass);
             search.setResults(results);
 
-            File searchFile = new File(messageDirectory, search.getSearchFileName());
-
-            if (checkAndMergeWithExisting(search, searchFile))
+            if (recordSearchesWithoutResults || !results.isEmpty())
             {
-                serialiseSearch(search, searchFile);
+                File searchFile = new File(messageDirectory, search.getSearchFileName());
+
+                if (checkAndMergeWithExisting(search, searchFile))
+                {
+                    serialiseSearch(search, searchFile);
+                }
             }
         }
         catch (IOException e)
@@ -268,7 +308,7 @@ public class ClarityAPIRecordingAspect
      */
     <E extends Locatable> void serialiseSearch(Search<E> search, File searchFile) throws IOException
     {
-        try (Writer out = new FileWriterWithEncoding(searchFile, US_ASCII, false))
+        try (Writer out = new FileWriter(searchFile, US_ASCII, false))
         {
             xstream.toXML(search, out);
 
@@ -421,6 +461,7 @@ public class ClarityAPIRecordingAspect
      * Shared method to get the LIMS id out of a URI, public to let the playback aspect
      * use it. Removes trailing sections on the URI from classes like Demux and StepDetails.
      *
+     * @param clazz The type of entity to obtain the LIMS id for.
      * @param uri The URI in string form.
      *
      * @return The (single) LIMS id from the URI.
@@ -470,7 +511,7 @@ public class ClarityAPIRecordingAspect
             entityType = link.getEntityClass();
         }
 
-        if (id == null || Instrument.class.equals(entityType))
+        if (id == null)
         {
             Locatable item = (Locatable)thing;
             id = limsIdFromUri(entityType, item.getUri().getPath());

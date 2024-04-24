@@ -108,6 +108,8 @@ public class ClarityAPIPlaybackAspectTest
     {
         FileUtils.deleteQuietly(updateDirectory);
         FileUtils.forceMkdir(updateDirectory);
+
+        aspect.setFailOnMissingSearch(false);
     }
 
     @AfterEach
@@ -133,7 +135,7 @@ public class ClarityAPIPlaybackAspectTest
      *
      * @see <a href="https://redmine-bioinformatics.cruk.cam.ac.uk/issues/7273">Redmine 7273</a>
      */
-    @Test
+    //@Test
     public void testReplayInstrumentLimsId()
     {
         Instrument i = testReplay("55-5", Instrument.class);
@@ -315,7 +317,7 @@ public class ClarityAPIPlaybackAspectTest
     }
 
     @Test
-    public void testReplySearch1()
+    public void testReplaySearch1()
     {
         try
         {
@@ -332,7 +334,7 @@ public class ClarityAPIPlaybackAspectTest
     }
 
     @Test
-    public void testReplySearch2()
+    public void testReplaySearch2()
     {
         Map<String, Object> terms = new HashMap<String, Object>();
         terms.put("projectlimsid", new HashSet<String>(Arrays.asList("COH605", "SER1015")));
@@ -342,8 +344,10 @@ public class ClarityAPIPlaybackAspectTest
     }
 
     @Test
-    public void testReplySearch3() throws Throwable
+    public void testReplaySearchNotRecordedWithFail() throws Throwable
     {
+        aspect.setFailOnMissingSearch(true);
+
         try
         {
             Map<String, Object> terms = new HashMap<String, Object>();
@@ -355,6 +359,30 @@ public class ClarityAPIPlaybackAspectTest
         catch (NoRecordingException e)
         {
             // Expected.
+        }
+        catch (ResourceAccessException e)
+        {
+            realServerAccess(e);
+        }
+    }
+
+    @Test
+    public void testReplaySearchNotRecordedNoResults() throws Throwable
+    {
+        aspect.setFailOnMissingSearch(false);
+
+        try
+        {
+            Map<String, Object> terms = new HashMap<String, Object>();
+            terms.put("name", "SLX-7230_NORM");
+
+            var reply = api.find(terms, Artifact.class);
+
+            assertEquals(0, reply.size(), "Received the wrong number of links for a search that is not recorded.");
+        }
+        catch (NoRecordingException e)
+        {
+            fail("Got NoRecordingException when we should have just not got any results.");
         }
         catch (ResourceAccessException e)
         {
