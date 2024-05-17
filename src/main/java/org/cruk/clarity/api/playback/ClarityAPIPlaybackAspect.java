@@ -45,6 +45,7 @@ import javax.xml.transform.stream.StreamSource;
 
 import org.apache.commons.lang3.ClassUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.cruk.clarity.api.ClarityAPI;
 import org.cruk.clarity.api.ClarityException;
@@ -59,6 +60,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
+import org.springframework.stereotype.Component;
 
 import com.genologics.ri.Batch;
 import com.genologics.ri.LimsLink;
@@ -71,6 +73,8 @@ import com.thoughtworks.xstream.XStreamException;
  * of entities as would be returned from a real Clarity server.
  */
 @Aspect
+@Component("clarityPlaybackAspect")
+@SuppressWarnings("exports")
 public class ClarityAPIPlaybackAspect
 {
     /**
@@ -284,6 +288,7 @@ public class ClarityAPIPlaybackAspect
      *
      * @throws Throwable if there is anything else that fails.
      */
+    @Around("execution(public * getForObject(..)) and bean(clarityRestTemplate)")
     public Object doGet(ProceedingJoinPoint pjp) throws Throwable
     {
         Object uriObj = pjp.getArgs()[0];
@@ -318,6 +323,7 @@ public class ClarityAPIPlaybackAspect
      *
      * @throws Throwable if there is anything that fails.
      */
+    @Around("execution(public * getForEntity(..)) and bean(clarityRestTemplate)")
     public ResponseEntity<?> doGetEntity(ProceedingJoinPoint pjp) throws Throwable
     {
         ResponseEntity<?> response;
@@ -359,6 +365,7 @@ public class ClarityAPIPlaybackAspect
      *
      * @throws Throwable if there is anything else that fails.
      */
+    @Around("execution(public * loadAll(..)) and bean(clarityAPI)")
     public List<?> doLoadAll(ProceedingJoinPoint pjp) throws Throwable
     {
         Collection<?> links = (Collection<?>)pjp.getArgs()[0];
@@ -392,6 +399,7 @@ public class ClarityAPIPlaybackAspect
      *
      * @throws Throwable if there is anything else that fails.
      */
+    @Around("execution(public * find(..)) and bean(clarityAPI)")
     public <E extends Locatable> List<LimsLink<E>> doFind(ProceedingJoinPoint pjp) throws Throwable
     {
         @SuppressWarnings("unchecked")
@@ -440,6 +448,7 @@ public class ClarityAPIPlaybackAspect
      *
      * @throws Throwable if there is an error invoking the underlying method.
      */
+    @Around("execution(public * list*(..)) and bean(clarityAPI)")
     public <E extends Locatable, L extends LimsLink<E>, BH extends Batch<L>>
     List<L> doList(ProceedingJoinPoint pjp) throws Throwable
     {
@@ -481,6 +490,7 @@ public class ClarityAPIPlaybackAspect
      *
      * @param pjp The join point.
      */
+    @Around("(execution(public * create*(..)) or execution(public * delete*(..)) or execution(public * upload*(..))) and bean(clarityAPI)")
     public void blockWrite(ProceedingJoinPoint pjp)
     {
         logger.warn("Call to {} blocked.", pjp.getSignature().getName());
@@ -496,6 +506,7 @@ public class ClarityAPIPlaybackAspect
      *
      * @throws Throwable if there is anything fails.
      */
+    @Around("execution(public * update(..)) and bean(clarityAPI)")
     public void doUpdate(ProceedingJoinPoint pjp) throws Throwable
     {
         if (updatesDirectory != null)
@@ -520,6 +531,7 @@ public class ClarityAPIPlaybackAspect
      *
      * @throws Throwable if there is anything fails.
      */
+    @Around("execution(public * updateAll(..)) and bean(clarityAPI)")
     public void doUpdateAll(ProceedingJoinPoint pjp) throws Throwable
     {
         if (updatesDirectory != null)

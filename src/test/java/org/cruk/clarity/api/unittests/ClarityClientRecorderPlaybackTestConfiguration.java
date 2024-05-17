@@ -18,11 +18,12 @@
 
 package org.cruk.clarity.api.unittests;
 
+import org.cruk.clarity.api.playback.spring.ClarityClientPlaybackConfiguration;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.ImportResource;
+import org.springframework.context.annotation.Import;
 
 @Configuration
-@ImportResource("classpath:/org/cruk/clarity/api/clarity-playback-context.xml")
+@Import(ClarityClientPlaybackConfiguration.class)
 public class ClarityClientRecorderPlaybackTestConfiguration extends ClarityClientRecorderTestConfiguration
 {
     public ClarityClientRecorderPlaybackTestConfiguration()

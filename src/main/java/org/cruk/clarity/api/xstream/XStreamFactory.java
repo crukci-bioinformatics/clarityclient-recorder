@@ -18,24 +18,17 @@
 
 package org.cruk.clarity.api.xstream;
 
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
+import org.cruk.clarity.api.ClarityAPI;
 import org.cruk.clarity.api.search.Search;
 import org.cruk.clarity.api.search.SearchTerms;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.FactoryBean;
 
 import com.thoughtworks.xstream.XStream;
@@ -53,11 +46,6 @@ import com.thoughtworks.xstream.security.PrimitiveTypePermission;
 public class XStreamFactory implements FactoryBean<XStream>
 {
     /**
-     * Logger.
-     */
-    private Logger logger = LoggerFactory.getLogger(XStreamFactory.class);
-
-    /**
      * List of packages whose classes are allowed to be deserialised by XStream.
      * These are read from the "packagelist.txt" file on the class path.
      */
@@ -69,32 +57,13 @@ public class XStreamFactory implements FactoryBean<XStream>
      */
     public XStreamFactory()
     {
-        final String packagesList = "/com/genologics/ri/packagelist.txt";
+        Module apiMod = ClarityAPI.class.getModule();
+        List<String> packages = apiMod.getPackages().stream()
+                .filter(n -> n.startsWith("com.genologics.ri"))
+                .map(n -> n + ".*")
+                .collect(Collectors.toList());
 
-        List<String> packages = new ArrayList<String>();
-        try (InputStream in = XStreamFactory.class.getResourceAsStream(packagesList))
-        {
-            if (in == null)
-            {
-                logger.error("There is no packages list on the classpath ({}).", packagesList);
-            }
-            else
-            {
-                BufferedReader reader = new BufferedReader(new InputStreamReader(in, "US-ASCII"));
-                String line;
-                while ((line = reader.readLine()) != null)
-                {
-                    if (isNotBlank(line))
-                    {
-                        packages.add(line.trim() + ".*");
-                    }
-                }
-            }
-        }
-        catch (IOException e)
-        {
-            logger.error("Could not load API package names from packages list.");
-        }
+        packages.add(Search.class.getPackage().getName() + ".*");
 
         packageWildcards = Collections.unmodifiableList(packages);
     }
@@ -119,7 +88,7 @@ public class XStreamFactory implements FactoryBean<XStream>
         // allow some basics
         xstream.addPermission(NullPermission.NULL);
         xstream.addPermission(PrimitiveTypePermission.PRIMITIVES);
-        xstream.allowTypes(new Class[] { String.class, URI.class, URL.class } );
+        xstream.allowTypes(new Class<?>[] { String.class, URI.class, URL.class } );
         xstream.allowTypeHierarchy(Collection.class);
         xstream.allowTypeHierarchy(Map.class);
 

@@ -38,6 +38,7 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.apache.commons.lang3.ClassUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.cruk.clarity.api.ClarityAPI;
 import org.cruk.clarity.api.impl.ClarityAPIInternal;
@@ -48,6 +49,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
+import org.springframework.stereotype.Component;
 
 import com.genologics.ri.Batch;
 import com.genologics.ri.ClarityEntity;
@@ -63,6 +65,8 @@ import com.thoughtworks.xstream.XStreamException;
  * to a directory on disk.
  */
 @Aspect
+@Component("clarityRecordingAspect")
+@SuppressWarnings("exports")
 public class ClarityAPIRecordingAspect
 {
     /**
@@ -216,6 +220,7 @@ public class ClarityAPIRecordingAspect
      *
      * @throws Throwable if there is anything fails.
      */
+    @Around("(execution(public * retrieve(..)) or execution(public * load(..))) and bean(clarityAPI)")
     public Object doLoad(ProceedingJoinPoint pjp) throws Throwable
     {
         Object thing = pjp.proceed();
@@ -237,6 +242,7 @@ public class ClarityAPIRecordingAspect
      *
      * @see #doLoad(ProceedingJoinPoint)
      */
+    @Around("execution(public * loadAll(..)) and bean(clarityAPI)")
     public Object doLoadAll(ProceedingJoinPoint pjp) throws Throwable
     {
         Collection<?> list = (Collection<?>)pjp.proceed();
@@ -260,6 +266,7 @@ public class ClarityAPIRecordingAspect
      *
      * @throws Throwable if there is an error invoking the underlying method.
      */
+    @Around("execution(public * find(..)) and bean(clarityAPI)")
     public <E extends Locatable> List<LimsLink<E>> doFind(ProceedingJoinPoint pjp) throws Throwable
     {
         @SuppressWarnings("unchecked")
@@ -400,6 +407,7 @@ public class ClarityAPIRecordingAspect
      *
      * @throws Throwable if there is an error invoking the underlying method.
      */
+    @Around("execution(public * list*(..)) and bean(clarityAPI)")
     public <E extends Locatable, L extends LimsLink<E>, BH extends Batch<L>>
     List<L> doList(ProceedingJoinPoint pjp) throws Throwable
     {

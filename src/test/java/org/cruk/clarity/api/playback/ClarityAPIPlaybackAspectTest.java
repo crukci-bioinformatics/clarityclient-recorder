@@ -36,11 +36,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 import javax.xml.transform.stream.StreamSource;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.http.conn.HttpHostConnectException;
+import org.apache.hc.client5.http.HttpHostConnectException;
 import org.cruk.clarity.api.ClarityAPI;
 import org.cruk.clarity.api.ClarityException;
 import org.cruk.clarity.api.unittests.ClarityClientRecorderPlaybackTestConfiguration;

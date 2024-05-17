@@ -5,10 +5,11 @@ module org.cruk.clarity.api.recorder
 {
     requires transitive org.cruk.clarity.api;
 
-    requires transitive org.aspectj.runtime;
-    requires org.slf4j;
     requires org.apache.commons.io;
     requires org.apache.commons.lang3;
+    requires org.aspectj.weaver;
+    requires org.slf4j;
+
     requires xstream;
 
     exports org.cruk.clarity.api.playback;

@@ -18,11 +18,12 @@
 
 package org.cruk.clarity.api.unittests;
 
+import org.cruk.clarity.api.record.spring.ClarityClientRecordConfiguration;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.ImportResource;
+import org.springframework.context.annotation.Import;
 
 @Configuration
-@ImportResource("classpath:/org/cruk/clarity/api/clarity-record-context.xml")
+@Import(ClarityClientRecordConfiguration.class)
 public class ClarityClientRecorderRecordTestConfiguration extends ClarityClientRecorderTestConfiguration
 {
     public ClarityClientRecorderRecordTestConfiguration()
