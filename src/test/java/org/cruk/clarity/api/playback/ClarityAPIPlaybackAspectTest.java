@@ -37,17 +37,22 @@ import java.util.List;
 import java.util.Map;
 
 import jakarta.annotation.PostConstruct;
+import jakarta.xml.bind.JAXBException;
+
 import javax.xml.transform.stream.StreamSource;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.hc.client5.http.HttpHostConnectException;
 import org.cruk.clarity.api.ClarityAPI;
 import org.cruk.clarity.api.ClarityException;
+import org.cruk.clarity.api.search.Search;
+import org.cruk.clarity.api.search.SearchTerms;
 import org.cruk.clarity.api.unittests.ClarityClientRecorderPlaybackTestConfiguration;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.web.client.ResourceAccessException;
@@ -78,6 +83,7 @@ import com.genologics.ri.workflowconfiguration.Workflow;
 public class ClarityAPIPlaybackAspectTest
 {
     @Autowired
+    @Qualifier("claritySearchMarshaller")
     private Jaxb2Marshaller marshaller;
 
     @Autowired
@@ -319,6 +325,8 @@ public class ClarityAPIPlaybackAspectTest
     @Test
     public void testReplaySearch1()
     {
+        aspect.setFailOnMissingSearch(true);
+
         try
         {
             Map<String, Object> terms = new HashMap<String, Object>();
@@ -336,6 +344,8 @@ public class ClarityAPIPlaybackAspectTest
     @Test
     public void testReplaySearch2()
     {
+        aspect.setFailOnMissingSearch(true);
+
         Map<String, Object> terms = new HashMap<String, Object>();
         terms.put("projectlimsid", new HashSet<String>(Arrays.asList("COH605", "SER1015")));
         List<LimsLink<Sample>> samples = api.find(terms, Sample.class);
@@ -391,7 +401,7 @@ public class ClarityAPIPlaybackAspectTest
     }
 
     @Test
-    public void testUpdate()
+    public void testUpdate() throws JAXBException
     {
         try
         {
@@ -409,10 +419,10 @@ public class ClarityAPIPlaybackAspectTest
             File update2File = new File(updateDirectory, "Sample-GAO9862A146.001.xml");
             assertTrue(update2File.exists(), "Updated sample not written to " + update2File.getName());
 
-            Sample sv1 = (Sample)marshaller.unmarshal(new StreamSource(update1File));
+            Sample sv1 = marshaller.createUnmarshaller().unmarshal(new StreamSource(update1File), Sample.class).getValue();
             assertEquals("Name change one", sv1.getName(), "Version zero name wrong");
 
-            Sample sv2 = (Sample)marshaller.unmarshal(new StreamSource(update2File));
+            Sample sv2 = marshaller.createUnmarshaller().unmarshal(new StreamSource(update2File), Sample.class).getValue();
             assertEquals("Second name change", sv2.getName(), "Version zero name wrong");
         }
         catch (ResourceAccessException e)

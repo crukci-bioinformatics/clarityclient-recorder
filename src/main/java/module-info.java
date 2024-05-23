@@ -10,11 +10,7 @@ module org.cruk.clarity.api.recorder
     requires org.aspectj.weaver;
     requires org.slf4j;
 
-    requires xstream;
-
     exports org.cruk.clarity.api.playback;
     exports org.cruk.clarity.api.record;
     exports org.cruk.clarity.api.search;
-
-    opens org.cruk.clarity.api.search to xstream;
 }

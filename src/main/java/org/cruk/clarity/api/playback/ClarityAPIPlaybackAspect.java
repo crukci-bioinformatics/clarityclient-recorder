@@ -18,16 +18,15 @@
 
 package org.cruk.clarity.api.playback;
 
-import static java.nio.charset.StandardCharsets.US_ASCII;
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.cruk.clarity.api.record.ClarityAPIRecordingAspect.FILENAME_PATTERN;
 import static org.cruk.clarity.api.record.ClarityAPIRecordingAspect.limsIdFromObject;
 import static org.cruk.clarity.api.record.ClarityAPIRecordingAspect.limsIdFromUri;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -65,8 +64,9 @@ import org.springframework.stereotype.Component;
 import com.genologics.ri.Batch;
 import com.genologics.ri.LimsLink;
 import com.genologics.ri.Locatable;
-import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.XStreamException;
+
+import jakarta.xml.bind.JAXBElement;
+import jakarta.xml.bind.JAXBException;
 
 /**
  * Aspect for replaying server exchanges from a directory containing XML representations
@@ -117,6 +117,7 @@ public class ClarityAPIPlaybackAspect
 
     /**
      * The JAXB marshaller used to directly unmarshal the XML files into objects.
+     * This one should also include the search classes.
      */
     private Jaxb2Marshaller jaxbMarshaller;
 
@@ -129,13 +130,6 @@ public class ClarityAPIPlaybackAspect
      * Access to the API, but through its internal interface.
      */
     private ClarityAPIInternal apiInternal;
-
-    /**
-     * XStream XML serialiser.
-     */
-    @Autowired
-    @Qualifier("claritySearchXStream")
-    private XStream xstream;
 
 
     /**
@@ -241,11 +235,13 @@ public class ClarityAPIPlaybackAspect
 
     /**
      * Inject the JAXB marshaller. This is required.
+     * This marshaller needs to also be able to cope with the search classes, so use
+     * the search marshaller that also handles the model classes.
      *
      * @param jaxbMarshaller The marshaller.
      */
     @Autowired
-    @Qualifier("clarityJaxbMarshaller")
+    @Qualifier("claritySearchMarshaller")
     public void setJaxbMarshaller(Jaxb2Marshaller jaxbMarshaller)
     {
         this.jaxbMarshaller = jaxbMarshaller;
@@ -302,6 +298,10 @@ public class ClarityAPIPlaybackAspect
         }
 
         Object thing = jaxbMarshaller.unmarshal(new StreamSource(file));
+        if (thing instanceof JAXBElement<?> e)
+        {
+            thing = e.getValue();
+        }
 
         return thing;
     }
@@ -330,6 +330,10 @@ public class ClarityAPIPlaybackAspect
         try
         {
             Object thing = doGet(pjp);
+            if (thing instanceof JAXBElement<?> e)
+            {
+                thing = e.getValue();
+            }
 
             response = new ResponseEntity<Object>(thing, HttpStatus.OK);
         }
@@ -410,7 +414,9 @@ public class ClarityAPIPlaybackAspect
 
         SearchTerms<E> terms = new SearchTerms<>(searchTerms, entityClass);
 
-        Search<E> search = loadSearch(terms);
+        File searchFile = new File(messageDirectory, Search.getSearchFileName(terms));
+
+        Search<E> search = loadSearch(searchFile);
 
         if (search != null)
         {
@@ -419,7 +425,8 @@ public class ClarityAPIPlaybackAspect
 
         if (failOnMissingSearch)
         {
-            throw new NoRecordingException("There is no recorded search with the parameters given:\n" + searchTerms);
+            throw new NoRecordingException("There is no recorded search with the parameters given (file should be \"" +
+                                           searchFile.getName() + "\"):\n" + searchTerms);
         }
         else
         {
@@ -470,8 +477,7 @@ public class ClarityAPIPlaybackAspect
 
             if (listFile.exists())
             {
-                @SuppressWarnings("unchecked")
-                BH batch = (BH)jaxbMarshaller.unmarshal(new StreamSource(listFile));
+                BH batch = jaxbMarshaller.createUnmarshaller().unmarshal(new StreamSource(listFile), batchClass).getValue();
                 list = batch.getList();
             }
             else
@@ -561,40 +567,23 @@ public class ClarityAPIPlaybackAspect
      * search has not been recorded.
      */
     @SuppressWarnings("unchecked")
-    private <E extends Locatable> Search<E> loadSearch(SearchTerms<?> terms)
+    private <E extends Locatable> Search<E> loadSearch(File searchFile)
     {
-        File searchFile = new File(messageDirectory, Search.getSearchFileName(terms));
-
         try
         {
-            try (Reader reader = new InputStreamReader(new FileInputStream(searchFile), US_ASCII))
+            try (Reader reader = new FileReader(searchFile, UTF_8))
             {
-                return (Search<E>)xstream.fromXML(reader);
-            }
-            catch (XStreamException xse)
-            {
-                Throwable t = xse;
-                while (t.getCause() != null)
-                {
-                    t = t.getCause();
-                }
-                try
-                {
-                    throw t;
-                }
-                catch (IOException e)
-                {
-                    throw e;
-                }
-                catch (Throwable t2)
-                {
-                    throw xse;
-                }
+                return jaxbMarshaller.createUnmarshaller().unmarshal(new StreamSource(reader), Search.class).getValue();
             }
         }
         catch (FileNotFoundException e)
         {
             logger.debug("Search file {} does not exist.", searchFile.getName());
+        }
+        catch (JAXBException e)
+        {
+            logger.warn("Cannot interpret the search saved in {}", searchFile.getAbsolutePath());
+            logger.debug("{}: {}", e.getClass().getName(), e.getMessage());
         }
         catch (IOException e)
         {

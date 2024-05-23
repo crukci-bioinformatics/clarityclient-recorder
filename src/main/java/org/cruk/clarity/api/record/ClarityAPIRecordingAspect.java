@@ -18,14 +18,15 @@
 
 package org.cruk.clarity.api.record;
 
-import static java.nio.charset.StandardCharsets.US_ASCII;
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.Writer;
 import java.lang.reflect.Constructor;
@@ -35,6 +36,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
 
 import org.apache.commons.lang3.ClassUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -57,8 +59,8 @@ import com.genologics.ri.LimsEntity;
 import com.genologics.ri.LimsEntityLink;
 import com.genologics.ri.LimsLink;
 import com.genologics.ri.Locatable;
-import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.XStreamException;
+
+import jakarta.xml.bind.JAXBException;
 
 /**
  * Aspect for recording server exchanges with a real Clarity server as XML files
@@ -73,11 +75,6 @@ public class ClarityAPIRecordingAspect
      * Template for the file name pattern.
      */
     public static final String FILENAME_PATTERN = "{0}-{1}.xml";
-
-    /**
-     * End of line in byte form.
-     */
-    private static final String EOL = System.getProperty("line.separator", "\n");
 
     /**
      * Logger.
@@ -98,6 +95,7 @@ public class ClarityAPIRecordingAspect
 
     /**
      * The JAXB marshaller used to directly marshal the API entities into XML files.
+     * This one should also include the search classes.
      */
     private Jaxb2Marshaller jaxbMarshaller;
 
@@ -105,13 +103,6 @@ public class ClarityAPIRecordingAspect
      * Access to the API, but through its internal interface.
      */
     private ClarityAPIInternal apiInternal;
-
-    /**
-     * XStream XML serialiser.
-     */
-    @Autowired
-    @Qualifier("claritySearchXStream")
-    private XStream xstream;
 
 
     /**
@@ -186,11 +177,13 @@ public class ClarityAPIRecordingAspect
 
     /**
      * Inject the JAXB marshaller. This is required.
+     * This marshaller needs to also be able to cope with the search classes, so use
+     * the search marshaller that also handles the model classes.
      *
      * @param jaxbMarshaller The marshaller.
      */
     @Autowired
-    @Qualifier("clarityJaxbMarshaller")
+    @Qualifier("claritySearchMarshaller")
     public void setJaxbMarshaller(Jaxb2Marshaller jaxbMarshaller)
     {
         this.jaxbMarshaller = jaxbMarshaller;
@@ -315,12 +308,9 @@ public class ClarityAPIRecordingAspect
      */
     <E extends Locatable> void serialiseSearch(Search<E> search, File searchFile) throws IOException
     {
-        try (Writer out = new FileWriter(searchFile, US_ASCII, false))
+        try (Writer writer = new BufferedWriter(new FileWriter(searchFile, UTF_8)))
         {
-            xstream.toXML(search, out);
-
-            // Doesn't write a final end of line.
-            out.write(EOL);
+            jaxbMarshaller.marshal(search, new StreamResult(writer));
         }
     }
 
@@ -347,9 +337,10 @@ public class ClarityAPIRecordingAspect
 
         try
         {
-            try (Reader reader = new InputStreamReader(new FileInputStream(searchFile), US_ASCII))
+            try (Reader reader = new BufferedReader(new FileReader(searchFile, UTF_8)))
             {
-                Search<?> previousSearch = (Search<?>)xstream.fromXML(reader);
+                @SuppressWarnings("unchecked")
+                Search<E> previousSearch = jaxbMarshaller.createUnmarshaller().unmarshal(new StreamSource(reader), search.getClass()).getValue();
 
                 if (!previousSearch.getSearchTerms().equals(search.getSearchTerms()))
                 {
@@ -363,12 +354,9 @@ public class ClarityAPIRecordingAspect
                 // class of entity searched for is the same in both searches, so the
                 // test above ensures they are for the same class.
 
-                @SuppressWarnings("unchecked")
-                Search<E> previousTypedSearch = (Search<E>)previousSearch;
-
-                return search.merge(previousTypedSearch);
+                return search.merge(previousSearch);
             }
-            catch (XStreamException xse)
+            catch (JAXBException xse)
             {
                 Throwable t = xse;
                 while (t.getCause() != null)

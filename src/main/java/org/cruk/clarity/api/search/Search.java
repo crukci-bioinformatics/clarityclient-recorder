@@ -30,10 +30,18 @@ import java.util.Map;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.cruk.clarity.api.ClarityAPI;
+import org.cruk.clarity.api.search.internal.LimsLinkAdapter;
 
 import com.genologics.ri.LimsLink;
 import com.genologics.ri.Locatable;
-import com.thoughtworks.xstream.annotations.XStreamAlias;
+
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlElementWrapper;
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlType;
+import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 /**
  * A class holding both the parameters of a search and the links returned
@@ -43,7 +51,9 @@ import com.thoughtworks.xstream.annotations.XStreamAlias;
  *
  * @see ClarityAPI#find(Map, Class)
  */
-@XStreamAlias("search")
+@XmlRootElement(name = "search")
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(name = "search", propOrder = { "searchTerms", "results" })
 public class Search<E extends Locatable> implements Serializable
 {
     /**
@@ -62,14 +72,23 @@ public class Search<E extends Locatable> implements Serializable
     /**
      * The search terms used in this search.
      */
-    @XStreamAlias("terms")
+    @XmlElement(name = "terms")
     private SearchTerms<E> searchTerms;
 
     /**
      * The results of the search.
      */
+    @XmlElementWrapper(name = "results")
+    @XmlElement(name = "link")
+    @XmlJavaTypeAdapter(LimsLinkAdapter.class)
     private List<LimsLink<E>> results;
 
+    /**
+     * Package level default constructor for JAXB.
+     */
+    Search()
+    {
+    }
 
     /**
      * Constructor that takes the parameters from a call to the API's

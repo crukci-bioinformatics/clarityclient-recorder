@@ -214,12 +214,20 @@
                     <artifactId>maven-surefire-plugin</artifactId>
                     <version>3.2.5</version>
                     <configuration>
-                        <useModulePath>false</useModulePath>
+                        <useModulePath>true</useModulePath>
                     </configuration>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-toolchains-plugin</artifactId>
+                    <version>3.2.0</version>
+                </plugin>
+
+                <!-- Third party plugins -->
+
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>jaxb2-maven-plugin</artifactId>
                     <version>3.2.0</version>
                 </plugin>
 
@@ -275,6 +283,29 @@
         </pluginManagement>
 
         <plugins>
+            <!--
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>jaxb2-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>generation</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>xjc</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <verbose>false</verbose>
+                    <quiet>false</quiet>
+                    <clearOutputDir>false</clearOutputDir>
+                    <extension>true</extension>
+                    <arguments>-no-header</arguments>
+                </configuration>
+            </plugin>
+            -->
+
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>versions-maven-plugin</artifactId>
@@ -494,12 +525,6 @@
             </dependency>
 
             <dependency>
-                <groupId>com.thoughtworks.xstream</groupId>
-                <artifactId>xstream</artifactId>
-                <version>1.4.20</version>
-            </dependency>
-
-            <dependency>
                 <groupId>org.apache.httpcomponents.core5</groupId>
                 <artifactId>httpcore5</artifactId>
                 <version>5.2.4</version>
@@ -532,11 +557,6 @@
             <groupId>org.cruk.clarity</groupId>
             <artifactId>clarity-client</artifactId>
             <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.thoughtworks.xstream</groupId>
-            <artifactId>xstream</artifactId>
         </dependency>
 
         <dependency>
