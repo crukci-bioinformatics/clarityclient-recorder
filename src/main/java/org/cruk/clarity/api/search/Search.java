@@ -186,13 +186,13 @@ public class Search<E extends Locatable> implements Serializable
         if (results == null || results.isEmpty())
         {
             // Take the other results.
-            results = new ArrayList<LimsLink<E>>(otherResults);
+            results = new ArrayList<>(otherResults);
             return true;
         }
 
         // Merge based on URI paths.
 
-        Map<String, LimsLink<E>> map = new HashMap<String, LimsLink<E>>();
+        Map<String, LimsLink<E>> map = new HashMap<>();
         for (LimsLink<E> link : results)
         {
             map.put(link.getUri().getPath(), link);
@@ -202,7 +202,7 @@ public class Search<E extends Locatable> implements Serializable
             map.put(link.getUri().getPath(), link);
         }
 
-        results = new ArrayList<LimsLink<E>>(map.values());
+        results = new ArrayList<>(map.values());
         return true;
     }
 
