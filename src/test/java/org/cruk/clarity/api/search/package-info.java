@@ -16,23 +16,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.cruk.clarity.api.playback.spring;
-
-import org.cruk.clarity.api.playback.ClarityAPIPlaybackAspect;
-import org.cruk.clarity.api.search.ClarityClientSearchConfiguration;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.EnableAspectJAutoProxy;
-
 /**
- * Spring configuration for playback.
+ * Classes supporting the recording of searches for record and playback.
  */
-@Configuration
-@EnableAspectJAutoProxy
-@ComponentScan(basePackageClasses = ClarityAPIPlaybackAspect.class)
-public class ClarityClientPlaybackConfiguration extends ClarityClientSearchConfiguration
-{
-    public ClarityClientPlaybackConfiguration()
-    {
-    }
-}
+@XmlSchema(
+        namespace = "http://cruk.cam.ac.uk/genologics/search",
+        elementFormDefault = XmlNsForm.UNQUALIFIED,
+        xmlns = @XmlNs(prefix = "search", namespaceURI = "http://cruk.cam.ac.uk/genologics/search"))
+package org.cruk.clarity.api.search;
+
+import jakarta.xml.bind.annotation.XmlNs;
+import jakarta.xml.bind.annotation.XmlNsForm;
+import jakarta.xml.bind.annotation.XmlSchema;

@@ -19,6 +19,7 @@
 package org.cruk.clarity.api.playback;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.cruk.clarity.api.record.ClarityAPIRecordingAspect.FILENAME_PATTERN;
 import static org.cruk.clarity.api.record.ClarityAPIRecordingAspect.limsIdFromObject;
 import static org.cruk.clarity.api.record.ClarityAPIRecordingAspect.limsIdFromUri;
@@ -42,6 +43,8 @@ import java.util.Map;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
+import jakarta.xml.bind.JAXBElement;
+
 import org.apache.commons.lang3.ClassUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -58,15 +61,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.oxm.jaxb.Jaxb2Marshaller;
+import org.springframework.oxm.Marshaller;
+import org.springframework.oxm.Unmarshaller;
+import org.springframework.oxm.XmlMappingException;
 import org.springframework.stereotype.Component;
 
 import com.genologics.ri.Batch;
 import com.genologics.ri.LimsLink;
 import com.genologics.ri.Locatable;
-
-import jakarta.xml.bind.JAXBElement;
-import jakarta.xml.bind.JAXBException;
 
 /**
  * Aspect for replaying server exchanges from a directory containing XML representations
@@ -116,10 +118,14 @@ public class ClarityAPIPlaybackAspect
     private boolean failOnMissingSearch = false;
 
     /**
-     * The JAXB marshaller used to directly unmarshal the XML files into objects.
-     * This one should also include the search classes.
+     * The JAXB unmarshaller used to directly unmarshal the XML files into objects.
      */
-    private Jaxb2Marshaller jaxbMarshaller;
+    private Unmarshaller unmarshaller;
+
+    /**
+     * The JAXB marshaller used to marshal object into XML for recording updates.
+     */
+    private Marshaller marshaller;
 
     /**
      * Access to the API through its public interface.
@@ -234,17 +240,27 @@ public class ClarityAPIPlaybackAspect
     }
 
     /**
-     * Inject the JAXB marshaller. This is required.
-     * This marshaller needs to also be able to cope with the search classes, so use
-     * the search marshaller that also handles the model classes.
+     * Inject the JAXB unmarshaller. This is required.
      *
-     * @param jaxbMarshaller The marshaller.
+     * @param unmarshaller The unmarshaller.
      */
     @Autowired
-    @Qualifier("claritySearchMarshaller")
-    public void setJaxbMarshaller(Jaxb2Marshaller jaxbMarshaller)
+    @Qualifier("clarityJaxbUnmarshaller")
+    public void setClarityUnmarshaller(Unmarshaller unmarshaller)
     {
-        this.jaxbMarshaller = jaxbMarshaller;
+        this.unmarshaller = unmarshaller;
+    }
+
+    /**
+     * Inject the JAXB marshaller.
+     *
+     * @param marshaller The marshaller.
+     */
+    @Autowired
+    @Qualifier("clarityJaxbMarshaller")
+    public void setClarityMarshaller(Marshaller marshaller)
+    {
+        this.marshaller = marshaller;
     }
 
     /**
@@ -297,10 +313,10 @@ public class ClarityAPIPlaybackAspect
             throw new NoRecordingException("There is no file " + file.getName() + " recorded.");
         }
 
-        Object thing = jaxbMarshaller.unmarshal(new StreamSource(file));
-        if (thing instanceof JAXBElement<?> e)
+        Object thing = unmarshaller.unmarshal(new StreamSource(file));
+        if (thing instanceof JAXBElement<?> element)
         {
-            thing = e.getValue();
+            thing = element.getValue();
         }
 
         return thing;
@@ -330,9 +346,9 @@ public class ClarityAPIPlaybackAspect
         try
         {
             Object thing = doGet(pjp);
-            if (thing instanceof JAXBElement<?> e)
+            if (thing instanceof JAXBElement<?> element)
             {
-                thing = e.getValue();
+                thing = element.getValue();
             }
 
             response = new ResponseEntity<Object>(thing, HttpStatus.OK);
@@ -477,8 +493,21 @@ public class ClarityAPIPlaybackAspect
 
             if (listFile.exists())
             {
-                BH batch = jaxbMarshaller.createUnmarshaller().unmarshal(new StreamSource(listFile), batchClass).getValue();
-                list = batch.getList();
+                try
+                {
+                    BH batch = batchClass.cast(unmarshaller.unmarshal(new StreamSource(listFile)));
+                    list = batch.getList();
+                }
+                catch (IOException | XmlMappingException e)
+                {
+                    Throwable t = e;
+                    while (t.getCause() != null)
+                    {
+                        t = t.getCause();
+                    }
+                    logger.warn("Failed to read from {}: {}", listFile, t.getMessage());
+                    logger.debug(EMPTY, t);
+                }
             }
             else
             {
@@ -573,14 +602,14 @@ public class ClarityAPIPlaybackAspect
         {
             try (Reader reader = new FileReader(searchFile, UTF_8))
             {
-                return jaxbMarshaller.createUnmarshaller().unmarshal(new StreamSource(reader), Search.class).getValue();
+                return (Search<E>)unmarshaller.unmarshal(new StreamSource(reader));
             }
         }
         catch (FileNotFoundException e)
         {
             logger.debug("Search file {} does not exist.", searchFile.getName());
         }
-        catch (JAXBException e)
+        catch (XmlMappingException e)
         {
             logger.warn("Cannot interpret the search saved in {}", searchFile.getAbsolutePath());
             logger.debug("{}: {}", e.getClass().getName(), e.getMessage());
@@ -651,7 +680,7 @@ public class ClarityAPIPlaybackAspect
                 {
                     File file = getFileForEntity(thing);
 
-                    jaxbMarshaller.marshal(thing, new StreamResult(file));
+                    marshaller.marshal(thing, new StreamResult(file));
                 }
                 catch (Exception e)
                 {

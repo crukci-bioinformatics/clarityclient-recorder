@@ -28,7 +28,7 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
  * Spring configuration for recording.
  */
 @Configuration
-@EnableAspectJAutoProxy(proxyTargetClass = true)
+@EnableAspectJAutoProxy
 @ComponentScan(basePackageClasses = ClarityAPIRecordingAspect.class)
 public class ClarityClientRecordConfiguration extends ClarityClientSearchConfiguration
 {

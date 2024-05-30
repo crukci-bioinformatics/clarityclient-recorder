@@ -36,24 +36,21 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
-import jakarta.annotation.PostConstruct;
-import jakarta.xml.bind.JAXBException;
-
 import javax.xml.transform.stream.StreamSource;
+
+import jakarta.annotation.PostConstruct;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.hc.client5.http.HttpHostConnectException;
 import org.cruk.clarity.api.ClarityAPI;
 import org.cruk.clarity.api.ClarityException;
-import org.cruk.clarity.api.search.Search;
-import org.cruk.clarity.api.search.SearchTerms;
 import org.cruk.clarity.api.unittests.ClarityClientRecorderPlaybackTestConfiguration;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.oxm.jaxb.Jaxb2Marshaller;
+import org.springframework.oxm.Unmarshaller;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.web.client.ResourceAccessException;
 
@@ -83,8 +80,8 @@ import com.genologics.ri.workflowconfiguration.Workflow;
 public class ClarityAPIPlaybackAspectTest
 {
     @Autowired
-    @Qualifier("claritySearchMarshaller")
-    private Jaxb2Marshaller marshaller;
+    @Qualifier("clarityJaxbUnmarshaller")
+    private Unmarshaller unmarshaller;
 
     @Autowired
     private ClarityAPI api;
@@ -401,7 +398,7 @@ public class ClarityAPIPlaybackAspectTest
     }
 
     @Test
-    public void testUpdate() throws JAXBException
+    public void testUpdate() throws IOException
     {
         try
         {
@@ -419,10 +416,10 @@ public class ClarityAPIPlaybackAspectTest
             File update2File = new File(updateDirectory, "Sample-GAO9862A146.001.xml");
             assertTrue(update2File.exists(), "Updated sample not written to " + update2File.getName());
 
-            Sample sv1 = marshaller.createUnmarshaller().unmarshal(new StreamSource(update1File), Sample.class).getValue();
+            Sample sv1 = (Sample)unmarshaller.unmarshal(new StreamSource(update1File));
             assertEquals("Name change one", sv1.getName(), "Version zero name wrong");
 
-            Sample sv2 = marshaller.createUnmarshaller().unmarshal(new StreamSource(update2File), Sample.class).getValue();
+            Sample sv2 = (Sample)unmarshaller.unmarshal(new StreamSource(update2File));
             assertEquals("Second name change", sv2.getName(), "Version zero name wrong");
         }
         catch (ResourceAccessException e)

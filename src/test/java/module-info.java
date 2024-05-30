@@ -28,6 +28,7 @@ open module org.cruk.clarity.api.recorder
     requires org.aspectj.weaver;
     requires org.slf4j;
 
+    requires org.apache.httpcomponents.client5.httpclient5;
     requires org.apache.httpcomponents.core5.httpcore5;
 
     requires static org.junit.jupiter;

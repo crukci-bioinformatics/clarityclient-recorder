@@ -53,6 +53,7 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.oxm.Unmarshaller;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.web.client.ResourceAccessException;
@@ -92,8 +93,8 @@ public class ClarityAPIRecordingAspectTest
     private ClarityAPI api;
 
     @Autowired
-    @Qualifier("claritySearchMarshaller")
-    private Jaxb2Marshaller marshaller;
+    @Qualifier("clarityJaxbUnmarshaller")
+    private Unmarshaller unmarshaller;
 
     @Autowired
     private ClarityAPIRecordingAspect aspect;
@@ -285,7 +286,7 @@ public class ClarityAPIRecordingAspectTest
     }
 
     @Test
-    public void testRecordList() throws JAXBException
+    public void testRecordList() throws IOException
     {
         CRUKCICheck.assumeInCrukCI();
         checkCredentialsFileExists();
@@ -298,7 +299,7 @@ public class ClarityAPIRecordingAspectTest
             assertTrue(containerTypesFile.exists(), "Container types not recorded.");
 
             Batch<? extends LimsLink<ContainerType>> ctBatch =
-                    marshaller.createUnmarshaller().unmarshal(new StreamSource(containerTypesFile), ContainerTypes.class).getValue();
+                    ContainerTypes.class.cast(unmarshaller.unmarshal(new StreamSource(containerTypesFile)));
 
             assertEquals(ctLinks.size(), ctBatch.getSize(), "Serialised container type links don't match the original.");
 
@@ -311,7 +312,7 @@ public class ClarityAPIRecordingAspectTest
 
             @SuppressWarnings("unchecked")
             Batch<? extends LimsLink<ReagentType>> rtBatch =
-                    marshaller.createUnmarshaller().unmarshal(new StreamSource(reagentTypesFile), ReagentTypes.class).getValue();
+                    ReagentTypes.class.cast(unmarshaller.unmarshal(new StreamSource(reagentTypesFile)));
 
             assertEquals(rtLinks.size(), rtBatch.getSize(), "Serialised reagent type links don't match the original.");
         }

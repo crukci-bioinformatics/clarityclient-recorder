@@ -50,6 +50,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.oxm.Marshaller;
+import org.springframework.oxm.Unmarshaller;
+import org.springframework.oxm.XmlMappingException;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 import org.springframework.stereotype.Component;
 
@@ -94,10 +97,14 @@ public class ClarityAPIRecordingAspect
     private boolean recordSearchesWithoutResults = true;
 
     /**
-     * The JAXB marshaller used to directly marshal the API entities into XML files.
-     * This one should also include the search classes.
+     * The JAXB unmarshaller used to unmarshal previously recorded searches for merging.
      */
-    private Jaxb2Marshaller jaxbMarshaller;
+    private Unmarshaller unmarshaller;
+
+    /**
+     * The JAXB marshaller used to marshal object into XML for recording updates.
+     */
+    private Marshaller marshaller;
 
     /**
      * Access to the API, but through its internal interface.
@@ -176,17 +183,27 @@ public class ClarityAPIRecordingAspect
     }
 
     /**
-     * Inject the JAXB marshaller. This is required.
-     * This marshaller needs to also be able to cope with the search classes, so use
-     * the search marshaller that also handles the model classes.
+     * Inject the JAXB unmarshaller. This is required.
      *
-     * @param jaxbMarshaller The marshaller.
+     * @param unmarshaller The unmarshaller.
      */
     @Autowired
-    @Qualifier("claritySearchMarshaller")
-    public void setJaxbMarshaller(Jaxb2Marshaller jaxbMarshaller)
+    @Qualifier("clarityJaxbUnmarshaller")
+    public void setClarityUnmarshaller(Unmarshaller unmarshaller)
     {
-        this.jaxbMarshaller = jaxbMarshaller;
+        this.unmarshaller = unmarshaller;
+    }
+
+    /**
+     * Inject the JAXB marshaller.
+     *
+     * @param marshaller The marshaller.
+     */
+    @Autowired
+    @Qualifier("clarityJaxbMarshaller")
+    public void setClarityMarshaller(Marshaller marshaller)
+    {
+        this.marshaller = marshaller;
     }
 
     /**
@@ -310,7 +327,7 @@ public class ClarityAPIRecordingAspect
     {
         try (Writer writer = new BufferedWriter(new FileWriter(searchFile, UTF_8)))
         {
-            jaxbMarshaller.marshal(search, new StreamResult(writer));
+            marshaller.marshal(search, new StreamResult(writer));
         }
     }
 
@@ -340,7 +357,7 @@ public class ClarityAPIRecordingAspect
             try (Reader reader = new BufferedReader(new FileReader(searchFile, UTF_8)))
             {
                 @SuppressWarnings("unchecked")
-                Search<E> previousSearch = jaxbMarshaller.createUnmarshaller().unmarshal(new StreamSource(reader), search.getClass()).getValue();
+                Search<E> previousSearch = search.getClass().cast(unmarshaller.unmarshal(new StreamSource(reader)));
 
                 if (!previousSearch.getSearchTerms().equals(search.getSearchTerms()))
                 {
@@ -356,7 +373,7 @@ public class ClarityAPIRecordingAspect
 
                 return search.merge(previousSearch);
             }
-            catch (JAXBException xse)
+            catch (XmlMappingException xse)
             {
                 Throwable t = xse;
                 while (t.getCause() != null)
@@ -444,7 +461,7 @@ public class ClarityAPIRecordingAspect
             {
                 File file = getFileForEntity(thing);
 
-                jaxbMarshaller.marshal(thing, new StreamResult(file));
+                marshaller.marshal(thing, new StreamResult(file));
             }
             catch (Exception e)
             {
@@ -549,7 +566,7 @@ public class ClarityAPIRecordingAspect
 
                 File file = new File(messageDirectory, name);
 
-                jaxbMarshaller.marshal(list, new StreamResult(file));
+                marshaller.marshal(list, new StreamResult(file));
             }
             catch (Exception e)
             {
