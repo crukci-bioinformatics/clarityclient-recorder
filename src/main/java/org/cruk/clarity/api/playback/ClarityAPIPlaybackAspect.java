@@ -240,7 +240,7 @@ public class ClarityAPIPlaybackAspect
     }
 
     /**
-     * Inject the JAXB unmarshaller. This is required.
+     * Inject the JAXB unmarshaller.
      *
      * @param unmarshaller The unmarshaller.
      */
@@ -590,7 +590,7 @@ public class ClarityAPIPlaybackAspect
      *
      * @param <E> The type of entity being searched for.
      *
-     * @param terms The search terms.
+     * @param searchFile The file to load from.
      *
      * @return The search object loaded from the recorded file, or null if the
      * search has not been recorded.

@@ -20,9 +20,9 @@
  * Classes supporting the recording of searches for record and playback.
  */
 @XmlSchema(
-        namespace = "http://cruk.cam.ac.uk/genologics/search",
+        namespace = "http://cancerresearchuk.org/genologics/search",
         elementFormDefault = XmlNsForm.UNQUALIFIED,
-        xmlns = @XmlNs(prefix = "search", namespaceURI = "http://cruk.cam.ac.uk/genologics/search"))
+        xmlns = @XmlNs(prefix = "search", namespaceURI = "http://cancerresearchuk.org/genologics/search"))
 package org.cruk.clarity.api.search;
 
 import jakarta.xml.bind.annotation.XmlNs;

@@ -53,7 +53,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.oxm.Marshaller;
 import org.springframework.oxm.Unmarshaller;
 import org.springframework.oxm.XmlMappingException;
-import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 import org.springframework.stereotype.Component;
 
 import com.genologics.ri.Batch;
@@ -62,8 +61,6 @@ import com.genologics.ri.LimsEntity;
 import com.genologics.ri.LimsEntityLink;
 import com.genologics.ri.LimsLink;
 import com.genologics.ri.Locatable;
-
-import jakarta.xml.bind.JAXBException;
 
 /**
  * Aspect for recording server exchanges with a real Clarity server as XML files
@@ -183,7 +180,7 @@ public class ClarityAPIRecordingAspect
     }
 
     /**
-     * Inject the JAXB unmarshaller. This is required.
+     * Inject the JAXB unmarshaller.
      *
      * @param unmarshaller The unmarshaller.
      */
@@ -505,21 +502,15 @@ public class ClarityAPIRecordingAspect
     {
         assert thing != null : "Cannot get a name for null";
 
-        // This has got a lot more difficult thanks to Instrument not being consistent
-        // between the URI path and the lims id attribute, requiring a special case.
-        // See Redmine 7273.
-
         String id = null;
         Class<?> entityType = thing.getClass();
 
-        if (thing instanceof LimsEntity<?>)
+        if (thing instanceof LimsEntity<?> entity)
         {
-            LimsEntity<?> entity = (LimsEntity<?>)thing;
             id = entity.getLimsid();
         }
-        else if (thing instanceof LimsEntityLink<?>)
+        else if (thing instanceof LimsEntityLink<?> link)
         {
-            LimsEntityLink<?> link = (LimsEntityLink<?>)thing;
             id = link.getLimsid();
             entityType = link.getEntityClass();
         }
