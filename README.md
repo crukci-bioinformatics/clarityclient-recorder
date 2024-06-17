@@ -63,7 +63,6 @@ to your POM (I'm assuming you're using Maven now):
 ```
 
 _Fill in the <version> tag with the version of the API._
-_For this branch, and code using EE8, the version should start "2.31.ee8"._
 
 For details of using the API, please refer to the documentation at
 https://crukci-bioinformatics.github.io/clarityclient-recorder
@@ -73,3 +72,4 @@ as shown in the excerpt above.
 This should be one of the EE8 implementations, namely a Glassfish
 implementation version 2.x.x: The `com.sun.xml.bind:jaxb-impl`
 artifacts available in Maven won't work well with newer JREs.
+

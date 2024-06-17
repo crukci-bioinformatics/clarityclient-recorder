@@ -18,15 +18,14 @@
 
 package org.cruk.clarity.api.record;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
+import static java.nio.charset.StandardCharsets.US_ASCII;
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileReader;
+import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.Writer;
 import java.lang.reflect.Constructor;
@@ -36,11 +35,9 @@ import java.util.List;
 import java.util.Map;
 
 import javax.xml.transform.stream.StreamResult;
-import javax.xml.transform.stream.StreamSource;
 
 import org.apache.commons.lang3.ClassUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.cruk.clarity.api.ClarityAPI;
 import org.cruk.clarity.api.impl.ClarityAPIInternal;
@@ -50,10 +47,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.oxm.Marshaller;
-import org.springframework.oxm.Unmarshaller;
-import org.springframework.oxm.XmlMappingException;
-import org.springframework.stereotype.Component;
+import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 
 import com.genologics.ri.Batch;
 import com.genologics.ri.ClarityEntity;
@@ -61,20 +55,25 @@ import com.genologics.ri.LimsEntity;
 import com.genologics.ri.LimsEntityLink;
 import com.genologics.ri.LimsLink;
 import com.genologics.ri.Locatable;
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.XStreamException;
 
 /**
  * Aspect for recording server exchanges with a real Clarity server as XML files
  * to a directory on disk.
  */
 @Aspect
-@Component("clarityRecordingAspect")
-@SuppressWarnings("exports")
 public class ClarityAPIRecordingAspect
 {
     /**
      * Template for the file name pattern.
      */
     public static final String FILENAME_PATTERN = "{0}-{1}.xml";
+
+    /**
+     * End of line in byte form.
+     */
+    private static final String EOL = System.getProperty("line.separator", "\n");
 
     /**
      * Logger.
@@ -94,19 +93,21 @@ public class ClarityAPIRecordingAspect
     private boolean recordSearchesWithoutResults = true;
 
     /**
-     * The JAXB unmarshaller used to unmarshal previously recorded searches for merging.
+     * The JAXB marshaller used to directly marshal the API entities into XML files.
      */
-    private Unmarshaller unmarshaller;
-
-    /**
-     * The JAXB marshaller used to marshal object into XML for recording updates.
-     */
-    private Marshaller marshaller;
+    private Jaxb2Marshaller jaxbMarshaller;
 
     /**
      * Access to the API, but through its internal interface.
      */
     private ClarityAPIInternal apiInternal;
+
+    /**
+     * XStream XML serialiser.
+     */
+    @Autowired
+    @Qualifier("claritySearchXStream")
+    private XStream xstream;
 
 
     /**
@@ -180,27 +181,15 @@ public class ClarityAPIRecordingAspect
     }
 
     /**
-     * Inject the JAXB unmarshaller.
+     * Inject the JAXB marshaller. This is required.
      *
-     * @param unmarshaller The unmarshaller.
-     */
-    @Autowired
-    @Qualifier("clarityJaxbUnmarshaller")
-    public void setClarityUnmarshaller(Unmarshaller unmarshaller)
-    {
-        this.unmarshaller = unmarshaller;
-    }
-
-    /**
-     * Inject the JAXB marshaller.
-     *
-     * @param marshaller The marshaller.
+     * @param jaxbMarshaller The marshaller.
      */
     @Autowired
     @Qualifier("clarityJaxbMarshaller")
-    public void setClarityMarshaller(Marshaller marshaller)
+    public void setJaxbMarshaller(Jaxb2Marshaller jaxbMarshaller)
     {
-        this.marshaller = marshaller;
+        this.jaxbMarshaller = jaxbMarshaller;
     }
 
     /**
@@ -227,7 +216,6 @@ public class ClarityAPIRecordingAspect
      *
      * @throws Throwable if there is anything fails.
      */
-    @Around("(execution(public * retrieve(..)) or execution(public * load(..))) and bean(clarityAPI)")
     public Object doLoad(ProceedingJoinPoint pjp) throws Throwable
     {
         Object thing = pjp.proceed();
@@ -249,7 +237,6 @@ public class ClarityAPIRecordingAspect
      *
      * @see #doLoad(ProceedingJoinPoint)
      */
-    @Around("execution(public * loadAll(..)) and bean(clarityAPI)")
     public Object doLoadAll(ProceedingJoinPoint pjp) throws Throwable
     {
         Collection<?> list = (Collection<?>)pjp.proceed();
@@ -273,7 +260,6 @@ public class ClarityAPIRecordingAspect
      *
      * @throws Throwable if there is an error invoking the underlying method.
      */
-    @Around("execution(public * find(..)) and bean(clarityAPI)")
     public <E extends Locatable> List<LimsLink<E>> doFind(ProceedingJoinPoint pjp) throws Throwable
     {
         @SuppressWarnings("unchecked")
@@ -322,9 +308,12 @@ public class ClarityAPIRecordingAspect
      */
     <E extends Locatable> void serialiseSearch(Search<E> search, File searchFile) throws IOException
     {
-        try (Writer writer = new BufferedWriter(new FileWriter(searchFile, UTF_8)))
+        try (Writer out = new FileWriter(searchFile, US_ASCII, false))
         {
-            marshaller.marshal(search, new StreamResult(writer));
+            xstream.toXML(search, out);
+
+            // Doesn't write a final end of line.
+            out.write(EOL);
         }
     }
 
@@ -351,10 +340,9 @@ public class ClarityAPIRecordingAspect
 
         try
         {
-            try (Reader reader = new BufferedReader(new FileReader(searchFile, UTF_8)))
+            try (Reader reader = new InputStreamReader(new FileInputStream(searchFile), US_ASCII))
             {
-                @SuppressWarnings("unchecked")
-                Search<E> previousSearch = search.getClass().cast(unmarshaller.unmarshal(new StreamSource(reader)));
+                Search<?> previousSearch = (Search<?>)xstream.fromXML(reader);
 
                 if (!previousSearch.getSearchTerms().equals(search.getSearchTerms()))
                 {
@@ -368,9 +356,12 @@ public class ClarityAPIRecordingAspect
                 // class of entity searched for is the same in both searches, so the
                 // test above ensures they are for the same class.
 
-                return search.merge(previousSearch);
+                @SuppressWarnings("unchecked")
+                Search<E> previousTypedSearch = (Search<E>)previousSearch;
+
+                return search.merge(previousTypedSearch);
             }
-            catch (XmlMappingException xse)
+            catch (XStreamException xse)
             {
                 Throwable t = xse;
                 while (t.getCause() != null)
@@ -409,7 +400,6 @@ public class ClarityAPIRecordingAspect
      *
      * @throws Throwable if there is an error invoking the underlying method.
      */
-    @Around("execution(public * list*(..)) and bean(clarityAPI)")
     public <E extends Locatable, L extends LimsLink<E>, BH extends Batch<L>>
     List<L> doList(ProceedingJoinPoint pjp) throws Throwable
     {
@@ -458,7 +448,7 @@ public class ClarityAPIRecordingAspect
             {
                 File file = getFileForEntity(thing);
 
-                marshaller.marshal(thing, new StreamResult(file));
+                jaxbMarshaller.marshal(thing, new StreamResult(file));
             }
             catch (Exception e)
             {
@@ -502,15 +492,21 @@ public class ClarityAPIRecordingAspect
     {
         assert thing != null : "Cannot get a name for null";
 
+        // This has got a lot more difficult thanks to Instrument not being consistent
+        // between the URI path and the lims id attribute, requiring a special case.
+        // See Redmine 7273.
+
         String id = null;
         Class<?> entityType = thing.getClass();
 
-        if (thing instanceof LimsEntity<?> entity)
+        if (thing instanceof LimsEntity<?>)
         {
+            LimsEntity<?> entity = (LimsEntity<?>)thing;
             id = entity.getLimsid();
         }
-        else if (thing instanceof LimsEntityLink<?> link)
+        else if (thing instanceof LimsEntityLink<?>)
         {
+            LimsEntityLink<?> link = (LimsEntityLink<?>)thing;
             id = link.getLimsid();
             entityType = link.getEntityClass();
         }
@@ -557,7 +553,7 @@ public class ClarityAPIRecordingAspect
 
                 File file = new File(messageDirectory, name);
 
-                marshaller.marshal(list, new StreamResult(file));
+                jaxbMarshaller.marshal(list, new StreamResult(file));
             }
             catch (Exception e)
             {

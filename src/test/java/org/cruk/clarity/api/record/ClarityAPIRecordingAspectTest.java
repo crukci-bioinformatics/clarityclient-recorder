@@ -36,11 +36,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.PostConstruct;
 import javax.xml.transform.stream.StreamSource;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.ClassUtils;
-import org.apache.hc.client5.http.HttpHostConnectException;
+import org.apache.http.conn.HttpHostConnectException;
 import org.cruk.clarity.api.ClarityAPI;
 import org.cruk.clarity.api.http.AuthenticatingClientHttpRequestFactory;
 import org.cruk.clarity.api.search.Search;
@@ -53,7 +54,6 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.oxm.Unmarshaller;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.web.client.ResourceAccessException;
@@ -65,7 +65,6 @@ import com.genologics.ri.artifact.Artifact;
 import com.genologics.ri.artifact.Demux;
 import com.genologics.ri.container.Container;
 import com.genologics.ri.containertype.ContainerType;
-import com.genologics.ri.containertype.ContainerTypes;
 import com.genologics.ri.instrument.Instrument;
 import com.genologics.ri.lab.Lab;
 import com.genologics.ri.permission.Permission;
@@ -73,7 +72,6 @@ import com.genologics.ri.process.ClarityProcess;
 import com.genologics.ri.project.Project;
 import com.genologics.ri.protocolconfiguration.Protocol;
 import com.genologics.ri.reagenttype.ReagentType;
-import com.genologics.ri.reagenttype.ReagentTypes;
 import com.genologics.ri.researcher.Researcher;
 import com.genologics.ri.role.Role;
 import com.genologics.ri.sample.Sample;
@@ -82,9 +80,7 @@ import com.genologics.ri.step.ProcessStep;
 import com.genologics.ri.step.StepDetails;
 import com.genologics.ri.stepconfiguration.ProtocolStep;
 import com.genologics.ri.workflowconfiguration.Workflow;
-
-import jakarta.annotation.PostConstruct;
-import jakarta.xml.bind.JAXBException;
+import com.thoughtworks.xstream.XStream;
 
 @SpringJUnitConfig(classes = ClarityClientRecorderRecordTestConfiguration.class)
 public class ClarityAPIRecordingAspectTest
@@ -93,8 +89,7 @@ public class ClarityAPIRecordingAspectTest
     private ClarityAPI api;
 
     @Autowired
-    @Qualifier("clarityJaxbUnmarshaller")
-    private Unmarshaller unmarshaller;
+    private Jaxb2Marshaller marshaller;
 
     @Autowired
     private ClarityAPIRecordingAspect aspect;
@@ -102,6 +97,10 @@ public class ClarityAPIRecordingAspectTest
     @Autowired
     @Qualifier("clarityClientHttpRequestFactory")
     protected AuthenticatingClientHttpRequestFactory httpRequestFactory;
+
+    @Autowired
+    @Qualifier("claritySearchXStream")
+    private XStream xstream;
 
     private File messageDirectory = new File("target/messages");
 
@@ -125,7 +124,7 @@ public class ClarityAPIRecordingAspectTest
     @AfterEach
     public void cleanup()
     {
-        //FileUtils.deleteQuietly(messageDirectory);
+        FileUtils.deleteQuietly(messageDirectory);
     }
 
     private void checkCredentialsFileExists()
@@ -286,7 +285,7 @@ public class ClarityAPIRecordingAspectTest
     }
 
     @Test
-    public void testRecordList() throws IOException
+    public void testRecordList()
     {
         CRUKCICheck.assumeInCrukCI();
         checkCredentialsFileExists();
@@ -298,10 +297,12 @@ public class ClarityAPIRecordingAspectTest
             File containerTypesFile = new File(messageDirectory, "ContainerTypes.xml");
             assertTrue(containerTypesFile.exists(), "Container types not recorded.");
 
+            @SuppressWarnings("unchecked")
             Batch<? extends LimsLink<ContainerType>> ctBatch =
-                    ContainerTypes.class.cast(unmarshaller.unmarshal(new StreamSource(containerTypesFile)));
+                    (Batch<? extends LimsLink<ContainerType>>)marshaller.unmarshal(new StreamSource(containerTypesFile));
 
             assertEquals(ctLinks.size(), ctBatch.getSize(), "Serialised container type links don't match the original.");
+
 
             List<LimsLink<ReagentType>> rtLinks = api.listSome(ReagentType.class, 0, 120);
 
@@ -312,7 +313,7 @@ public class ClarityAPIRecordingAspectTest
 
             @SuppressWarnings("unchecked")
             Batch<? extends LimsLink<ReagentType>> rtBatch =
-                    ReagentTypes.class.cast(unmarshaller.unmarshal(new StreamSource(reagentTypesFile)));
+                    (Batch<? extends LimsLink<ReagentType>>)marshaller.unmarshal(new StreamSource(reagentTypesFile));
 
             assertEquals(rtLinks.size(), rtBatch.getSize(), "Serialised reagent type links don't match the original.");
         }

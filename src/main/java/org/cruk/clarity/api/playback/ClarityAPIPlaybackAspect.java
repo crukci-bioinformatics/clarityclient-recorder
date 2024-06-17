@@ -18,16 +18,16 @@
 
 package org.cruk.clarity.api.playback;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
-import static org.apache.commons.lang3.StringUtils.EMPTY;
+import static java.nio.charset.StandardCharsets.US_ASCII;
 import static org.cruk.clarity.api.record.ClarityAPIRecordingAspect.FILENAME_PATTERN;
 import static org.cruk.clarity.api.record.ClarityAPIRecordingAspect.limsIdFromObject;
 import static org.cruk.clarity.api.record.ClarityAPIRecordingAspect.limsIdFromUri;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -43,11 +43,8 @@ import java.util.Map;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
-import jakarta.xml.bind.JAXBElement;
-
 import org.apache.commons.lang3.ClassUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.cruk.clarity.api.ClarityAPI;
 import org.cruk.clarity.api.ClarityException;
@@ -61,22 +58,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.oxm.Marshaller;
-import org.springframework.oxm.Unmarshaller;
-import org.springframework.oxm.XmlMappingException;
-import org.springframework.stereotype.Component;
+import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 
 import com.genologics.ri.Batch;
 import com.genologics.ri.LimsLink;
 import com.genologics.ri.Locatable;
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.XStreamException;
 
 /**
  * Aspect for replaying server exchanges from a directory containing XML representations
  * of entities as would be returned from a real Clarity server.
  */
 @Aspect
-@Component("clarityPlaybackAspect")
-@SuppressWarnings("exports")
 public class ClarityAPIPlaybackAspect
 {
     /**
@@ -118,14 +112,9 @@ public class ClarityAPIPlaybackAspect
     private boolean failOnMissingSearch = false;
 
     /**
-     * The JAXB unmarshaller used to directly unmarshal the XML files into objects.
+     * The JAXB marshaller used to directly unmarshal the XML files into objects.
      */
-    private Unmarshaller unmarshaller;
-
-    /**
-     * The JAXB marshaller used to marshal object into XML for recording updates.
-     */
-    private Marshaller marshaller;
+    private Jaxb2Marshaller jaxbMarshaller;
 
     /**
      * Access to the API through its public interface.
@@ -136,6 +125,13 @@ public class ClarityAPIPlaybackAspect
      * Access to the API, but through its internal interface.
      */
     private ClarityAPIInternal apiInternal;
+
+    /**
+     * XStream XML serialiser.
+     */
+    @Autowired
+    @Qualifier("claritySearchXStream")
+    private XStream xstream;
 
 
     /**
@@ -240,27 +236,15 @@ public class ClarityAPIPlaybackAspect
     }
 
     /**
-     * Inject the JAXB unmarshaller.
+     * Inject the JAXB marshaller. This is required.
      *
-     * @param unmarshaller The unmarshaller.
-     */
-    @Autowired
-    @Qualifier("clarityJaxbUnmarshaller")
-    public void setClarityUnmarshaller(Unmarshaller unmarshaller)
-    {
-        this.unmarshaller = unmarshaller;
-    }
-
-    /**
-     * Inject the JAXB marshaller.
-     *
-     * @param marshaller The marshaller.
+     * @param jaxbMarshaller The marshaller.
      */
     @Autowired
     @Qualifier("clarityJaxbMarshaller")
-    public void setClarityMarshaller(Marshaller marshaller)
+    public void setJaxbMarshaller(Jaxb2Marshaller jaxbMarshaller)
     {
-        this.marshaller = marshaller;
+        this.jaxbMarshaller = jaxbMarshaller;
     }
 
     /**
@@ -300,7 +284,6 @@ public class ClarityAPIPlaybackAspect
      *
      * @throws Throwable if there is anything else that fails.
      */
-    @Around("execution(public * getForObject(..)) and bean(clarityRestTemplate)")
     public Object doGet(ProceedingJoinPoint pjp) throws Throwable
     {
         Object uriObj = pjp.getArgs()[0];
@@ -313,11 +296,7 @@ public class ClarityAPIPlaybackAspect
             throw new NoRecordingException("There is no file " + file.getName() + " recorded.");
         }
 
-        Object thing = unmarshaller.unmarshal(new StreamSource(file));
-        if (thing instanceof JAXBElement<?> element)
-        {
-            thing = element.getValue();
-        }
+        Object thing = jaxbMarshaller.unmarshal(new StreamSource(file));
 
         return thing;
     }
@@ -339,17 +318,12 @@ public class ClarityAPIPlaybackAspect
      *
      * @throws Throwable if there is anything that fails.
      */
-    @Around("execution(public * getForEntity(..)) and bean(clarityRestTemplate)")
     public ResponseEntity<?> doGetEntity(ProceedingJoinPoint pjp) throws Throwable
     {
         ResponseEntity<?> response;
         try
         {
             Object thing = doGet(pjp);
-            if (thing instanceof JAXBElement<?> element)
-            {
-                thing = element.getValue();
-            }
 
             response = new ResponseEntity<Object>(thing, HttpStatus.OK);
         }
@@ -385,7 +359,6 @@ public class ClarityAPIPlaybackAspect
      *
      * @throws Throwable if there is anything else that fails.
      */
-    @Around("execution(public * loadAll(..)) and bean(clarityAPI)")
     public List<?> doLoadAll(ProceedingJoinPoint pjp) throws Throwable
     {
         Collection<?> links = (Collection<?>)pjp.getArgs()[0];
@@ -419,7 +392,6 @@ public class ClarityAPIPlaybackAspect
      *
      * @throws Throwable if there is anything else that fails.
      */
-    @Around("execution(public * find(..)) and bean(clarityAPI)")
     public <E extends Locatable> List<LimsLink<E>> doFind(ProceedingJoinPoint pjp) throws Throwable
     {
         @SuppressWarnings("unchecked")
@@ -430,9 +402,7 @@ public class ClarityAPIPlaybackAspect
 
         SearchTerms<E> terms = new SearchTerms<>(searchTerms, entityClass);
 
-        File searchFile = new File(messageDirectory, Search.getSearchFileName(terms));
-
-        Search<E> search = loadSearch(searchFile);
+        Search<E> search = loadSearch(terms);
 
         if (search != null)
         {
@@ -441,8 +411,7 @@ public class ClarityAPIPlaybackAspect
 
         if (failOnMissingSearch)
         {
-            throw new NoRecordingException("There is no recorded search with the parameters given (file should be \"" +
-                                           searchFile.getName() + "\"):\n" + searchTerms);
+            throw new NoRecordingException("There is no recorded search with the parameters given:\n" + searchTerms);
         }
         else
         {
@@ -471,7 +440,6 @@ public class ClarityAPIPlaybackAspect
      *
      * @throws Throwable if there is an error invoking the underlying method.
      */
-    @Around("execution(public * list*(..)) and bean(clarityAPI)")
     public <E extends Locatable, L extends LimsLink<E>, BH extends Batch<L>>
     List<L> doList(ProceedingJoinPoint pjp) throws Throwable
     {
@@ -493,21 +461,9 @@ public class ClarityAPIPlaybackAspect
 
             if (listFile.exists())
             {
-                try
-                {
-                    BH batch = batchClass.cast(unmarshaller.unmarshal(new StreamSource(listFile)));
-                    list = batch.getList();
-                }
-                catch (IOException | XmlMappingException e)
-                {
-                    Throwable t = e;
-                    while (t.getCause() != null)
-                    {
-                        t = t.getCause();
-                    }
-                    logger.warn("Failed to read from {}: {}", listFile, t.getMessage());
-                    logger.debug(EMPTY, t);
-                }
+                @SuppressWarnings("unchecked")
+                BH batch = (BH)jaxbMarshaller.unmarshal(new StreamSource(listFile));
+                list = batch.getList();
             }
             else
             {
@@ -525,7 +481,6 @@ public class ClarityAPIPlaybackAspect
      *
      * @param pjp The join point.
      */
-    @Around("(execution(public * create*(..)) or execution(public * delete*(..)) or execution(public * upload*(..))) and bean(clarityAPI)")
     public void blockWrite(ProceedingJoinPoint pjp)
     {
         logger.warn("Call to {} blocked.", pjp.getSignature().getName());
@@ -541,7 +496,6 @@ public class ClarityAPIPlaybackAspect
      *
      * @throws Throwable if there is anything fails.
      */
-    @Around("execution(public * update(..)) and bean(clarityAPI)")
     public void doUpdate(ProceedingJoinPoint pjp) throws Throwable
     {
         if (updatesDirectory != null)
@@ -566,7 +520,6 @@ public class ClarityAPIPlaybackAspect
      *
      * @throws Throwable if there is anything fails.
      */
-    @Around("execution(public * updateAll(..)) and bean(clarityAPI)")
     public void doUpdateAll(ProceedingJoinPoint pjp) throws Throwable
     {
         if (updatesDirectory != null)
@@ -590,29 +543,46 @@ public class ClarityAPIPlaybackAspect
      *
      * @param <E> The type of entity being searched for.
      *
-     * @param searchFile The file to load from.
+     * @param terms The search terms.
      *
      * @return The search object loaded from the recorded file, or null if the
      * search has not been recorded.
      */
     @SuppressWarnings("unchecked")
-    private <E extends Locatable> Search<E> loadSearch(File searchFile)
+    private <E extends Locatable> Search<E> loadSearch(SearchTerms<?> terms)
     {
+        File searchFile = new File(messageDirectory, Search.getSearchFileName(terms));
+
         try
         {
-            try (Reader reader = new FileReader(searchFile, UTF_8))
+            try (Reader reader = new InputStreamReader(new FileInputStream(searchFile), US_ASCII))
             {
-                return (Search<E>)unmarshaller.unmarshal(new StreamSource(reader));
+                return (Search<E>)xstream.fromXML(reader);
+            }
+            catch (XStreamException xse)
+            {
+                Throwable t = xse;
+                while (t.getCause() != null)
+                {
+                    t = t.getCause();
+                }
+                try
+                {
+                    throw t;
+                }
+                catch (IOException e)
+                {
+                    throw e;
+                }
+                catch (Throwable t2)
+                {
+                    throw xse;
+                }
             }
         }
         catch (FileNotFoundException e)
         {
             logger.debug("Search file {} does not exist.", searchFile.getName());
-        }
-        catch (XmlMappingException e)
-        {
-            logger.warn("Cannot interpret the search saved in {}", searchFile.getAbsolutePath());
-            logger.debug("{}: {}", e.getClass().getName(), e.getMessage());
         }
         catch (IOException e)
         {
@@ -680,7 +650,7 @@ public class ClarityAPIPlaybackAspect
                 {
                     File file = getFileForEntity(thing);
 
-                    marshaller.marshal(thing, new StreamResult(file));
+                    jaxbMarshaller.marshal(thing, new StreamResult(file));
                 }
                 catch (Exception e)
                 {

@@ -1,21 +1,48 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<search:search xmlns:que="http://genologics.com/ri/queue" xmlns:protcnf="http://genologics.com/ri/protocolconfiguration" xmlns:aut="http://genologics.com/ri/automation" xmlns:rt="http://genologics.com/ri/routing" xmlns:artgr="http://genologics.com/ri/artifactgroup" xmlns:role="http://genologics.com/ri/role" xmlns:con="http://genologics.com/ri/container" xmlns:perm="http://genologics.com/ri/permission" xmlns:lab="http://genologics.com/ri/lab" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:lot="http://genologics.com/ri/reagentlot" xmlns:exc="http://genologics.com/ri/exception" xmlns:protstepcnf="http://genologics.com/ri/stepconfiguration" xmlns:search="http://cruk.cam.ac.uk/genologics/search" xmlns:file="http://genologics.com/ri/file" xmlns:prop="http://genologics.com/ri/property" xmlns:kit="http://genologics.com/ri/reagentkit" xmlns:smp="http://genologics.com/ri/sample" xmlns:cnf="http://genologics.com/ri/configuration" xmlns:ctp="http://genologics.com/ri/containertype" xmlns:ctrltp="http://genologics.com/ri/controltype" xmlns:prc="http://genologics.com/ri/process" xmlns:res="http://genologics.com/ri/researcher" xmlns:art="http://genologics.com/ri/artifact" xmlns:ver="http://genologics.com/ri/version" xmlns:xmime="http://www.w3.org/2005/05/xmlmime" xmlns:itp="http://genologics.com/ri/instrumenttype" xmlns:stg="http://genologics.com/ri/stage" xmlns:ptm="http://genologics.com/ri/processtemplate" xmlns:prj="http://genologics.com/ri/project" xmlns:wkfcnf="http://genologics.com/ri/workflowconfiguration" xmlns:ptp="http://genologics.com/ri/processtype" xmlns:stp="http://genologics.com/ri/step" xmlns:rtp="http://genologics.com/ri/reagenttype" xmlns:udf="http://genologics.com/ri/userdefined" xmlns:prx="http://genologics.com/ri/processexecution" xmlns:ri="http://genologics.com/ri" xmlns:inst="http://genologics.com/ri/instrument" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-    <terms>
-        <term>
-            <param>projectlimsid</param>
-            <value>SER1015</value>
-            <value>COH605</value>
-        </term>
-        <entity>com.genologics.ri.sample.Sample</entity>
-    </terms>
-    <results>
-        <link xsi:type="smp:sample-link" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/COH605A3" limsid="COH605A3"/>
-        <link xsi:type="smp:sample-link" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/COH605A4" limsid="COH605A4"/>
-        <link xsi:type="smp:sample-link" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/SER1015A1" limsid="SER1015A1"/>
-        <link xsi:type="smp:sample-link" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/SER1015A2" limsid="SER1015A2"/>
-        <link xsi:type="smp:sample-link" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/SER1015A3" limsid="SER1015A3"/>
-        <link xsi:type="smp:sample-link" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/SER1015A4" limsid="SER1015A4"/>
-        <link xsi:type="smp:sample-link" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/SER1015A5" limsid="SER1015A5"/>
-        <link xsi:type="smp:sample-link" uri="https://limsdev.cruk.cam.ac.uk/api/v2/samples/SER1015A6" limsid="SER1015A6"/>
-    </results>
-</search:search>
+<search>
+  <terms>
+    <params>
+      <entry>
+        <string>projectlimsid</string>
+        <list>
+          <string>SER1015</string>
+          <string>COH605</string>
+        </list>
+      </entry>
+    </params>
+    <entity>com.genologics.ri.sample.Sample</entity>
+  </terms>
+  <results>
+    <com.genologics.ri.sample.SampleLink>
+      <uri>https://limsdev.cruk.cam.ac.uk/api/v2/samples/COH605A3</uri>
+      <limsid>COH605A3</limsid>
+    </com.genologics.ri.sample.SampleLink>
+    <com.genologics.ri.sample.SampleLink>
+      <uri>https://limsdev.cruk.cam.ac.uk/api/v2/samples/COH605A4</uri>
+      <limsid>COH605A4</limsid>
+    </com.genologics.ri.sample.SampleLink>
+    <com.genologics.ri.sample.SampleLink>
+      <uri>https://limsdev.cruk.cam.ac.uk/api/v2/samples/SER1015A1</uri>
+      <limsid>SER1015A1</limsid>
+    </com.genologics.ri.sample.SampleLink>
+    <com.genologics.ri.sample.SampleLink>
+      <uri>https://limsdev.cruk.cam.ac.uk/api/v2/samples/SER1015A2</uri>
+      <limsid>SER1015A2</limsid>
+    </com.genologics.ri.sample.SampleLink>
+    <com.genologics.ri.sample.SampleLink>
+      <uri>https://limsdev.cruk.cam.ac.uk/api/v2/samples/SER1015A3</uri>
+      <limsid>SER1015A3</limsid>
+    </com.genologics.ri.sample.SampleLink>
+    <com.genologics.ri.sample.SampleLink>
+      <uri>https://limsdev.cruk.cam.ac.uk/api/v2/samples/SER1015A4</uri>
+      <limsid>SER1015A4</limsid>
+    </com.genologics.ri.sample.SampleLink>
+    <com.genologics.ri.sample.SampleLink>
+      <uri>https://limsdev.cruk.cam.ac.uk/api/v2/samples/SER1015A5</uri>
+      <limsid>SER1015A5</limsid>
+    </com.genologics.ri.sample.SampleLink>
+    <com.genologics.ri.sample.SampleLink>
+      <uri>https://limsdev.cruk.cam.ac.uk/api/v2/samples/SER1015A6</uri>
+      <limsid>SER1015A6</limsid>
+    </com.genologics.ri.sample.SampleLink>
+  </results>
+</search>

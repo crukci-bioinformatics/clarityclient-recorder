@@ -108,10 +108,6 @@ public class SearchTermsTest
         assertNotEquals(st1.hashCode(), st2.hashCode(), "Search terms hashes match");
     }
 
-    /*
-     * This test has changed. For JAXB, the terms are all turned into strings,
-     * so there is no difference between int and long.
-     */
     @Test
     public void differentParameterClass()
     {
@@ -125,8 +121,8 @@ public class SearchTermsTest
 
         SearchTerms<Artifact> st2 = new SearchTerms<Artifact>(terms2, Artifact.class);
 
-        assertEquals(st1, st2, "Search terms don't match");
-        assertEquals(st1.hashCode(), st2.hashCode(), "Search terms hashes don't match");
+        assertNotEquals(st1, st2, "Search terms match");
+        assertNotEquals(st1.hashCode(), st2.hashCode(), "Search terms hashes match");
     }
 
     @Test

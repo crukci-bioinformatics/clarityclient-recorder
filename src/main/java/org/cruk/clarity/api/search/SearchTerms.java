@@ -19,11 +19,14 @@
 package org.cruk.clarity.api.search;
 
 import static org.apache.commons.lang3.ClassUtils.getShortClassName;
+import static org.apache.commons.lang3.StringUtils.join;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -32,11 +35,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import org.cruk.clarity.api.ClarityAPI;
 
 import com.genologics.ri.Locatable;
-
-import jakarta.xml.bind.annotation.XmlAccessType;
-import jakarta.xml.bind.annotation.XmlAccessorType;
-import jakarta.xml.bind.annotation.XmlElement;
-import jakarta.xml.bind.annotation.XmlType;
+import com.thoughtworks.xstream.annotations.XStreamAlias;
 
 /**
  * Class recording the parameters and entity class of a call to the API's
@@ -46,8 +45,7 @@ import jakarta.xml.bind.annotation.XmlType;
  *
  * @see ClarityAPI#find(Map, Class)
  */
-@XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "terms", propOrder = { "searchTerms", "entityClass" })
+@XStreamAlias("terms")
 public class SearchTerms<E extends Locatable> implements Serializable
 {
     /**
@@ -58,22 +56,15 @@ public class SearchTerms<E extends Locatable> implements Serializable
     /**
      * The search terms (parameters) of the search.
      */
-    @XmlElement(name = "term")
-    private List<SearchTerm> searchTerms;
+    @XStreamAlias("params")
+    private Map<String, Object> searchTerms;
 
     /**
      * The class of the objects being searched for.
      */
-    @XmlElement(name = "entity")
+    @XStreamAlias("entity")
     private Class<E> entityClass;
 
-
-    /**
-     * Package level default constructor for JAXB.
-     */
-    SearchTerms()
-    {
-    }
 
     /**
      * Creates a new SearchTerms object with the given values (as have
@@ -86,34 +77,34 @@ public class SearchTerms<E extends Locatable> implements Serializable
     {
         this.entityClass = entityClass;
 
-        this.searchTerms = new ArrayList<>(searchTerms.size());
+        this.searchTerms = new HashMap<String, Object>();
         for (Map.Entry<String, ?> entry : searchTerms.entrySet())
         {
-            SearchTerm store = new SearchTerm(entry.getKey());
-            if (entry.getValue() instanceof Collection<?> collection)
+            Object store;
+            if (entry.getValue() instanceof Collection)
             {
-                store.setValues(collection);
+                store = new ArrayList<Object>((Collection<?>)entry.getValue());
             }
             else if (entry.getValue().getClass().isArray())
             {
                 Object[] values = (Object[])entry.getValue();
-                store.setValues(values);
+                store = new ArrayList<Object>(Arrays.asList(values));
             }
             else
             {
-                store.setValue(entry.getValue());
+                store = entry.getValue();
             }
 
-            this.searchTerms.add(store);
+            this.searchTerms.put(entry.getKey(), store);
         }
     }
 
     /**
      * Get the parameters of the search.
      *
-     * @return A list of individual search terms.
+     * @return A map of parameter name to value or values.
      */
-    public List<SearchTerm> getSearchTerms()
+    public Map<String, Object> getSearchTerms()
     {
         return searchTerms;
     }
@@ -146,9 +137,33 @@ public class SearchTerms<E extends Locatable> implements Serializable
 
         int hash = entityClass.getName().hashCode();
 
-        for (SearchTerm term : searchTerms)
+        for (Map.Entry<String, ?> entry : searchTerms.entrySet())
         {
-            hash ^= term.hashCode();
+            hash ^= entry.getKey().hashCode();
+
+            // In the copy of the collection, we only have collections or simple values. No arrays.
+
+            if (entry.getValue() instanceof Collection)
+            {
+                Collection<?> c = (Collection<?>)entry.getValue();
+                for (Object v : c)
+                {
+                    if (v != null)
+                    {
+                        hash ^= v.getClass().getName().hashCode();
+                        hash ^= v.hashCode();
+                    }
+                }
+            }
+            else
+            {
+                if (entry.getValue() != null)
+                {
+                    Object v = entry.getValue();
+                    hash ^= v.getClass().getName().hashCode();
+                    hash ^= v.hashCode();
+                }
+            }
         }
 
         return hash;
@@ -180,11 +195,37 @@ public class SearchTerms<E extends Locatable> implements Serializable
                 b.append(entityClass, other.entityClass);
                 b.append(searchTerms.size(), other.searchTerms.size());
 
-                var iter = searchTerms.iterator();
-                while (b.isEquals() && iter.hasNext())
+                Iterator<String> meIter = searchTerms.keySet().iterator();
+                while (meIter.hasNext() && b.isEquals())
                 {
-                    // Don't want the order of the terms to matter.
-                    b.append(true, other.searchTerms.contains(iter.next()));
+                    String term = meIter.next();
+
+                    Object myValue = searchTerms.get(term);
+                    Object otherValue = other.searchTerms.get(term);
+
+                    b.append(myValue != null, otherValue != null);
+                    b.append(myValue instanceof Collection, otherValue instanceof Collection);
+
+                    if (b.isEquals())
+                    {
+                        if (myValue instanceof Collection)
+                        {
+                            Collection<?> myCollection = (Collection<?>)myValue;
+                            Collection<?> otherCollection = (Collection<?>)otherValue;
+
+                            b.append(myCollection.size(), otherCollection.size());
+
+                            // Don't want the order of the values to matter.
+                            for (Object value : myCollection)
+                            {
+                                b.append(true, otherCollection.contains(value));
+                            }
+                        }
+                        else
+                        {
+                            b.append(myValue, otherValue);
+                        }
+                    }
                 }
 
                 equal = b.isEquals();
@@ -205,9 +246,16 @@ public class SearchTerms<E extends Locatable> implements Serializable
         ToStringBuilder b = new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE);
         b.append("entityClass", getShortClassName(entityClass));
 
-        for (SearchTerm term : searchTerms)
+        for (Map.Entry<String, ?> entry : searchTerms.entrySet())
         {
-            term.toString(b);
+            if (entry.getValue() instanceof Collection)
+            {
+                b.append(entry.getKey(), join((Collection<?>)entry.getValue(), ","));
+            }
+            else
+            {
+                b.append(entry.getKey(), entry.getValue());
+            }
         }
 
         return b.toString();
