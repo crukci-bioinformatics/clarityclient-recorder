@@ -1,8 +1,15 @@
+**This project has been discontinued.** It has been replaced by
+[Clarity Client 2](https://github.com/crukci-bioinformatics/clarityclient2),
+which is a repackaging of this project and the client combined with an
+update to Jakarta EE 10.
+
+There will not be any further updates to this project.
+
 # CRUK-CI Clarity API Java Client Recorder
 
 The Cancer Research UK Cambridge Institute (CRUK-CI) Clarity Java Client
 provides the Java or Groovy developer a means to work with
-[Clarity's REST API](https://d10e8rzir0haj8.cloudfront.net/6.0/REST.html) using objects
+[Clarity's REST API](https://d10e8rzir0haj8.cloudfront.net/6.2/REST.html) using objects
 rather than XML or DOM document trees. This repository provides a wrapper
 around our [Clarity Java Client](https://github.com/crukci-bioinformatics/clarityclient)
 that allows the developer to record entities returned from a real Clarity
